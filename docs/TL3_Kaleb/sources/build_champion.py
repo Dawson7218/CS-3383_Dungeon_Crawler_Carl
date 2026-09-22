@@ -25,9 +25,9 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Emu, Inches, Pt, RGBColor
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 OUT_DOCX = ROOT / "Champion_Upgrade_and_Loot_System.docx"
-IMG = ROOT / "champion_diagrams"
+IMG = ROOT / "general_diagrams"
 IMG.mkdir(exist_ok=True)
 
 NAVY = "#2F3E4E"
@@ -316,32 +316,9 @@ def draw_dfd0():
 
 
 def draw_dfd4():
-    fig, ax = new_fig(14.2, 7.8, equal=False, xmax=124)
-    text(ax, 62, 97.4, "Diagram 4 — Upgrade & Loot", size=12.5, weight="bold", color=TITLE_C)
-
-    gane_process(ax, 16, 84, 22, 12, "2", "Generate Dungeon Map")
-    gane_process(ax, 16, 52, 22, 12, "3", "Spawn Encounters")
-    gane_process(ax, 16, 20, 22, 12, "7", "Control Player & Combat")
-    gane_process(ax, 50, 84, 24, 12, "4.1", "Roll Loot Drop", fill=PEACH)
-    gane_process(ax, 84, 84, 24, 12, "4.2", "Apply Effect", fill=PEACH)
-    gane_process(ax, 84, 52, 24, 12, "4.3", "Revert Consumable", fill=PEACH)
-    gane_process(ax, 84, 20, 24, 12, "4.4", "Snapshot Loadout", fill=PEACH)
-    data_store(ax, 50, 52, 24, 10, "D1", "Item Catalog")
-    data_store(ax, 114, 20, 20, 10, "D2", "Player Loadout")
-
-    poly_arrow(ax, [(27, 84), (38, 84)], "room type", (32.5, 87.4), 8)
-    poly_arrow(ax, [(27, 56), (38, 78)], "room cleared", (25.4, 70), 7.5)
-    poly_arrow(ax, [(62, 84), (72, 84)], "dropped item", (67, 87.4), 8)
-    poly_arrow(ax, [(50, 57), (50, 78)], "templates, weights", (42.2, 68), 7.5)
-    poly_arrow(ax, [(27, 26), (32, 26), (32, 76), (72, 76)], "PlayerStats", (48, 73.4), 7.5)
-    poly_arrow(ax, [(72, 78), (72, 36), (27, 36), (27, 26)], "stat deltas", (52, 38.6), 7.5)
-    poly_arrow(ax, [(84, 78), (84, 58)], "effect record", (91.4, 69), 8)
-    poly_arrow(ax, [(78, 78), (78, 26)], "loadout delta", (70.4, 48), 8)
-    poly_arrow(ax, [(72, 46), (72, 8), (27, 8), (27, 14)], "reverted stats", (48, 10.6), 7.5)
-    poly_arrow(ax, [(96, 20), (104, 20)], "ItemSnapshot", (100, 23.4), 7.5)
-    poly_arrow(ax, [(114, 25), (114, 84), (96, 84)], "current loadout", (116.6, 56), 7.5)
-
-    return save(fig, "dfd4_zoom.png")
+    """Feature 4 zoom comes from the standalone matplotlib Diagram 4."""
+    from build_dfd4 import draw_dfd4 as _draw
+    return _draw()
 
 
 def draw_tree():

@@ -12,7 +12,7 @@ This log is the full question record referenced by the Champion’s **AI Questio
 | **Date** | 15 September 2026 |
 | **Tool** | Cursor agent (chat over the Dungeon Crawler Carl repo) |
 | **Source files given to the AI** | `/Users/jonathan/Downloads/Champion Sample Enemy Feature.docx` (structure + diagram types); Feature 4 text from `docs/TL5_KC/Feature Specifications.docx` |
-| **Output** | `Champion_Upgrade_and_Loot_System.docx` plus Gane–Sarson / use-case / PERT / Gantt PNGs in `champion_diagrams/` |
+| **Output** | `Champion_Upgrade_and_Loot_System.docx` plus Gane–Sarson / use-case / PERT / Gantt PNGs in `general_diagrams/` (originally `champion_diagrams/`) |
 
 ### Prompt (verbatim summary)
 
@@ -188,6 +188,178 @@ Unchanged numbers (still the Feature 4 spec budget, not a seven-feature roll-up)
 
 ---
 
+## Entry 9 — UML class diagram (Feature 4 only)
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Cursor agent (chat over the Dungeon Crawler Carl repo) |
+| **Source** | `Champion_Upgrade_and_Loot_System.docx` / `sources/build_champion.py` (Feature 4 internals and interface contract) |
+| **Prompt** | In `docs/TL3_Kaleb`, make a UML class diagram for the upgrade and loot system based on the Champion. Cover only this feature. |
+| **Output** | `general_diagrams/class_diagram.png`, `sources/Class_Diagram_Upgrade_and_Loot.puml`, `sources/build_class_diagram.py` |
+
+Classes on the diagram, taken from the Champion (not from Features 1–3 or 5–7):
+
+| Element | Role |
+|---|---|
+| `LootSystem` | Owner of the four Champion public methods (`ApplyItem`, `RollDrop`, `SaveState`, `RestoreState`). The spec lists those methods without naming a class; this is the Feature 4 entry point so they have a UML home. |
+| `Item` (abstract) | `itemId`, `kind`, virtual `ApplyEffect`, `Clone()` (Prototype) |
+| `WeaponUpgradeItem`, `ArmorUpgradeItem`, `ConsumableItem`, `RelicItem` | The four overrides; common/rare deltas as Champion bounds |
+| `LootTable` | `RollDrop(RoomType)` plus drop rates / weights |
+| `ItemMemento` | `SaveState` / `RestoreState` |
+| `ItemSnapshot` | Equipped ids, consumable timers, stat baseline, schema 1 |
+| `ItemKind` | Feature 4 enum |
+
+Gray boxes are **dependencies only**: Feature 2 `RoomType`, Feature 7 `PlayerStats`. HUD, map generation, combat, points, and boss phases are omitted.
+
+`NullItem` is a note on `Item` (Kind = None), not a fifth subclass — matching the Champion’s Null Object wording.
+
+Pearson / UML line styles used: generalization (solid + hollow triangle), association, composition (filled diamond), dependency (dashed + open head).
+
+---
+
+## Entry 10 — Diagram 4 redraw (matplotlib; Diagram 0 left alone)
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Cursor agent |
+| **Prompt** | Generate DFDs in the same matplotlib style as the class diagram, but do not redo Diagram 0 — keep it aligned with the rest of the team. Only Diagram 4. |
+| **Output** | `sources/build_dfd4.py` → `general_diagrams/dfd4_upgrade_and_loot.png` |
+
+Diagram 0 (`dfd0_context.png`) was left alone. The Champion now embeds `dfd4_upgrade_and_loot.png` instead of the old `dfd4_zoom.png`.
+
+Diagram 4 still uses Gane–Sarson (numbered process rectangles, open-right stores). Peach = Feature 4 (`4.1`–`4.4`, D1, D2). White = sibling processes 2, 3, and 7 as sources/sinks. Every flow starts and ends on a box.
+
+The same Cursor chat continued in a branch (overlap fix, folder layout, Diagram 4 redraw). A second branch of that chat asked whether the `.py` / `.puml` files are required. Entries 10–14 below are that continuation.
+
+---
+
+## Entry 10 — Class-diagram layout fix
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation (continued) |
+| **Prompt** | The diagram looks great; `WeaponUpgradeItem` and `ArmorUpgradeItem` boxes overlap. |
+| **Output** | Regenerated `general_diagrams/class_diagram.png` with the four item subclasses spaced so no class boxes overlap. |
+
+---
+
+## Entry 11 — Folder layout (`general_diagrams/` and `sources/`)
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation (continued) |
+| **Prompts** | Rename `champion_diagrams` to something more accurate like “general diagrams.” Then bundle all `.py` and `.puml` files in `TL3_Kaleb` into their own subfolder. |
+| **Output** | Folder renamed to `general_diagrams/`. Build scripts and PlantUML moved to `sources/`. Scripts still write the Champion `.docx` and PNGs into the parent `TL3_Kaleb` folder. README paths updated. |
+
+---
+
+## Entry 12 — Source files vs the PNG (branch)
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Branch of the same Cursor conversation |
+| **Prompts** | What are the `.py` and `.puml` files for — are they needed? Then: is the class-diagram image built from the `.puml` or the `.py`? |
+| **Output** | No files changed. Decision recorded as Q26–Q27. |
+
+The PNG is the submit image. `sources/build_class_diagram.py` draws it with matplotlib. `sources/Class_Diagram_Upgrade_and_Loot.puml` is a text copy of the same model for a PlantUML viewer; it does not render the PNG. The `.py` / `.puml` are not required unless we need to change the diagram later. They were kept and later moved into `sources/` (Entry 11).
+
+---
+
+## Entry 13 — Diagram 4 only in the class-diagram matplotlib style (branch)
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Branch of the same Cursor conversation |
+| **Prompts** | Generate two DFDs the same way as the class diagram. Follow-up: do not redo Diagram 0 (keep it aligned with the rest of the team); only Diagram 4. |
+| **Output** | `sources/build_dfd4.py` → `general_diagrams/dfd4_upgrade_and_loot.png`. Champion now embeds that Diagram 4; `dfd0_context.png` stays the shipped Diagram 0. |
+
+Diagram 4 is still Gane–Sarson (numbered process rectangles, open-right stores, no dead-end flows). Peach boxes are Feature 4 (`4.1`–`4.4`); white boxes are sibling processes 2, 3, and 7 as sources/sinks. Diagram 0 was not redrawn.
+
+---
+
+## Entry 14 — Refresh this log
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation |
+| **Prompt** | Update the AI interaction log with this chat; the work continued in another branch of it. |
+| **Output** | This file: Entries 9–14 and questions 25–29 added so the log matches the class diagram, folder layout, and Diagram 4 redraw that actually shipped. |
+
+---
+
+## Entry 15 — Diagram 4 flow labels sit on their shafts
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation (continued) |
+| **Prompt** | A few of the line labels are hard to tell what line they are associated with. |
+| **Output** | Regenerated `dfd4_upgrade_and_loot.png`. Each flow name sits on its own shaft with a white label background (`PlayerStats` on the top rail into 4.2, `templates, weights` on D1 → 4.1, `effect record` on 4.2 → 4.3, `stat deltas` / `loadout delta` on separate verticals, `reverted stats` on the 4.3 → 7 run). |
+
+---
+
+## Entry 16 — 4.2 / 4.3 overlapping exits
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation (continued) |
+| **Prompt** | Screenshot of 4.2 → 4.3: the lines coming out alongside **effect record** overlap oddly. |
+| **Output** | Three exits from 4.2 no longer share that gap. `effect record` is a single vertical 4.2 → 4.3. `stat deltas` leaves the left of 4.2. `loadout delta` goes down the right of 4.3 into 4.4. |
+
+---
+
+## Entry 17 — 4.4 arrow and ItemSnapshot label
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation (continued) |
+| **Prompt** | Screenshot of 4.4 / D2: the arrow above the tan box is hard to see, and the ItemSnapshot line is hidden by its label. |
+| **Output** | `loadout delta` now drops a visible stretch above 4.4 before the arrowhead. `ItemSnapshot` sits under the 4.4 → D2 shaft so the line and arrow stay visible. |
+
+---
+
+## Entry 18 — Reverted-stats run vs bottom notes
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation (continued) |
+| **Prompt** | The reverted stats line gets too close to the info cards at the bottom. |
+| **Output** | Raised the 4.3 → 7 horizontal and dropped the two note boxes so there is a clear gap above the cards. |
+
+---
+
+## Entry 19 — Champion uses the new Diagram 4
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation (continued) |
+| **Prompt** | Use the new Diagram 4 image instead of the old one. |
+| **Output** | `Champion_Upgrade_and_Loot_System.docx` now embeds `general_diagrams/dfd4_upgrade_and_loot.png`. Old `dfd4_zoom.png` deleted. `build_champion.py` `draw_dfd4()` imports the standalone drawer so a later Champion rebuild does not restore the old zoom. Diagram 0 was not regenerated. |
+
+---
+
+## Entry 20 — Refresh this log (Diagram 4 polish)
+
+| | |
+|---|---|
+| **Date** | 20 September 2026 |
+| **Tool** | Same Cursor conversation |
+| **Prompt** | Update the AI interaction log with the parts of this chat not already in it. |
+| **Output** | This file: Entries 15–20 and questions 30–34 added for the Diagram 4 label/routing polish and the Champion image swap. |
+
+---
+
 ## Numbered question log
 
 Questions asked of the model while drafting, with the decision that went into the Champion.
@@ -264,6 +436,39 @@ Questions asked of the model while drafting, with the decision that went into th
 24. **Q:** Are the PERT/Gantt/work items the seven-feature project schedule?  
     **A:** No. They are Feature 4 only: 10 loot tasks totaling Design 10 + Coding 27 + Testing 10 + Documentation 5 = 52 hours of my work, 31 hours on the critical path. Node numbers are those tasks, not Diagram 0 feature IDs. The Gantt axis is “Feature 4 hour,” not “Project hour.”
 
+25. **Q:** What belongs on the Feature 4 class diagram?  
+    **A:** The Champion’s seven internal classes (`Item` + four subtypes, `LootTable`, `ItemMemento`), plus `ItemSnapshot` and `ItemKind` from the interface contract. `LootSystem` holds the four public methods because the spec names the methods, not a class. Feature 2 `RoomType` and Feature 7 `PlayerStats` are gray external types. `NullItem` is a note, not a fifth subclass. No HUD, map, combat, economy, or boss classes.
+
+26. **Q:** Should Diagram 0 be redrawn in the class-diagram matplotlib style?  
+    **A:** No. Diagram 0 is the shared game context and should stay aligned with the other features’ Diagram 0s. Only Diagram 4 (process 4 zoom) is redrawn that way.
+
+26. **Q:** Are the `.py` and `.puml` files required to submit the class diagram?  
+    **A:** No. The submit image is the PNG. The `.py` regenerates that PNG; the `.puml` is an optional PlantUML text copy. They can be deleted without affecting the Champion. They were kept in `sources/` so the diagram can be edited later.
+
+27. **Q:** Does the class-diagram PNG come from the `.puml` or the `.py`?  
+    **A:** The `.py` (`sources/build_class_diagram.py` → matplotlib). The `.puml` is not in the render path.
+
+28. **Q:** Should Diagram 0 be redrawn in the class-diagram matplotlib style?  
+    **A:** No. Diagram 0 is the shared game context and should stay aligned with the rest of the team’s Diagram 0s. Only Diagram 4 (Feature 4 zoom) was redrawn that way.
+
+29. **Q:** Where do generated figures and build scripts live after the folder cleanup?  
+    **A:** PNGs in `general_diagrams/` (not `champion_diagrams/`, because the folder now holds more than Champion figures). `.py` and `.puml` in `sources/`. The Champion `.docx` stays at the `TL3_Kaleb` root.
+
+30. **Q:** May Diagram 4 flow names float between two nearby shafts?  
+    **A:** No. Each label sits on the shaft it names, with a white background so `PlayerStats`, `templates, weights`, `effect record`, `stat deltas`, and `loadout delta` cannot be read as the wrong line.
+
+31. **Q:** May `stat deltas` and `loadout delta` share the 4.2 → 4.3 corridor with `effect record`?  
+    **A:** No. After the 4.2/4.3 screenshot, `effect record` is the only vertical in that gap. `stat deltas` leaves 4.2 on the left; `loadout delta` runs down the right of 4.3 into 4.4.
+
+32. **Q:** Is a one-pixel arrow on the top edge of 4.4, or an ItemSnapshot label covering 4.4 → D2, acceptable?  
+    **A:** No. `loadout delta` must approach 4.4 with a visible last segment and arrowhead. `ItemSnapshot` sits under the shaft so the line into D2 stays visible.
+
+33. **Q:** May the reverted-stats run sit on the top edge of the bottom note cards?  
+    **A:** No. The 4.3 → 7 horizontal is raised and the notes dropped so the flow and the cards do not touch.
+
+34. **Q:** Which Diagram 4 PNG goes in the Champion?  
+    **A:** `general_diagrams/dfd4_upgrade_and_loot.png` (the matplotlib redraw). The old `dfd4_zoom.png` was removed. Diagram 0 stays `dfd0_context.png`.
+
 ---
 
 ## What was not delegated
@@ -274,3 +479,5 @@ Questions asked of the model while drafting, with the decision that went into th
 - That Feature 4’s published methods are only the four listed in the spec.
 - That Diagram 0 is one process per spec feature (instructor example), not two loot subprocesses.
 - That the timeline is Feature 4’s 52-hour budget, not the seven-feature project calendar.
+- That Diagram 0 stays in the shared team style; only Diagram 4 was redrawn in the class-diagram matplotlib script.
+- That the Champion embeds the new Diagram 4 (`dfd4_upgrade_and_loot.png`), not the old zoom.

@@ -1,0 +1,130 @@
+@startuml Feature4_Upgrade_and_Loot
+' Feature 4 only — Upgrade & Loot System
+' Matches Champion_Upgrade_and_Loot_System.docx (internal classes + public API).
+' Render: plantuml sources/Class_Diagram_Upgrade_and_Loot.puml
+' The checked-in PNG is general_diagrams/class_diagram.png (matplotlib, same model).
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+skinparam class {
+    BackgroundColor White
+    BorderColor #2F3E4E
+    FontColor #2C3E50
+    HeaderBackgroundColor White
+}
+skinparam note {
+    BackgroundColor #F7F4EE
+    BorderColor #2F3E4E
+}
+
+title Class Diagram — Feature 4 Upgrade & Loot System
+
+package "Feature 4 — Upgrade & Loot" #FFFFFF {
+
+    class LootSystem <<Feature 4 public API>> #F3D2B5 {
+        + ApplyItem(item : Item, stats : PlayerStats) : void
+        + RollDrop(roomType : RoomType) : Item
+        + SaveState() : ItemSnapshot
+        + RestoreState(snap : ItemSnapshot) : void
+    }
+
+    abstract class Item <<abstract>> #F3D2B5 {
+        + itemId : string
+        + kind : ItemKind
+        + ApplyEffect(stats : PlayerStats) : void {virtual}
+        + Clone() : Item <<Prototype>>
+    }
+
+    class WeaponUpgradeItem {
+        + attackDelta : int {5 | 8}
+        + ApplyEffect(stats : PlayerStats) : void
+    }
+
+    class ArmorUpgradeItem {
+        + defenseDelta : int {3 | 5}
+        + maxHealthDelta : int {10 | 20}
+        + ApplyEffect(stats : PlayerStats) : void
+    }
+
+    class ConsumableItem {
+        + consumableId : string
+        + durationRemaining : float {10.0}
+        + attackDelta : int = 8
+        + ApplyEffect(stats : PlayerStats) : void
+        + Revert(stats : PlayerStats) : void
+    }
+
+    class RelicItem {
+        + relicId : string
+        + moveSpeedDelta : float = 0.15
+        + critChanceDelta : int = 10
+        + ApplyEffect(stats : PlayerStats) : void
+    }
+
+    class LootTable {
+        - dropRates : Map<RoomType, float>
+        - weights : Map<RoomType, (ItemId, int)[*]>
+        + RollDrop(roomType : RoomType) : Item
+    }
+
+    class ItemMemento <<GoF Memento>> {
+        + SaveState() : ItemSnapshot
+        + RestoreState(snap : ItemSnapshot) : void
+    }
+
+    class ItemSnapshot {
+        + equippedItemIds : string[*]
+        + consumableTimers : (string, float)[*]
+        + statBaseline : PlayerStats
+        + schemaVersion : int = 1
+    }
+
+    enum ItemKind {
+        None
+        WeaponUpgrade
+        ArmorUpgrade
+        Consumable
+        Relic
+    }
+
+    Item <|-- WeaponUpgradeItem
+    Item <|-- ArmorUpgradeItem
+    Item <|-- ConsumableItem
+    Item <|-- RelicItem
+
+    LootSystem *-- LootTable : RollDrop
+    LootSystem *-- ItemMemento : save / restore
+    LootSystem "1" o-- "0..*" Item : loadout
+    LootTable "1" --> "1..*" Item : clones prototype
+    Item --> ItemKind : kind
+    ItemMemento --> ItemSnapshot : stores
+}
+
+enum RoomType <<Feature 2>> #E8E8E8 {
+    CombatRoom
+    TreasureRoom
+    CorridorRoom
+    BossRoom
+}
+
+class PlayerStats <<external / Feature 7>> #E8E8E8 {
+    + maxHealth : int = 100
+    + currentHealth : int = 100
+    + attack : int = 10
+    + defense : int = 0
+    + moveSpeed : float = 1.00
+    + critChancePercent : int = 0
+}
+
+LootTable ..> RoomType : <<use>>
+ItemSnapshot --> PlayerStats : statBaseline
+
+note bottom of Item
+  **Null Object — not a fifth subclass**
+  NullItem is ItemId = "NULL", Kind = None.
+  ApplyItem / ApplyEffect are no-ops.
+  TreasureRoom and BossRoom never return it.
+end note
+
+@enduml
