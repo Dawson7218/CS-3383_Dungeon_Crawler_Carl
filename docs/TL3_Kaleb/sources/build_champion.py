@@ -14,7 +14,6 @@ from matplotlib.patches import (
     Ellipse,
     FancyArrowPatch,
     FancyBboxPatch,
-    Polygon,
     Rectangle,
 )
 from matplotlib.lines import Line2D
@@ -150,27 +149,40 @@ def assoc(ax, p1, p2, color=NAVY, lw=1.5):
     ax.plot([p1[0], p2[0]], [p1[1], p2[1]], color=color, lw=lw, zorder=2, solid_capstyle="round")
 
 
-def filled_head(ax, p1, p2, size=2.5, color=NAVY):
-    """Filled triangular head at p2 (include / extend)."""
+def open_head(ax, p1, p2, size=2.55, color=NAVY, lw=1.35):
+    """Open chevron at p2 (include / extend). Two strokes, not a filled triangle."""
     x1, y1 = p1
     x2, y2 = p2
     dx, dy = x2 - x1, y2 - y1
     length = max((dx * dx + dy * dy) ** 0.5, 1e-6)
     ux, uy = dx / length, dy / length
     px, py = -uy, ux
-    tip = (x2, y2)
-    left = (x2 - ux * size + px * size * 0.55, y2 - uy * size + py * size * 0.55)
-    right = (x2 - ux * size - px * size * 0.55, y2 - uy * size - py * size * 0.55)
-    ax.add_patch(Polygon([tip, left, right], closed=True, facecolor=color, edgecolor=color, linewidth=0.3, zorder=5))
+    wing = size
+    spread = size * 0.5
+    left = (x2 - ux * wing + px * spread, y2 - uy * wing + py * spread)
+    right = (x2 - ux * wing - px * spread, y2 - uy * wing - py * spread)
+    for wx, wy in (left, right):
+        ax.plot(
+            [wx, x2],
+            [wy, y2],
+            color=color,
+            lw=lw,
+            solid_capstyle="butt",
+            zorder=5,
+        )
 
 
-def dashed(ax, p1, p2, color=NAVY, lw=1.3, head=2.5):
-    """Include / extend: dashed shaft, filled arrowhead at p2."""
+def dashed(ax, p1, p2, color=NAVY, lw=1.35, head=2.55):
+    """Include / extend: dashed shaft, open arrowhead at p2."""
     x1, y1 = p1
     x2, y2 = p2
     dx, dy = x2 - x1, y2 - y1
     length = max((dx * dx + dy * dy) ** 0.5, 1e-6)
     ux, uy = dx / length, dy / length
+    # Sit the tip just off the target outline.
+    clearance = 0.35
+    x2 -= ux * clearance
+    y2 -= uy * clearance
     end = (x2 - ux * head, y2 - uy * head)
     ax.plot(
         [x1, end[0]],
@@ -181,7 +193,21 @@ def dashed(ax, p1, p2, color=NAVY, lw=1.3, head=2.5):
         zorder=2,
         solid_capstyle="butt",
     )
-    filled_head(ax, p1, p2, size=head, color=color)
+    # Fill at most one dash gap so the shaft meets the back of the chevron.
+    ax.figure.canvas.draw()
+    origin = ax.transData.transform((0.0, 0.0))
+    unit = ax.transData.transform((ux, uy))
+    pts_per_data = max(((unit[0] - origin[0]) ** 2 + (unit[1] - origin[1]) ** 2) ** 0.5, 1e-6)
+    stub = 4.2 / pts_per_data
+    ax.plot(
+        [end[0] - ux * stub, end[0]],
+        [end[1] - uy * stub, end[1]],
+        color=color,
+        lw=lw,
+        solid_capstyle="butt",
+        zorder=4,
+    )
+    open_head(ax, (x1, y1), (x2, y2), size=head, color=color, lw=lw)
 
 
 def flow_label(ax, x, y, s, size=8):
@@ -991,7 +1017,7 @@ def build_doc(images: dict):
     add_body(
         doc,
         "Later passes corrected diagrams against instructor examples. Use-case lines follow the Pearson legend: "
-        "Communicates is a solid line with no heads; << include >> and << extend >> are dashed with a filled head "
+        "Communicates is a solid line with no heads; << include >> and << extend >> are dashed with an open arrowhead "
         "(include points at the common use case; extend points from the exception to the basic use case). Diagram 0 has "
         "one process per spec feature (1–7) with process 4 highlighted; stores D1–D5 are the open-right Gane–Sarson "
         "symbol (ID band on the left). Every flow starts and ends on a box — dead-end arrows on Diagram 0 and Diagram 4 "

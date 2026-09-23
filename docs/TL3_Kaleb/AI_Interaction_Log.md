@@ -360,6 +360,35 @@ Diagram 4 is still Gane–Sarson (numbered process rectangles, open-right stores
 
 ---
 
+## Entry 21 — Open include / extend arrowheads
+
+| | |
+|---|---|
+| **Date** | 22 September 2026 |
+| **Tool** | Cursor agent (chat over the Dungeon Crawler Carl repo) |
+| **Prompt** | Use-case diagrams in the Champion (`docs/TL3_Kaleb`) have the wrong arrow ends on the `<< include >>` and `<< extend >>` dashed lines (filled triangles, as in the first screenshot). Match the open arrowheads in the second screenshot. Do not copy that example’s colors — shapes only. |
+| **Output** | Regenerated `general_diagrams/uc1_roll_drop.png` and `uc2_apply_item.png`, and replaced those two images inside `Champion_Upgrade_and_Loot_System.docx`. Other Champion figures were not redrawn. |
+
+What changed:
+
+- **`<< include >>` and `<< extend >>`:** dashed shaft, open chevron (two strokes, not a filled triangle). Direction is unchanged from Entry 4: include points at the included use case; extend points from the exception to the basic use case.
+- **Color:** still the diagram navy (`#2F3E4E`). The example’s red was not copied.
+- **Communicates:** still a solid line with no heads.
+- Champion prose that said “dashed with a filled head” now says “dashed with an open arrowhead.” `sources/build_champion.py` draws the new head so a later rebuild does not restore the filled triangle.
+
+---
+
+## Entry 22 — Refresh this log
+
+| | |
+|---|---|
+| **Date** | 22 September 2026 |
+| **Tool** | Same Cursor conversation |
+| **Prompt** | Update the AI interaction document with this chat. |
+| **Output** | This file: Entries 21–22 and question 35 added. Question 18’s filled-head answer is marked superseded. |
+
+---
+
 ## Numbered question log
 
 Questions asked of the model while drafting, with the decision that went into the Champion.
@@ -416,7 +445,7 @@ Questions asked of the model while drafting, with the decision that went into th
     **A:** No. Feature 4’s own Dependencies line is only Feature 7 stats + Feature 2 room type. Unlock gating is Feature 5’s job and is out of scope for this Champion’s API.
 
 18. **Q:** Do dashed use-case lines need arrowheads?  
-    **A:** Yes. Pearson: `<< include >>` dashed with a filled head pointing at the common/included use case; `<< extend >>` dashed with a filled head from the exception to the basic use case. Communicates stays a solid line with no heads.
+    **A:** Yes. Pearson: `<< include >>` dashed with a filled head pointing at the common/included use case; `<< extend >>` dashed with a filled head from the exception to the basic use case. Communicates stays a solid line with no heads. **Superseded by Q35** for the head shape (open chevron, not a filled triangle). Direction and the solid Communicates line still stand.
 
 19. **Q:** May Diagram 0 keep two loot processes (3 and 4) plus a Player entity?  
     **A:** No. After a correct Diagram 0 example was supplied, Diagram 0 must have **one process per Feature Specifications entry** (1 HUD, 2 map, 3 encounters, 4 loot, 5 economy, 6 boss, 7 player). Process 4 is the only highlighted box. The Player external entity was removed; inter-feature flows are process-to-process.
@@ -469,6 +498,9 @@ Questions asked of the model while drafting, with the decision that went into th
 34. **Q:** Which Diagram 4 PNG goes in the Champion?  
     **A:** `general_diagrams/dfd4_upgrade_and_loot.png` (the matplotlib redraw). The old `dfd4_zoom.png` was removed. Diagram 0 stays `dfd0_context.png`.
 
+35. **Q:** Should `<< include >>` and `<< extend >>` keep the filled triangular head from Q18?  
+    **A:** No. The instructor example uses an open chevron (two strokes) on the dashed shaft. Include still points at the included use case; extend still points from the exception to the basic use case. Keep the diagram navy; do not copy the example’s red. Communicates stays a solid line with no heads.
+
 ---
 
 ## What was not delegated
@@ -481,3 +513,4 @@ Questions asked of the model while drafting, with the decision that went into th
 - That the timeline is Feature 4’s 52-hour budget, not the seven-feature project calendar.
 - That Diagram 0 stays in the shared team style; only Diagram 4 was redrawn in the class-diagram matplotlib script.
 - That the Champion embeds the new Diagram 4 (`dfd4_upgrade_and_loot.png`), not the old zoom.
+- That `<< include >>` and `<< extend >>` use an open chevron in the diagram’s navy, not a filled triangle and not the example’s red.
