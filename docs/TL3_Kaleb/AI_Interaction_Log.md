@@ -389,6 +389,42 @@ What changed:
 
 ---
 
+## Entry 23 — Class diagram: GoF, virtual/override, Feature 4 only, private fields
+
+| | |
+|---|---|
+| **Date** | 24 September 2026 |
+| **Tool** | Cursor agent (chat over the Dungeon Crawler Carl repo) |
+| **Source** | Champion; [Prototype](https://sourcemaking.com/design_patterns/prototype); [Memento](https://sourcemaking.com/design_patterns/memento) |
+| **Prompt** | Update the class diagram: follow Champion GoF Prototype + Memento; watch MonoBehaviour (Unity / C# instantiation); keep a virtual/override dynamic-binding site; Feature 4 classes only; fields private with get/set. |
+| **Output** | Regenerated `general_diagrams/class_diagram.png` and `sources/Class_Diagram_Upgrade_and_Loot.puml`. |
+
+What changed versus Entry 9:
+
+| Requirement | Change |
+|---|---|
+| GoF Prototype | `Item` is the abstract Prototype (`Clone()` virtual). Each subtype **overrides** `Clone()`. `LootTable` is the prototype registry: `RollDrop` clones a registered template and does not `new` a hard-wired subclass. |
+| GoF Memento | Three SourceMaking roles: `Loadout` is Originator (`CreateMemento` / `SetMemento`); `ItemMemento` is the opaque lock-box (Champion `ItemSnapshot` fields live here); `LootSystem` is Caretaker (`SaveState` / `RestoreState` hold the memento and must not peek). |
+| MonoBehaviour | No Feature 4 class inherits `MonoBehaviour`. `Clone()` is plain C# (`new` / copy), not `Instantiate`. |
+| Dynamic binding | `Item.ApplyEffect` is `{virtual}` (base no-op). Four subtypes `{override}`. `ApplyItem` calls through an `Item` reference. Removing `virtual` / `override` runs the base no-op; HUD-visible stats stop changing. |
+| Feature 4 only | `RoomType` and `PlayerStats` class boxes removed. Those names appear only as parameter / field types. |
+| Private fields | Every attribute is `−`. Public `{ get; set; }` (or get-only) properties control access. Memento restore methods are `~` (Originator only). |
+
+---
+
+## Entry 24 — LootSystem is the only MonoBehaviour
+
+| | |
+|---|---|
+| **Date** | 24 September 2026 |
+| **Tool** | Same Cursor conversation |
+| **Prompt** | Apply the MonoBehaviour recommendation: only `LootSystem` inherits it. |
+| **Output** | Regenerated `general_diagrams/class_diagram.png` and `sources/Class_Diagram_Upgrade_and_Loot.puml`. |
+
+`LootSystem` is the Unity connector (`MonoBehaviour`, `Update` for the 10 s consumable). `Item` and its subtypes, `LootTable`, `Loadout`, and `ItemMemento` stay ordinary C# so Prototype `Clone()` can use `new`.
+
+---
+
 ## Numbered question log
 
 Questions asked of the model while drafting, with the decision that went into the Champion.
@@ -466,7 +502,7 @@ Questions asked of the model while drafting, with the decision that went into th
     **A:** No. They are Feature 4 only: 10 loot tasks totaling Design 10 + Coding 27 + Testing 10 + Documentation 5 = 52 hours of my work, 31 hours on the critical path. Node numbers are those tasks, not Diagram 0 feature IDs. The Gantt axis is “Feature 4 hour,” not “Project hour.”
 
 25. **Q:** What belongs on the Feature 4 class diagram?  
-    **A:** The Champion’s seven internal classes (`Item` + four subtypes, `LootTable`, `ItemMemento`), plus `ItemSnapshot` and `ItemKind` from the interface contract. `LootSystem` holds the four public methods because the spec names the methods, not a class. Feature 2 `RoomType` and Feature 7 `PlayerStats` are gray external types. `NullItem` is a note, not a fifth subclass. No HUD, map, combat, economy, or boss classes.
+    **A:** Originally: Champion internals plus gray Feature 2/7 boxes. **Superseded by Q36–Q38:** Feature 4 classes only; GoF Originator `Loadout` added; `ItemSnapshot` folded into `ItemMemento`; no `RoomType` / `PlayerStats` class boxes.
 
 26. **Q:** Should Diagram 0 be redrawn in the class-diagram matplotlib style?  
     **A:** No. Diagram 0 is the shared game context and should stay aligned with the other features’ Diagram 0s. Only Diagram 4 (process 4 zoom) is redrawn that way.
@@ -501,6 +537,18 @@ Questions asked of the model while drafting, with the decision that went into th
 35. **Q:** Should `<< include >>` and `<< extend >>` keep the filled triangular head from Q18?  
     **A:** No. The instructor example uses an open chevron (two strokes) on the dashed shaft. Include still points at the included use case; extend still points from the exception to the basic use case. Keep the diagram navy; do not copy the example’s red. Communicates stays a solid line with no heads.
 
+36. **Q:** How must Prototype and Memento appear on the class diagram?  
+    **A:** SourceMaking roles, not a single “Memento” class that also Save/Restores. Prototype: abstract `Item.Clone()` + overrides + `LootTable` registry (no client `new`). Memento: Originator `Loadout`, lock-box `ItemMemento`, Caretaker `LootSystem`. **Superseded in part by Q39:** `LootSystem` is the one `MonoBehaviour`; the Prototype/Memento types stay plain C#.
+
+37. **Q:** May Feature 2 `RoomType` or Feature 7 `PlayerStats` appear as classes?  
+    **A:** No class boxes. They may appear only as types on Feature 4 members (`ApplyEffect(stats : PlayerStats)`, `RollDrop(roomType : RoomType)`, `statBaseline : PlayerStats`).
+
+38. **Q:** How are fields shown?  
+    **A:** Private (`−`) plus public get/set properties so access is controlled. `ItemMemento` state has no public getters — only `~` Originator operations.
+
+39. **Q:** Which Feature 4 class inherits `MonoBehaviour`?  
+    **A:** Only `LootSystem` (Unity hook: pickup, `Update` for the 10 s consumable). `Item` and its four subtypes, `LootTable`, `Loadout`, and `ItemMemento` are ordinary C# so Prototype `Clone()` can use `new`.
+
 ---
 
 ## What was not delegated
@@ -514,3 +562,5 @@ Questions asked of the model while drafting, with the decision that went into th
 - That Diagram 0 stays in the shared team style; only Diagram 4 was redrawn in the class-diagram matplotlib script.
 - That the Champion embeds the new Diagram 4 (`dfd4_upgrade_and_loot.png`), not the old zoom.
 - That `<< include >>` and `<< extend >>` use an open chevron in the diagram’s navy, not a filled triangle and not the example’s red.
+- That only `LootSystem` inherits `MonoBehaviour`; `Item` / `LootTable` / `Loadout` / `ItemMemento` stay plain C# so Prototype `Clone()` can use `new`.
+- That Memento on the class diagram is Originator + Memento + Caretaker (SourceMaking), not Save/Restore methods on `ItemMemento`.

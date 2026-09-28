@@ -142,7 +142,7 @@ def class_box(
         ops_top = split_header - 0.85
 
     for i, line in enumerate(ops):
-        italic = "{virtual}" in line or (abstract and "ApplyEffect" in line)
+        italic = "{virtual}" in line or "{override}" in line or (abstract and "ApplyEffect" in line)
         text(ax, x + 0.7, ops_top - i * line_h, line, size=body_size, ha="left", style="italic" if italic else "normal")
 
     return box
@@ -315,20 +315,19 @@ def legend_strip(ax, x, y):
         "▷ generalization",
         "—— association",
         "◆ composition",
-        "- - ▶ dependency",
-        "gray = other feature",
+        "− field   + get/set",
     ]
     text(ax, x, y, "Notation:", size=6.8, weight="bold", ha="left", color=TITLE_C)
     cursor = x + 12.2
     for mark in items:
         text(ax, cursor, y, mark, size=6.6, ha="left", color=MUTED)
-        cursor += 24.6
+        cursor += 28.0
 
 
 def draw_class_diagram():
-    fig, ax = plt.subplots(figsize=(17.4, 11.0))
-    ax.set_xlim(0, 176)
-    ax.set_ylim(-1, 106)
+    fig, ax = plt.subplots(figsize=(18.4, 12.6))
+    ax.set_xlim(0, 186)
+    ax.set_ylim(-2, 120)
     ax.set_aspect("equal")
     ax.axis("off")
     fig.patch.set_facecolor("white")
@@ -336,8 +335,8 @@ def draw_class_diagram():
 
     text(
         ax,
-        88,
-        104.2,
+        93,
+        118.0,
         "Class Diagram — Feature 4 Upgrade & Loot System",
         size=13.4,
         weight="bold",
@@ -345,48 +344,71 @@ def draw_class_diagram():
     )
     text(
         ax,
-        88,
-        101.35,
-        "Champion internals only. Gray types belong to Feature 2 or Feature 7; they are dependencies, not classes this feature owns.",
+        93,
+        115.1,
+        "Feature 4 classes only. LootSystem is the Unity hook (MonoBehaviour). All other Feature 4 types are plain C#.",
         size=7.5,
         color=MUTED,
     )
-    legend_strip(ax, 8.5, 98.55)
+    legend_strip(ax, 48.0, 112.2)
 
     loot_system = class_box(
         ax,
         23,
-        81.4,
+        93.4,
         40,
         "LootSystem",
-        [],
+        [
+            "− table : LootTable",
+            "− loadout : Loadout",
+            "− heldMemento : ItemMemento",
+            "+ Table { get; }",
+            "+ Loadout { get; }",
+        ],
         [
             "+ ApplyItem(item : Item, stats : PlayerStats) : void",
             "+ RollDrop(roomType : RoomType) : Item",
-            "+ SaveState() : ItemSnapshot",
-            "+ RestoreState(snap : ItemSnapshot) : void",
+            "+ SaveState() : ItemMemento",
+            "+ RestoreState(m : ItemMemento) : void",
+            "+ Update() : void",
         ],
-        stereotype="«Feature 4 public API»",
+        stereotype="«Caretaker»  MonoBehaviour",
         fill=PEACH,
         edge=PEACH_EDGE,
         header_fill="#F8E6D0",
     )
 
+    mono = class_box(
+        ax,
+        23,
+        111.2,
+        28,
+        "MonoBehaviour",
+        [],
+        [],
+        stereotype="«Unity»",
+        fill=GRAY,
+        edge=GRAY_EDGE,
+    )
+    generalize(ax, loot_system, mono)
+
     item = class_box(
         ax,
-        92,
-        84.0,
-        42,
+        98,
+        95.4,
+        46,
         "Item",
         [
-            "+ itemId : string",
-            "+ kind : ItemKind",
+            "− itemId : string",
+            "− kind : ItemKind",
+            "+ ItemId { get; set; }",
+            "+ Kind { get; set; }",
         ],
         [
             "+ ApplyEffect(stats : PlayerStats) : void  {virtual}",
-            "+ Clone() : Item  «Prototype»",
+            "+ Clone() : Item  {virtual}",
         ],
-        stereotype="«abstract»",
+        stereotype="«abstract Prototype»  not MonoBehaviour",
         abstract=True,
         fill=PEACH,
         edge=PEACH_EDGE,
@@ -395,9 +417,9 @@ def draw_class_diagram():
 
     item_kind = enum_box(
         ax,
-        152,
-        83.6,
-        26,
+        160,
+        95.2,
+        28,
         "ItemKind",
         ["None", "WeaponUpgrade", "ArmorUpgrade", "Consumable", "Relic"],
     )
@@ -405,165 +427,171 @@ def draw_class_diagram():
     loot_table = class_box(
         ax,
         23,
-        56.4,
-        36,
+        64.8,
+        40,
         "LootTable",
         [
+            "− prototypes : Item[*]",
             "− dropRates : Map<RoomType, float>",
-            "     {Combat 0.35, Corridor 0.10, T/B 1.00}",
-            "− weights : Map<RoomType, (ItemId, int)[*]>",
+            "− weights : Map<RoomType, (string, int)[*]>",
+            "+ Prototypes { get; }",
+            "+ DropRates { get; }",
         ],
         [
             "+ RollDrop(roomType : RoomType) : Item",
         ],
+        stereotype="«Prototype registry»  not MonoBehaviour",
     )
 
     weapon = class_box(
         ax,
-        63,
-        48.6,
-        27,
+        68,
+        48.8,
+        28,
         "WeaponUpgradeItem",
-        ["+ attackDelta : int   {5 | 8}"],
-        ["+ ApplyEffect(stats : PlayerStats) : void"],
+        [
+            "− attackDelta : int  {5 | 8}",
+            "+ AttackDelta { get; set; }",
+        ],
+        [
+            "+ ApplyEffect(stats : PlayerStats) : void  {override}",
+            "+ Clone() : Item  {override}",
+        ],
     )
     armor = class_box(
         ax,
-        96,
-        47.8,
-        28,
+        102,
+        47.6,
+        30,
         "ArmorUpgradeItem",
         [
-            "+ defenseDelta : int     {3 | 5}",
-            "+ maxHealthDelta : int   {10 | 20}",
+            "− defenseDelta : int  {3 | 5}",
+            "− maxHealthDelta : int  {10 | 20}",
+            "+ DefenseDelta { get; set; }",
+            "+ MaxHealthDelta { get; set; }",
         ],
-        ["+ ApplyEffect(stats : PlayerStats) : void"],
+        [
+            "+ ApplyEffect(stats : PlayerStats) : void  {override}",
+            "+ Clone() : Item  {override}",
+        ],
     )
     consumable = class_box(
         ax,
-        130,
-        47.0,
-        30,
+        138,
+        46.4,
+        31,
         "ConsumableItem",
         [
-            "+ consumableId : string",
-            "+ durationRemaining : float  {10.0}",
-            "+ attackDelta : int = 8",
+            "− consumableId : string",
+            "− durationRemaining : float  {10.0}",
+            "− attackDelta : int = 8",
+            "+ ConsumableId { get; set; }",
+            "+ DurationRemaining { get; set; }",
+            "+ AttackDelta { get; set; }",
         ],
         [
-            "+ ApplyEffect(stats : PlayerStats) : void",
+            "+ ApplyEffect(stats : PlayerStats) : void  {override}",
             "+ Revert(stats : PlayerStats) : void",
+            "+ Clone() : Item  {override}",
         ],
     )
     relic = class_box(
         ax,
-        162,
-        47.8,
-        27,
+        172,
+        47.6,
+        28,
         "RelicItem",
         [
-            "+ relicId : string",
-            "+ moveSpeedDelta : float = 0.15",
-            "+ critChanceDelta : int = 10",
+            "− relicId : string",
+            "− moveSpeedDelta : float = 0.15",
+            "− critChanceDelta : int = 10",
+            "+ RelicId { get; set; }",
+            "+ MoveSpeedDelta { get; set; }",
+            "+ CritChanceDelta { get; set; }",
         ],
-        ["+ ApplyEffect(stats : PlayerStats) : void"],
+        [
+            "+ ApplyEffect(stats : PlayerStats) : void  {override}",
+            "+ Clone() : Item  {override}",
+        ],
     )
 
-    room_type = enum_box(
+    loadout = class_box(
         ax,
-        23,
-        22.4,
-        32,
-        "RoomType",
-        ["CombatRoom", "TreasureRoom", "CorridorRoom", "BossRoom"],
-        stereotype="«enumeration / Feature 2»",
-        fill=GRAY,
-        edge=GRAY_EDGE,
+        28,
+        18.6,
+        42,
+        "Loadout",
+        [
+            "− items : Item[0..*]",
+            "− consumableTimers : (string, float)[*]",
+            "+ Items { get; }",
+            "+ ConsumableTimers { get; }",
+        ],
+        [
+            "+ ApplyItem(item : Item, stats : PlayerStats) : void",
+            "+ CreateMemento() : ItemMemento",
+            "+ SetMemento(m : ItemMemento) : void",
+        ],
+        stereotype="«Originator»  not MonoBehaviour",
+        fill=PEACH,
+        edge=PEACH_EDGE,
+        header_fill="#F8E6D0",
     )
 
     memento = class_box(
         ax,
-        68,
-        22.0,
-        33,
+        118,
+        19.4,
+        44,
         "ItemMemento",
-        [],
         [
-            "+ SaveState() : ItemSnapshot",
-            "+ RestoreState(snap : ItemSnapshot) : void",
+            "− equippedItemIds : string[*]",
+            "− consumableTimers : (string, float)[*]",
+            "− statBaseline : PlayerStats",
+            "− schemaVersion : int = 1",
         ],
-        stereotype="«GoF Memento»",
+        [
+            "~ CopyFrom(loadout : Loadout) : void",
+            "~ RestoreInto(loadout : Loadout) : void",
+        ],
+        stereotype="«Memento»  opaque lock-box",
     )
 
-    snapshot = class_box(
-        ax,
-        110,
-        21.2,
-        36,
-        "ItemSnapshot",
-        [
-            "+ equippedItemIds : string[*]",
-            "+ consumableTimers : (string, float)[*]",
-            "+ statBaseline : PlayerStats",
-            "+ schemaVersion : int = 1",
-        ],
-        [],
-    )
-
-    stats = class_box(
-        ax,
-        154,
-        21.4,
-        32,
-        "PlayerStats",
-        [
-            "+ maxHealth : int = 100",
-            "+ currentHealth : int = 100",
-            "+ attack : int = 10",
-            "+ defense : int = 0",
-            "+ moveSpeed : float = 1.00",
-            "+ critChancePercent : int = 0",
-        ],
-        [],
-        stereotype="«external / Feature 7»",
-        fill=GRAY,
-        edge=GRAY_EDGE,
-    )
-
-    # Public API to internals — keep lines off the inheritance bus (y ≈ 61).
+    left_rail = 2.6
     compose(
         ax,
         loot_system,
         loot_table,
         start=loot_system.bottom(),
         end=loot_table.top(),
-        label="RollDrop",
-        lxy=(12.8, 68.4),
+        label="registry",
+        lxy=(11.6, 78.8),
+    )
+    compose(
+        ax,
+        loot_system,
+        loadout,
+        start=loot_system.left(),
+        end=loadout.left(),
+        label="originator",
+        lxy=(8.8, 40.6),
+        via=[
+            (left_rail, loot_system.cy),
+            (left_rail, loadout.cy),
+        ],
     )
     associate(
         ax,
         loot_system,
-        item,
-        start=(loot_system.x + loot_system.w, loot_system.cy + 2.4),
-        end=(item.x, item.cy + 2.4),
-        label="loadout",
-        lxy=(54.8, 90.0),
-        mult_b="0..*",
-        mxy_b=(73.2, 88.2),
-    )
-    gutter_x = loot_system.x + loot_system.w + 2.8
-    compose(
-        ax,
-        loot_system,
         memento,
-        start=(loot_system.x + loot_system.w, loot_system.y + 1.8),
-        end=memento.left(),
-        label="save / restore",
-        lxy=(gutter_x + 6.4, 33.2),
+        start=loot_system.right(),
+        end=memento.top(),
+        label="holds, never peeks",
+        lxy=(58.4, 82.6),
         via=[
-            (gutter_x, loot_system.y + 1.8),
-            (gutter_x, 32.8),
-            (memento.x - 0.15, 32.8),
+            (49.6, loot_system.cy),
+            (49.6, 82.0),
+            (memento.cx, 82.0),
         ],
     )
     associate(
@@ -571,45 +599,63 @@ def draw_class_diagram():
         loot_table,
         item,
         start=loot_table.right(),
-        end=(item.x, item.y + 1.4),
-        label="clones prototype",
-        lxy=(56.2, 66.6),
+        end=(item.x, item.cy - 2.0),
+        label="clones prototype  (no new Subclass)",
+        lxy=(56.8, 70.8),
         mult_b="1..*",
-        mxy_b=(73.4, 70.8),
-        via=[(52.6, loot_table.cy), (52.6, 71.4), (item.x, 71.4)],
+        mxy_b=(76.4, 74.6),
+        via=[(49.6, loot_table.cy), (49.6, item.cy - 2.0)],
     )
-    depend(ax, loot_table, room_type, label="«use»", lxy=(12.4, 39.2))
-    associate(ax, item, item_kind, label="kind", lxy=(123.8, 89.4))
+    associate(ax, item, item_kind, label="kind", lxy=(132.4, 101.6))
+    associate(
+        ax,
+        loadout,
+        memento,
+        label="writes / reads state",
+        lxy=(72.4, 23.6),
+        mult_b="1",
+        mxy_b=(94.8, 16.4),
+    )
+    associate(
+        ax,
+        loadout,
+        item,
+        start=loadout.right(),
+        end=(item.x, item.y),
+        label="equipped",
+        lxy=(58.8, 34.2),
+        mult_b="0..*",
+        via=[(49.6, loadout.cy), (49.6, 34.0), (item.x + 2.0, 34.0)],
+    )
 
-    bus_y = 62.4
+    bus_y = 66.8
     for child in (weapon, armor, consumable, relic):
         generalize(ax, child, item, bus_y=bus_y)
 
-    associate(ax, memento, snapshot, label="stores", lxy=(88.6, 25.6), mult_b="1", mxy_b=(92.2, 18.6))
-    associate(ax, snapshot, stats, label="statBaseline", lxy=(132.4, 25.4))
-
     note_box(
         ax,
-        55.5,
-        4.15,
-        74,
-        6.2,
-        "Null Object — not a fifth Item subclass",
+        48.0,
+        3.4,
+        78,
+        6.8,
+        "Dynamic binding — ApplyEffect",
         [
-            "NullItem is ItemId = \"NULL\", Kind = None. ApplyItem is a no-op.",
-            "CombatRoom / CorridorRoom may return it; TreasureRoom / BossRoom never do.",
+            "ApplyItem holds an Item reference and calls ApplyEffect.",
+            "Remove virtual / override → Item’s no-op runs; HUD stats freeze.",
+            "NullItem is Kind = None on Item (not a fifth subclass).",
         ],
     )
     note_box(
         ax,
-        132.5,
-        4.15,
-        70,
-        6.2,
-        "Out of this diagram",
+        132.0,
+        3.4,
+        78,
+        6.8,
+        "GoF + Unity",
         [
-            "Champion internal classes: Item + four subtypes, LootTable, ItemMemento.",
-            "HUD, map, combat, points, and boss phases stay on Features 1–3 and 5–7.",
+            "Prototype: LootTable.RollDrop clones a registered Item, never new.",
+            "Memento: Loadout writes ItemMemento; LootSystem only shepherds it.",
+            "Only LootSystem : MonoBehaviour (pickup + 10 s timer). Item.Clone stays plain C#.",
         ],
     )
 
