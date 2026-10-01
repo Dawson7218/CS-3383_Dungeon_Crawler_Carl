@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Net.ServerSentEvents;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -20,9 +18,9 @@ public class BindingTests
     public void BaseRef_ToBase_NoBindingChange()
     {
         Item baseline = new Item(); 
-        Item actual = new RelicUpgradeItem();
-        //Assert.AreNotEqual(baseline.Attack(), actual.Attack());
-        Assert.AreEqual(baseline.Attack(), actual.Attack());
+        Item actual = new Item();
+        //Assert.AreNotEqual(baseline.GetItemId(), actual.GetItemId());
+        Assert.AreEqual(baseline.GetItemId(), actual.GetItemId());
         // Run 1: RED - same output, nothing to bind to
         // Run 2: change to Assert.AreEqual -> GREEN -> commit
     }
