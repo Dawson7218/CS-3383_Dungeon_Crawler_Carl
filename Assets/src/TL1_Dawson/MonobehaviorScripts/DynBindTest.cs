@@ -3,15 +3,13 @@ using UnityEngine;
 public class DynBindTest : MonoBehaviour
 {
     HudElement healthBar = new HealthBarElement();
-    GameState gameState = new GameState()
-    {
-        tmp = 5
-    };
+
+    GameState gameState;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-      
+        ScriptableObject.CreateInstance<GameState>();
     }
 
     // Update is called once per frame
