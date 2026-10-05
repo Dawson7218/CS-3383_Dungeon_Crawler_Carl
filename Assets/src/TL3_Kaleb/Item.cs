@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public abstract class Item
+public class Item
 {
-    public virtual string whatClassIsThis()
+    public virtual string ItemId()
     {
-        return "This is the base Item Clase.";
+        return "basic item";
     }
 }
