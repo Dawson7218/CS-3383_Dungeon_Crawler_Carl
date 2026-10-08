@@ -1,0 +1,21 @@
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.FUNCTIONAL_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.FUNCTIONAL_PWD }}
+          # Only add this if account activation fails:
+          # UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          testMode: all   # runs your BOUNDARY tests
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
