@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BindingDemo : MonoBehaviour
+public class BindingDemoIshan : MonoBehaviour
 {
     Enemy enemy = new Enemy(1, 100, new IdleState());
 
