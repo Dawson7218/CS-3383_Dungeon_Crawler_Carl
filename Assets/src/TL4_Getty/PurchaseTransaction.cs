@@ -9,9 +9,10 @@ public class PurchaseTransaction : CurrencyTransaction
         this.cost = cost;
     }
 
-    public override void Execute(EconomySaveData candidate)
+    public override string Execute(EconomySaveData candidate)
     {
         // TODO: Deduct cost from candidate.points.
         // TODO: Increment corresponding stat level.
+        return "string2";
     }
 }

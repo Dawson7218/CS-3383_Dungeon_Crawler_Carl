@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/src/TL1_Dawson/Scenes/MainMenu.unity
+    guid: 3552120dc5bcf2e4a8def5a204276221
   m_configObjects: {}
