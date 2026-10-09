@@ -1,8 +1,11 @@
-[System.Serializable]
+using System;
+
+[Serializable]
 public class EconomySaveData
 {
-    int points;
-    int healthLevel;
-    int attackLevel;
-    int defenseLevel;
+    public int points;
+
+    public int healthLevel;
+    public int attackLevel;
+    public int defenseLevel;
 }
