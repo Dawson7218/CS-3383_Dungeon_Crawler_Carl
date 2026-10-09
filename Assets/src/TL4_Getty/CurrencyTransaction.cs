@@ -2,8 +2,9 @@ using System;
 
 public class CurrencyTransaction
 {
-    public virtual void Execute(EconomySaveData candidate)
+    public virtual string Execute(EconomySaveData candidate)
     {
         // TODO: Implement default transaction behavior.
+        return "string override";
     }
 }

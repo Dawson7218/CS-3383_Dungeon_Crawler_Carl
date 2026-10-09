@@ -7,8 +7,8 @@ public class RunEndPayoutTransaction : CurrencyTransaction
         this.pointsEarned = pointsEarned;
     }
 
-    public override void Execute(EconomySaveData candidate)
+    public override string Execute(EconomySaveData candidate)
     {
-        // TODO: Add pointsEarned to candidate.points.
+        return "string1";
     }
 }
