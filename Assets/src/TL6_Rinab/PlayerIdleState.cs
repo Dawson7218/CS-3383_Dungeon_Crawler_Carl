@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class IdleStateTL6 : PlayerState
+public class PlayerIdleState : PlayerState
 {
 public override string Update()
 {
