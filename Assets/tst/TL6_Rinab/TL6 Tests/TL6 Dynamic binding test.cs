@@ -9,7 +9,7 @@ public class TL6Dynamicbindingtest
     [Test]
     public void BaseRef_ToSubclass_UsesOverride(){
         PlayerState baseline = new PlayerState();
-        PlayerState actual = new IdleState();
+        PlayerState actual = new PlayerIdleState();
         string a = baseline.Update();
         string b = actual.Update();
         
