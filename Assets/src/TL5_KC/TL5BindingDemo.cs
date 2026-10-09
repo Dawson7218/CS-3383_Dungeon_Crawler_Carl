@@ -1,5 +1,5 @@
 using UnityEngine;
-public class BindingDemo : MonoBehaviour
+public class TLFiveBindingDemo : MonoBehaviour
 {
 BossPhase current = new Phase1_RangedBarrage(); // declared: Enemy · actual: Dragon​
 
