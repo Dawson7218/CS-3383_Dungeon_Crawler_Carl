@@ -1,7 +1,7 @@
 using UnityEngine;
 public class FourBindingDemo : MonoBehaviour
 {
-CurrencyTransaction current = new PurchaseTransaction(); // declared: Enemy · actual: Dragon​
+CurrencyTransaction current = new PurchaseTransaction(StatType.Health, 3); // declared: Enemy · actual: Dragon​
 
     void OnGUI()
     {
