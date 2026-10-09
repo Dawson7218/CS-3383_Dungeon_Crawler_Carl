@@ -1,3 +1,16 @@
 {
-	"name": "TL3Assembly"
+    "name": "TL3Assembly",
+    "rootNamespace": "",
+    "references": [
+        "GUID:49ca78c2f7d3a2d4dadfab4f0fa64514"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
