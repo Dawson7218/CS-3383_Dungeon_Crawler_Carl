@@ -7,10 +7,10 @@ public class GameState : ScriptableObject
 {
     public int tmp { get; set; }
 
-    public bool isPaused = true;
-    public int score = 0;
-    public float gameTimer = 0f;
-    public int dabloons = 0;
+    public bool isPaused { get; set; } = true;
+    public int score { get; set; } = 0;
+    public float gameTimer { get; set; } = 0f;
+    public int dabloons { get; set; } = 0;
 
     public List<HudElement> hudElements = new();
 
