@@ -13,4 +13,13 @@ public class LootSystem : MonoBehaviour
     {
         
     }
+
+    public Item RollDrop(RoomType roomType)
+    {
+        switch (roomType)
+        {
+            default:
+                return new RelicUpgradeItem("steak", "steak1", 0.1f, 1);
+        }
+    }
 }

@@ -260,6 +260,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc20e7ea418a4612a6e3e3444adaa88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::BindingDemo
+--- !u!1 &462011510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 462011512}
+  - component: {fileID: 462011511}
+  m_Layer: 0
+  m_Name: TL5_PauseManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &462011511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462011510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcaaeb8376a134ed99ebddae1959efd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Tl5Assembly::PauseManager
+  pauseMenu: {fileID: 0}
+--- !u!4 &462011512
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462011510}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1624957012
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,3 +404,4 @@ SceneRoots:
   - {fileID: 1624957015}
   - {fileID: 248665031}
   - {fileID: 256200024}
+  - {fileID: 462011512}
