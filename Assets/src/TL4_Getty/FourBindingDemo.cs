@@ -1,5 +1,5 @@
 using UnityEngine;
-public class BindingDemo : MonoBehaviour
+public class FourBindingDemo : MonoBehaviour
 {
 CurrencyTransaction current = new PurchaseTransaction(); // declared: Enemy · actual: Dragon​
 
