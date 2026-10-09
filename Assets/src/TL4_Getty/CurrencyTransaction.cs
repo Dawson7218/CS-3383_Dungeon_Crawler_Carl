@@ -1,9 +1,9 @@
-using UnityEngine;
+using System;
 
-public class CurrencyTransaction
+public abstract class CurrencyTransaction
 {
-    public virtual string Execute()
+    public virtual void Execute(EconomySaveData candidate)
     {
-        return "Virtual string";
+        // TODO: Implement default transaction behavior.
     }
 }

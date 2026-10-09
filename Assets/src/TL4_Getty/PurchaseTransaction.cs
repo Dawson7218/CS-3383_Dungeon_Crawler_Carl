@@ -1,12 +1,17 @@
-using UnityEngine;
-
 public class PurchaseTransaction : CurrencyTransaction
 {
-    int cost;
-    StatType state;
+    private StatType stat;
+    private int cost;
 
-    public override string Execute()
+    public PurchaseTransaction(StatType stat, int cost)
     {
-        return "other override string";
+        this.stat = stat;
+        this.cost = cost;
+    }
+
+    public override void Execute(EconomySaveData candidate)
+    {
+        // TODO: Deduct cost from candidate.points.
+        // TODO: Increment corresponding stat level.
     }
 }

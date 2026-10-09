@@ -1,10 +1,14 @@
-using UnityEngine;
-
 public class RunEndPayoutTransaction : CurrencyTransaction
 {
-    int pointsEarned;
-    public override string Execute() //fix this later, only no (EconomySaveData candidate) because of 
+    private int pointsEarned;
+
+    public RunEndPayoutTransaction(int pointsEarned)
     {
-        return "This is an override string";
+        this.pointsEarned = pointsEarned;
+    }
+
+    public override void Execute(EconomySaveData candidate)
+    {
+        // TODO: Add pointsEarned to candidate.points.
     }
 }
