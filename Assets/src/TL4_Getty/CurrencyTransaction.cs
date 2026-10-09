@@ -1,6 +1,6 @@
 using System;
 
-public abstract class CurrencyTransaction
+public class CurrencyTransaction
 {
     public virtual void Execute(EconomySaveData candidate)
     {
