@@ -5,9 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameState", menuName = "Scriptable Objects/GameState")]
 public class GameState : ScriptableObject
 {
-    public int tmp {  get; set; }
+    public int tmp { get; set; }
 
-    public bool isPaused = false;
+    public bool isPaused = true;
     public int score = 0;
     public float gameTimer = 0f;
     public int dabloons = 0;

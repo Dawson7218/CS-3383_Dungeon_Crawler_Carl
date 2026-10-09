@@ -20,6 +20,10 @@ public class GameStateManager : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
+        if(sceneName == "Tmp")
+        {
+            gameState.isPaused = false;
+        }
     }
 
     public void QuitGame()
