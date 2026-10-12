@@ -1,11 +1,12 @@
+
 using UnityEngine;
 
 public class Enemy
 {
-    int enemyId;
-    int hp;
-    int maxHp;
-    EnemyState currentState; // declared: EnemyState · actual: whichever concrete state
+    private int enemyId;
+    private int hp;
+    private int maxHp;
+    private EnemyState currentState;
 
     public int Hp => hp;
 
@@ -19,7 +20,7 @@ public class Enemy
 
     public string Update()
     {
-        return currentState.Handle(this); // dynamic binding happens here
+        return currentState.Handle(this);
     }
 
     public void ChangeState(EnemyState newState)
@@ -29,8 +30,14 @@ public class Enemy
 
     public void TakeDamage(int amount)
     {
+        if (IsDefeated() || amount <= 0)
+            return;
+
         hp = Mathf.Max(0, hp - amount);
-        if (IsDefeated()) ChangeState(new DeadState());
+        Debug.Log("Enemy HP: " + hp);
+
+        if (IsDefeated())
+            ChangeState(new DeadState());
     }
 
     public bool IsDefeated()

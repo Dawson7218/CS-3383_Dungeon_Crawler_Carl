@@ -9,22 +9,35 @@ public class EnemyController : MonoBehaviour
 
     [Header("Enemy Settings")]
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float detectionRange = 5f;
-    [SerializeField] private float attackRange = 1f;
+    [SerializeField] private float detectionRange = 20f;
+    [SerializeField] private float attackRange = 2.5f;
+    [SerializeField] private float attackExitBuffer = 0.3f;
     [SerializeField] private int maxHealth = 100;
 
+    [Header("Attack Settings")]
+    [SerializeField] private int attackDamage = 10;
+    [SerializeField] private float attackCooldown = 1f;
+
+    private float nextAttackTime;
+
     private Enemy enemy;
-    private Rigidbody2D rb;
     private EnemyState currentState;
+    private Rigidbody2D rb;
     private Animator animator;
+
+    public int CurrentHP => enemy != null ? enemy.Hp : 0;
+    public bool IsDead => enemy != null && enemy.IsDefeated();
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
         enemy = new Enemy(1, maxHealth, new IdleState());
         currentState = new IdleState();
-        animator = GetComponent<Animator>();
+
+        if (animator != null)
+            animator.Play("Enemy_Idle");
     }
 
     void FixedUpdate()
@@ -41,14 +54,34 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
+        TestPlayerHealth playerHealth =
+            player.GetComponent<TestPlayerHealth>();
+
+        if (playerHealth != null && playerHealth.IsDead)
+        {
+            ChangeState(new IdleState());
+            return;
+        }
+
         float distance = Vector2.Distance(
             rb.position,
-            player.position
+            (Vector2)player.position
         );
 
-        if (distance <= attackRange)
+        // Prevent rapid switching between Chase and Attack.
+        float attackThreshold = currentState is AttackState
+            ? attackRange + attackExitBuffer
+            : attackRange;
+
+        if (distance <= attackThreshold)
         {
             ChangeState(new AttackState());
+
+            if (Time.time >= nextAttackTime)
+            {
+                PerformAttack();
+                nextAttackTime = Time.time + attackCooldown;
+            }
         }
         else if (distance <= detectionRange)
         {
@@ -58,8 +91,8 @@ public class EnemyController : MonoBehaviour
                 ((Vector2)player.position - rb.position).normalized;
 
             Vector2 newPosition =
-                rb.position +
-                direction * moveSpeed * Time.fixedDeltaTime;
+                rb.position + direction * moveSpeed *
+                Time.fixedDeltaTime;
 
             rb.MovePosition(newPosition);
         }
@@ -69,38 +102,59 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-
-private void ChangeState(EnemyState newState)
-{
-    if (currentState.GetType() == newState.GetType())
-        return;
-
-    currentState = newState;
-    enemy.ChangeState(newState);
-
-    if (animator != null)
+    private void ChangeState(EnemyState newState)
     {
-        if (newState is IdleState)
+        if (currentState.GetType() == newState.GetType())
+            return;
+
+        currentState = newState;
+        enemy.ChangeState(newState);
+
+        if (animator != null)
         {
-            animator.Play("Enemy_Idle");
+            if (newState is IdleState)
+                animator.Play("Enemy_Idle", 0, 0f);
+
+            else if (newState is ChaseState)
+                animator.Play("Enemy_Run", 0, 0f);
+
+            else if (newState is AttackState)
+                animator.Play("Enemy_Attack", 0, 0f);
+
+            else if (newState is DeadState)
+                animator.Play("Enemy_Die", 0, 0f);
         }
-        else if (newState is ChaseState)
-        {
-            animator.Play("Enemy_Run");
-        }
-        else if (newState is AttackState)
-        {
-            animator.Play("Enemy_Attack");
-        }
-        else if (newState is DeadState)
-        {
-            animator.Play("Enemy_Die");
-        }
+
+        Debug.Log(enemy.Update());
     }
 
-    Debug.Log(enemy.Update());
-}
+    private void PerformAttack()
+    {
+        if (player == null || enemy.IsDefeated())
+            return;
 
+        TestPlayerHealth playerHealth =
+            player.GetComponent<TestPlayerHealth>();
+
+        if (playerHealth == null || playerHealth.IsDead)
+            return;
+
+        // Confirm the player is still within attack range.
+        float distance = Vector2.Distance(
+            rb.position,
+            (Vector2)player.position
+        );
+
+        if (distance > attackRange + attackExitBuffer)
+            return;
+
+        Debug.Log("Goblin attacks!");
+
+        if (animator != null)
+            animator.Play("Enemy_Attack", 0, 0f);
+
+        playerHealth.TakeDamage(attackDamage);
+    }
 
     public void SetTarget(Transform target)
     {
@@ -109,11 +163,25 @@ private void ChangeState(EnemyState newState)
 
     public void TakeDamage(int damage)
     {
+        if (enemy.IsDefeated())
+            return;
+
         enemy.TakeDamage(damage);
+
+        Debug.Log("Goblin HP: " + enemy.Hp);
 
         if (enemy.IsDefeated())
         {
             ChangeState(new DeadState());
+
+            // Prevent further collisions after death.
+            Collider2D enemyCollider =
+                GetComponent<Collider2D>();
+
+            if (enemyCollider != null)
+                enemyCollider.enabled = false;
+
+            rb.linearVelocity = Vector2.zero;
         }
     }
 }
