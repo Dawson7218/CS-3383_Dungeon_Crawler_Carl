@@ -20,7 +20,7 @@ public class GameStateManager : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
-        if(sceneName == "Tmp")
+        if(sceneName == "MVPScene")
         {
             gameState.isPaused = false;
         }
