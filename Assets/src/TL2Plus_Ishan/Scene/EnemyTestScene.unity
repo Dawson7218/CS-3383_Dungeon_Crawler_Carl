@@ -282,11 +282,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 5.5
+      value: 1.3293377
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 22
+      value: 13.068266
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalScale.z
@@ -294,11 +294,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.5
+      value: 10.37
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -450,7 +450,10 @@ MonoBehaviour:
   moveSpeed: 2
   detectionRange: 20
   attackRange: 1.5
+  attackExitBuffer: 0.3
   maxHealth: 100
+  attackDamage: 10
+  attackCooldown: 1
 --- !u!95 &1043052521
 Animator:
   serializedVersion: 7
@@ -485,6 +488,7 @@ GameObject:
   - component: {fileID: 1474347705}
   - component: {fileID: 1474347704}
   - component: {fileID: 1474347703}
+  - component: {fileID: 1474347706}
   m_Layer: 0
   m_Name: Tmp player
   m_TagString: Untagged
@@ -640,6 +644,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &1474347706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474347701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687c8a300337749918236c4125de9f77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MainGameAssembly::TestPlayerHealth
+  maxHealth: 100
 --- !u!1001 &1788378641
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -654,19 +671,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalScale.x
-      value: -5.5
+      value: -1.9187733
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 22
+      value: 12.980469
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.5
+      value: -10.718
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.5
+      value: 0.0234
       objectReference: {fileID: 0}
     - target: {fileID: 1845173464931087080, guid: a68bad84f0ef94894b61cb507a2fb53f, type: 3}
       propertyPath: m_LocalPosition.z
