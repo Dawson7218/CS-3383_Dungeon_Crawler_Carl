@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MVPDisplay : MonoBehaviour
 {
+//    private LootSystem lootSystem;
+//    private Item currentItem;
     private DungeonGenerator generator;
     private Room currentRoom;
 
@@ -12,12 +14,20 @@ public class MVPDisplay : MonoBehaviour
         // Generate one room.
         currentRoom = generator.GenerateRun(12345, 1);
 
+//        lootSystem = GetComponent<LootSystem>();
+
+//        currentItem = lootSystem.RollDrop(currentRoom.getRoomType());
+
+//        Debug.Log("Generated item: " + currentItem.getItemKind());
+
         Debug.Log("MVP started!");
         Debug.Log("Room type: " + currentRoom.getRoomType());
     }
 
     private Vector2 playerPosition = new Vector2(230, 150);
     private float playerSpeed = 200f;
+    private Vector2 enemyPosition = new Vector2(350, 150);
+    private Vector2 itemPosition = new Vector2(100, 250);
 
 
     private Vector2 GetMovementInput()
@@ -25,10 +35,10 @@ public class MVPDisplay : MonoBehaviour
         Vector2 direction = Vector2.zero;
 
         if (Input.GetKey(KeyCode.W))
-            direction.y += 1;
+            direction.y -= 1;
 
         if (Input.GetKey(KeyCode.S))
-            direction.y -= 1;
+            direction.y += 1;
 
         if (Input.GetKey(KeyCode.A))
             direction.x -= 1;
@@ -76,11 +86,86 @@ public class MVPDisplay : MonoBehaviour
     ), "");
         GUI.color = Color.white;
 
-        // Display room information.
-        if (currentRoom != null)
+        // Draw enemy as a red square.
+    GUI.color = Color.red;
+
+    GUI.Box(new Rect(
+        x + enemyPosition.x,
+        y + enemyPosition.y,
+        40,
+        40
+    ), "");
+
+    GUI.color = Color.white;
+
+//    if (currentItem != null)
+//    {
+//        // Draw item as a yellow square.
+//        GUI.color = Color.yellow;
+
+//        GUI.Box(new Rect(
+//           x + itemPosition.x,
+//            y + itemPosition.y,
+//            20,
+//            20
+//        ), "");
+
+
+
+//        GUI.color = Color.white;
+    
+//        GUI.Label(new Rect(
+//        x + itemPosition.x,
+//        y + itemPosition.y + 20,
+//        150, 25
+//    ), currentItem.getItemKind().ToString());
+//    }
+
+    // Temporary item placeholder
+    GUI.color = Color.yellow;
+
+    GUI.Box(new Rect(
+        x + itemPosition.x,
+        y + itemPosition.y,
+        20,
+        20
+    ), "");
+
+    GUI.color = Color.white;
+
+    GUI.Label(new Rect(
+        x + itemPosition.x,
+        y + itemPosition.y + 20,
+        100, 25
+    ), "Item");
+
+    GUI.Label(new Rect(
+        x + enemyPosition.x,
+        y + enemyPosition.y + 40,
+        100, 25
+    ), "Enemy");
+
+    // Display room information.
+    if (currentRoom != null)
         {
             GUI.Label(new Rect(x + 10, y + 30, 300, 30),
                 "Room Type: " + currentRoom.getRoomType());
         }
+
+    if (Time.timeScale == 0f)
+        {
+            GUI.color = Color.white;
+
+            GUI.Box(
+                new Rect(
+                    x + roomWidth / 2 - 100,
+                    y + roomHeight / 2 - 25,
+                    200,
+                    50
+                ),
+                "GAME PAUSED"
+            );
+        }
     }
+
 }
