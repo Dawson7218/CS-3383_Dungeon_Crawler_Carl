@@ -20,16 +20,15 @@ public class MVPDisplay : MonoBehaviour
     private float playerSpeed = 200f;
 
 
-void Update()
+    private Vector2 GetMovementInput()
     {
         Vector2 direction = Vector2.zero;
 
-        // Temporary input until Getty's GetInput() is ready.
         if (Input.GetKey(KeyCode.W))
-            direction.y -= 1;
+            direction.y += 1;
 
         if (Input.GetKey(KeyCode.S))
-            direction.y += 1;
+            direction.y -= 1;
 
         if (Input.GetKey(KeyCode.A))
             direction.x -= 1;
@@ -37,13 +36,22 @@ void Update()
         if (Input.GetKey(KeyCode.D))
             direction.x += 1;
 
-        // Temporary movement until Rinab's Move() is ready.
-        playerPosition += direction.normalized * playerSpeed * Time.deltaTime;
+        return direction.normalized;
+    }
 
-        // Keep the player inside the room.
-        playerPosition.x = Mathf.Clamp(playerPosition.x, 0, 460);
-        playerPosition.y = Mathf.Clamp(playerPosition.y, 40, 310);
-}
+
+
+    void Update()
+        {
+            Vector2 direction = GetMovementInput();
+
+            // Temporary movement until Rinab's Move() is ready.
+            playerPosition += direction.normalized * playerSpeed * Time.deltaTime;
+
+            // Keep the player inside the room.
+            playerPosition.x = Mathf.Clamp(playerPosition.x, 0, 460);
+            playerPosition.y = Mathf.Clamp(playerPosition.y, 40, 310);
+    }
 
 
     void OnGUI()
