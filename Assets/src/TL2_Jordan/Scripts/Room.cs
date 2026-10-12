@@ -3,6 +3,10 @@ using UnityEngine;
 public class Room
 {  
     private RoomType roomType;
+    public void SetRoomType(RoomType type)
+    {
+    roomType = type;
+    }
     public RoomType getRoomType()
     {
         return this.roomType;
