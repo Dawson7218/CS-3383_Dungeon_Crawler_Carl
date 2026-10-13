@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class MVPDisplay : MonoBehaviour
 {
-//    private LootSystem lootSystem;
-//    private Item currentItem;
+    private LootSystem lootSystem;
+    private Item currentItem;
     private DungeonGenerator generator;
     private Room currentRoom;
 
@@ -14,11 +14,11 @@ public class MVPDisplay : MonoBehaviour
         // Generate one room.
         currentRoom = generator.GenerateRun(12345, 1);
 
-//        lootSystem = GetComponent<LootSystem>();
+        lootSystem = GetComponent<LootSystem>();
 
-//        currentItem = lootSystem.RollDrop(currentRoom.getRoomType());
+        currentItem = lootSystem.RollDrop(currentRoom.getRoomType());
 
-//        Debug.Log("Generated item: " + currentItem.getItemKind());
+        Debug.Log("Generated item: " + currentItem.getItemKind());
 
         Debug.Log("MVP started!");
         Debug.Log("Room type: " + currentRoom.getRoomType());
@@ -66,12 +66,21 @@ public class MVPDisplay : MonoBehaviour
 
     void OnGUI()
     {
+
+        float scaleX = Screen.width / 600f;
+        float scaleY = Screen.height / 450f;
+
+        GUI.matrix = Matrix4x4.Scale(
+            new Vector3(scaleX, scaleY, 1f)
+        );
+
+
         // Draw the room background.
         float roomWidth = 500;
         float roomHeight = 350;
 
-        float x = (Screen.width - roomWidth) / 2;
-        float y = (Screen.height - roomHeight) / 2;
+        float x = (600 - roomWidth) / 2;
+        float y = (450 - roomHeight) / 2;
 
         GUI.Box(new Rect(x, y, roomWidth, roomHeight),
                 "Dungeon Room");
@@ -87,63 +96,63 @@ public class MVPDisplay : MonoBehaviour
         GUI.color = Color.white;
 
         // Draw enemy as a red square.
-    GUI.color = Color.red;
+//    GUI.color = Color.red;
 
-    GUI.Box(new Rect(
-        x + enemyPosition.x,
-        y + enemyPosition.y,
-        40,
-        40
-    ), "");
+//    GUI.Box(new Rect(
+//        x + enemyPosition.x,
+//        y + enemyPosition.y,
+//        40,
+//        40
+//    ), "");
 
     GUI.color = Color.white;
 
-//    if (currentItem != null)
-//    {
-//        // Draw item as a yellow square.
-//        GUI.color = Color.yellow;
+    if (currentItem != null)
+    {
+        // Draw item as a yellow square.
+        GUI.color = Color.yellow;
 
-//        GUI.Box(new Rect(
-//           x + itemPosition.x,
-//            y + itemPosition.y,
-//            20,
-//            20
-//        ), "");
+        GUI.Box(new Rect(
+           x + itemPosition.x,
+            y + itemPosition.y,
+            20,
+            20
+        ), "");
 
 
 
-//        GUI.color = Color.white;
+        GUI.color = Color.white;
     
-//        GUI.Label(new Rect(
-//        x + itemPosition.x,
-//        y + itemPosition.y + 20,
-//        150, 25
-//    ), currentItem.getItemKind().ToString());
-//    }
-
-    // Temporary item placeholder
-    GUI.color = Color.yellow;
-
-    GUI.Box(new Rect(
-        x + itemPosition.x,
-        y + itemPosition.y,
-        20,
-        20
-    ), "");
-
-    GUI.color = Color.white;
-
-    GUI.Label(new Rect(
+        GUI.Label(new Rect(
         x + itemPosition.x,
         y + itemPosition.y + 20,
-        100, 25
-    ), "Item");
+        150, 25
+    ), currentItem.getItemKind().ToString());
+    }
 
-    GUI.Label(new Rect(
-        x + enemyPosition.x,
-        y + enemyPosition.y + 40,
-        100, 25
-    ), "Enemy");
+    // Temporary item placeholder
+//    GUI.color = Color.yellow;
+
+//    GUI.Box(new Rect(
+//        x + itemPosition.x,
+//        y + itemPosition.y,
+//        20,
+//        20
+//    ), "");
+
+//    GUI.color = Color.white;
+
+//    GUI.Label(new Rect(
+//        x + itemPosition.x,
+//        y + itemPosition.y + 20,
+//        100, 25
+//    ), "Item");
+
+//    GUI.Label(new Rect(
+//        x + enemyPosition.x,
+//        y + enemyPosition.y + 40,
+//        100, 25
+//    ), "Enemy");
 
     // Display room information.
     if (currentRoom != null)
@@ -167,5 +176,4 @@ public class MVPDisplay : MonoBehaviour
             );
         }
     }
-
 }
