@@ -30,18 +30,8 @@ public class Item // YOUR superclass name​
         return itemKind;
     }
 
-    public void setItemKind(ItemKind itemKind)
-    {
-        this.itemKind = itemKind;
-    }
-
     public string getItemId()
     {
-        throw new NotImplementedException();
-    }
-
-    public void setItemId(string itemId)
-    {
-        this.itemId = itemId;
+        return itemId;
     }
 }
