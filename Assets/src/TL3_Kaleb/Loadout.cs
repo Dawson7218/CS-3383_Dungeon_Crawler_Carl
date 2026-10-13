@@ -21,4 +21,14 @@ public class Loadout
         items.Add(item);
         //other functionallity needed here
     }
+
+    public ItemMemento CreateMemento()
+    {
+        return new ItemMemento();
+    }
+
+    public void SetMemento(ItemMemento itemMemento)
+    {
+        
+    }
 }

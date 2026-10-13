@@ -3,14 +3,16 @@ using UnityEngine;
 
 public class ItemMemento
 {
-    private List<Item> items;
+    private List<string> equipedItemIds;
     private List<(string, float)> consumableTimers;
     //private PlayerStats statBaseline;
-    private int schemaVersion;
+    private int schemaVersion = 1;
 
     protected void CopyFrom(Loadout loadout)
     {
-        items = loadout.Items();
+        loadout.Items().ForEach( item => {
+            equipedItemIds.Add(item.getItemId());
+        });
         consumableTimers = loadout.ConsumableTimers();
     }
 
