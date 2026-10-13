@@ -5,7 +5,7 @@ public class ArmorUpgradeItem : Item
     private int defenseDelta = 0;
     private int maxHealthDelta = 0;
 
-    protected ArmorUpgradeItem(string itemId, ItemKind itemKind, int defenseDelta, int maxHealthDelta) : base(itemId, itemKind)
+    public ArmorUpgradeItem(string itemId, ItemKind itemKind, int defenseDelta, int maxHealthDelta) : base(itemId, itemKind)
     {
         this.defenseDelta = defenseDelta;
         this.maxHealthDelta = maxHealthDelta;

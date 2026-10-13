@@ -4,7 +4,7 @@ public class WeaponUpgradeItem : Item
 {
     private int attackDelta = 0;
 
-    protected WeaponUpgradeItem(string itemId, ItemKind itemKind, int attackDelta) : base(itemId, itemKind)
+    public WeaponUpgradeItem(string itemId, ItemKind itemKind, int attackDelta) : base(itemId, itemKind)
     {
         this.attackDelta = attackDelta;
     }
