@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MVPDisplay : MonoBehaviour
 {
+    [SerializeField] private EconomyManager economyManager;
+    [SerializeField] private PlayerController playerController;
     private LootSystem lootSystem;
     private Item currentItem;
     private DungeonGenerator generator;
@@ -51,17 +53,17 @@ public class MVPDisplay : MonoBehaviour
 
 
 
-    void Update()
-        {
-            Vector2 direction = GetMovementInput();
+//    void Update()
+//        {
+//            Vector2 direction = GetMovementInput();
 
-            // Temporary movement until Rinab's Move() is ready.
-            playerPosition += direction.normalized * playerSpeed * Time.deltaTime;
+//            // Temporary movement until Rinab's Move() is ready.
+//            playerPosition += direction.normalized * playerSpeed * Time.deltaTime;
 
-            // Keep the player inside the room.
-            playerPosition.x = Mathf.Clamp(playerPosition.x, 0, 460);
-            playerPosition.y = Mathf.Clamp(playerPosition.y, 40, 310);
-    }
+//            // Keep the player inside the room.
+//            playerPosition.x = Mathf.Clamp(playerPosition.x, 0, 460);
+//            playerPosition.y = Mathf.Clamp(playerPosition.y, 40, 310);
+//    }
 
 
     void OnGUI()
@@ -84,6 +86,18 @@ public class MVPDisplay : MonoBehaviour
 
         GUI.Box(new Rect(x, y, roomWidth, roomHeight),
                 "Dungeon Room");
+
+            GUI.color = Color.white;
+
+        GUI.Box(
+            new Rect(
+                x + roomWidth - 160,
+                y + 10,
+                150,
+                35
+            ),
+            "Score: " + economyManager.GetBalance()
+        );
 
         // Draw the player as a blue square.
         GUI.color = Color.blue;
@@ -176,4 +190,19 @@ public class MVPDisplay : MonoBehaviour
             );
         }
     }
+
+
+    private void LateUpdate()
+    {
+        if (playerController == null)
+            return;
+
+        // Get the position calculated by Rinab's movement system.
+        Vector2 position = playerController.GetPosition();
+
+        // Convert Unity world coordinates to our GUI room coordinates.
+        playerPosition.x = 230f + position.x * 20f;
+        playerPosition.y = 150f - position.y * 20f;
+    }
+
 }
