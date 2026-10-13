@@ -22,7 +22,8 @@ public class EconomyManager : MonoBehaviour
 
     public int GetBalance()
     {
-        return state.points;
+        return 10;
+        //return state.points;
         throw new System.NotImplementedException();
     }
 
