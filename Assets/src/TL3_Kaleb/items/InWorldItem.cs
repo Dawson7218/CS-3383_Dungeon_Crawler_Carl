@@ -3,13 +3,18 @@ using UnityEngine;
 public class InWorldItem : MonoBehaviour
 {
 
-    private Item item;
-    
+    [SerializeField] private Item item;
+    [SerializeField] private LootSystem lootSystem;
 
-    // Update is called once per frame
-    void Update()
+    public InWorldItem(LootSystem lootSystem)
     {
-        // this will trigger applying the contained item when player is within this hit box
+        this.lootSystem = lootSystem;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.CompareTag("Player")) {
+            lootSystem.ApplyItem(item);
+        }
     }
 
     public Item Item()

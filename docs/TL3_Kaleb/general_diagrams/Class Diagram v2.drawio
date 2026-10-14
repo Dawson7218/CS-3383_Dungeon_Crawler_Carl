@@ -370,7 +370,7 @@
         <mxCell id="PlpVRiUS8lezRA0TqAUI-6" parent="PlpVRiUS8lezRA0TqAUI-1" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=#C4A882;" value="" vertex="1">
           <mxGeometry height="8" width="340" y="82" as="geometry" />
         </mxCell>
-        <mxCell id="PlpVRiUS8lezRA0TqAUI-12" parent="PlpVRiUS8lezRA0TqAUI-1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;fontSize=11;fontColor=#2C3E50;fontFamily=Helvetica;fontStyle=2;" value="+ Update() : void&amp;nbsp;" vertex="1">
+        <mxCell id="PlpVRiUS8lezRA0TqAUI-12" parent="PlpVRiUS8lezRA0TqAUI-1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;fontSize=11;fontColor=#2C3E50;fontFamily=Helvetica;fontStyle=2;" value="+ OnTriggerEnter2D(Collider2D other) : void&amp;nbsp;" vertex="1">
           <mxGeometry height="18" width="340" y="90" as="geometry" />
         </mxCell>
       </root>
