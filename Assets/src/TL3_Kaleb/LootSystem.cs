@@ -19,6 +19,12 @@ public class LootSystem : MonoBehaviour
 
     public void GenerateLootAt(RoomType roomType, Vector2 location)
     {
+        GameObject objectToSpawn = lootTables.RollDrop(roomType);
+        if (objectToSpawn != null)
+        {
+            //TODO:
+            //Instantiate(objectToSpawn)
+        }
     }
 
     //temporary for continued mvp workage

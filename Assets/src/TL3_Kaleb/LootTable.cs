@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 [Serializable]
@@ -19,12 +20,53 @@ public class LootTable
         return dropRates;
     }
 
-    public Item RollDrop(RoomType roomType)
+/**
+ * RollDrop returns a spawnable game object for the dropped item;
+ */
+    public GameObject RollDrop(RoomType roomType)
     {
-        switch (roomType)
+        float dropRate = dropRates.Find(roomRate =>
         {
-            default:
-                return new RelicUpgradeItem("steak", "steak1", 0.1f, 1);
+            return roomRate.GetRoomType() == roomType;
+        }).GetDropRate();
+
+        //check if the loot actually drops
+        if (UnityEngine.Random.Range(0.0f, 1.0f) <= dropRate)
+        {
+            RoomLootTable lootTable = weights.Find(roomLootTable =>
+            {
+                return roomLootTable.GetRoomType() == roomType;
+            });
+
+            //Do not continue if the loot table does not exist
+            if (lootTable == null)
+                return null;
+
+            //fetch total weight for weighted rand drop
+            int totalWeight = 0;
+            lootTable.GetLootTable().ForEach(itemDropWeight =>
+            {
+                totalWeight += itemDropWeight.GetDropRate();
+            });
+            
+            int itemRand = UnityEngine.Random.Range(0,totalWeight+1);
+            GameObject itemToDrop = null;
+            foreach (ItemDropWeight item in lootTable.GetLootTable())
+            {
+                if (itemRand <= item.GetDropRate())
+                {
+                    itemToDrop = item.GetSpawnableItem();
+                    break;
+                } else
+                {
+                    itemRand -= item.GetDropRate();
+                    continue;
+                }
+            };
+            return itemToDrop;
+        } else
+        {
+            return null;
         }
     }
 
@@ -73,7 +115,7 @@ public class LootTable
         [SerializeField]
         private int dropWeight = 0;
         
-        public GameObject GetRoomType()
+        public GameObject GetSpawnableItem()
         {
             return SpawnableItem;
         }
