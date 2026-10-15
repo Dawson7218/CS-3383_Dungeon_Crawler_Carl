@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class LootSystem : MonoBehaviour
 {
-    private LootTable lootTables = new LootTable();
-    private Loadout loadout;
-    private ItemMemento heldMemento;
+    [SerializeField] private LootTable lootTables;
+    private Loadout loadout = new Loadout();
+    private ItemMemento heldMemento = new ItemMemento();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,9 +17,8 @@ public class LootSystem : MonoBehaviour
         
     }
 
-    public Item RollDrop(RoomType roomType)
+    public void GenerateLootAt(RoomType roomType, Vector2 location)
     {
-        return lootTables.RollDrop(roomType);
     }
 
     public ItemMemento SaveAState()
