@@ -21,6 +21,12 @@ public class LootSystem : MonoBehaviour
     {
     }
 
+    //temporary for continued mvp workage
+    public Item RollDrop(RoomType roomType)
+    {
+        return new RelicUpgradeItem("steak", "steak", 0.1f, 1);
+    }
+
     public ItemMemento SaveAState()
     {
         return heldMemento;

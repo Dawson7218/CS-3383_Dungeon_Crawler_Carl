@@ -148,6 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d24220371544460a47b76ce0036ef7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::InWorldItem
+  item:
+    itemId: none
+    itemKind: 0
   lootSystem: {fileID: 801641439}
 --- !u!4 &664786086
 Transform:
@@ -208,6 +211,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ebb9e52f4cc40c397d29c5296017dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::LootSystem
+  lootTables:
+    prototypes: []
+    dropRates:
+    - roomType: 1
+      dropRate: 0.7
+    - roomType: 2
+      dropRate: 1
+    - roomType: 3
+      dropRate: 0.1
+    - roomType: 4
+      dropRate: 0
+    weights:
+    - roomType: 1
+      lootTable:
+      - SpawnableItem: {fileID: 0}
+        dropWeight: 0
 --- !u!1 &1686801236
 GameObject:
   m_ObjectHideFlags: 0
