@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TreaureRoom : Room
+public class TreasureRoom : Room
 {
     public override void GenerateLayout()
     {
