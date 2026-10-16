@@ -6,7 +6,10 @@ using UnityEngine;
 [Serializable]
 public class LootTable
 {
-    [SerializeField] private List<Item> prototypes = new List<Item>{};
+    private List<Item> prototypes = new List<Item>
+    {
+        
+    };
     [SerializeField] private List<RoomDropRate> dropRates = new List<RoomDropRate>{};
     [SerializeField] private List<RoomLootTable> weights = new List<RoomLootTable>{};
 
@@ -23,7 +26,7 @@ public class LootTable
 /**
  * RollDrop returns a spawnable game object for the dropped item;
  */
-    public GameObject RollDrop(RoomType roomType)
+    public Item RollDrop(RoomType roomType)
     {
         float dropRate = dropRates.Find(roomRate =>
         {
@@ -50,12 +53,12 @@ public class LootTable
             });
             
             int itemRand = UnityEngine.Random.Range(0,totalWeight+1);
-            GameObject itemToDrop = null;
+            string itemToDropId = null;
             foreach (ItemDropWeight item in lootTable.GetLootTable())
             {
                 if (itemRand <= item.GetDropRate())
                 {
-                    itemToDrop = item.GetSpawnableItem();
+                    itemToDropId = item.GetSpawnableItem();
                     break;
                 } else
                 {
@@ -63,7 +66,14 @@ public class LootTable
                     continue;
                 }
             };
-            return itemToDrop;
+            foreach (Item item in prototypes)
+            {
+                if (item.getItemId() == itemToDropId)
+                {
+                    return item.Clone();
+                }
+            }
+            return null;
         } else
         {
             return null;
@@ -111,11 +121,11 @@ public class LootTable
     private class ItemDropWeight
     {
         [SerializeField]
-        private GameObject SpawnableItem;
+        private string SpawnableItem;
         [SerializeField]
         private int dropWeight = 0;
         
-        public GameObject GetSpawnableItem()
+        public string GetSpawnableItem()
         {
             return SpawnableItem;
         }

@@ -6,6 +6,7 @@ public class Item // YOUR superclass name​
 {
     [SerializeField] private string itemId = "none";
     [SerializeField] private ItemKind itemKind = ItemKind.None;
+    [SerializeField] private string texturePath = "";
 
     public Item(string itemId, ItemKind itemKind)
     {

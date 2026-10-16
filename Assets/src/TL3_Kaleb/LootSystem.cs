@@ -19,8 +19,8 @@ public class LootSystem : MonoBehaviour
 
     public void GenerateLootAt(RoomType roomType, Vector2 location)
     {
-        GameObject objectToSpawn = lootTables.RollDrop(roomType);
-        if (objectToSpawn != null)
+        Item itemToSpawn = lootTables.RollDrop(roomType);
+        if (itemToSpawn != null)
         {
             //TODO:
             //Instantiate(objectToSpawn)
