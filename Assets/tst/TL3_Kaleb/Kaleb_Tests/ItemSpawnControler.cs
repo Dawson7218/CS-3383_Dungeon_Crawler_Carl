@@ -19,7 +19,7 @@ public class ItemSpawnControler : MonoBehaviour
             fpsCounter.SetText("fps: {0}", currentFPS);
         } else
         {
-            
+            Debug.Log("fps dropped below 60 to " + currentFPS + " at " + numItems + " items spawned in");
         }
     }
 }
