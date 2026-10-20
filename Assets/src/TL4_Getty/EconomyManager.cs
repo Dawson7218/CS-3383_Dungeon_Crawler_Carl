@@ -1,5 +1,15 @@
 using UnityEngine;
+/*
+Vars:
+    PointsScored:
+    int EnemiesKilled
+    float timealive (seconds)
+    bool BossKilled
 
+    saveState economy JSON
+
+
+*/
 public class EconomyManager : MonoBehaviour
 {
     public static EconomyManager Instance { get; private set; }
@@ -48,7 +58,7 @@ public class EconomyManager : MonoBehaviour
         throw new System.NotImplementedException();
     }
 
-    public void CreditRunEnd(int pointsEarned)
+    public void CreditRunEnd(int pointsEarned, bool bossKilled, float timeAlive)
     {
         // TODO: Validate payout.
         // TODO: Create RunEndPayoutTransaction.
@@ -67,4 +77,5 @@ public class EconomyManager : MonoBehaviour
         // TODO: Persist candidate state.
         throw new System.NotImplementedException();
     }
+    
 }

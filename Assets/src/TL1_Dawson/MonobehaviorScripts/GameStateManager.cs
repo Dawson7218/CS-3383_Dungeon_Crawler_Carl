@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,8 @@ public class GameStateManager : MonoBehaviour
     {
         gameState.gameTimer = 0f;
     }
+
+    public static event Action<GameState> OnGameStateChanged;
 
     // Update is called once per frame
     void Update()
@@ -24,6 +27,7 @@ public class GameStateManager : MonoBehaviour
         {
             gameState.isPaused = false;
         }
+        OnGameStateChanged?.Invoke(gameState);
     }
 
     public void QuitGame()
