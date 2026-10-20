@@ -6,6 +6,31 @@ public class DungeonGenerator : MonoBehaviour
 {
     private List<Room> rooms = new List<Room>();
 
+    [SerializeField] private GameObject combatRoomPrefab;
+    [SerializeField] private float roomSpacingX = 20f;
+    [SerializeField] private float roomSpacingY = 12f;
+
+    private void SpawnRoomPrefabs()
+    {
+        foreach (Room room in rooms)
+        {
+            Vector2Int gridPos = room.GetPosition();
+
+            UnityEngine.Vector3 worldPos = new UnityEngine.Vector3(
+                gridPos.x * roomSpacingX,
+                gridPos.y * roomSpacingY,
+                0f
+            );
+
+            Instantiate(
+                combatRoomPrefab,
+                worldPos,
+                UnityEngine.Quaternion.identity,
+                transform
+            );
+        }
+    }
+
     private static readonly Vector2Int[] directions =
     {
         Vector2Int.up,
@@ -54,6 +79,8 @@ public class DungeonGenerator : MonoBehaviour
 
             // Find new available positions.
             AddToFrontier(position, occupied, frontier);
+
+            SpawnRoomPrefabs();
         }
 
         //Generate each room's internal layout
