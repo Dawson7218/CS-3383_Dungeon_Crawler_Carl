@@ -148,9 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8d0d65c5df8f046b1022317527d6aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: TL1_Tests::HUDElementSpawnController
-  numberOfElementsViewer: {fileID: 0}
-  fpsCounter: {fileID: 0}
-  item: {fileID: 0}
+  numberOfElementsViewer: {fileID: 477697857}
+  fpsCounter: {fileID: 84082956}
+  item: {fileID: 2146621159577194273, guid: 0bbf3a418fbc546419e1777f6b7855ef, type: 3}
 --- !u!4 &80898429
 Transform:
   m_ObjectHideFlags: 0
