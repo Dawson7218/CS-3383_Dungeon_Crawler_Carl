@@ -3,13 +3,14 @@ using UnityEngine;
 
 public class ConsumableItem : Item
 {
+    static private int consumables = 0;
     private string consumableId = "nothing";
     private float durationRemaining = 0;
     private int attackDelta = 0;
 
-    public ConsumableItem(string itemId, ItemKind itemKind, string consumableId, float durationRemaining, int attackDelta) : base(itemId, itemKind)
+    public ConsumableItem(string itemId, float durationRemaining, int attackDelta, string texturePath) : base(itemId, ItemKind.Consumable, texturePath)
     {
-        this.consumableId = consumableId;
+        this.consumableId = itemId + "_" + consumables++;
         this.durationRemaining = durationRemaining;
         this.attackDelta = attackDelta;
     }
@@ -30,7 +31,7 @@ public class ConsumableItem : Item
 
     public override Item Clone()
     {
-        return new ConsumableItem(getItemId(), getItemKind(), consumableId, durationRemaining, attackDelta);
+        return new ConsumableItem(getItemId(), durationRemaining, attackDelta, getTexture());
     }
 
     public string getConsumableId()

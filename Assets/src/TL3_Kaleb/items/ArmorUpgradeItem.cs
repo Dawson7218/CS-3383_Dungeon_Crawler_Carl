@@ -5,7 +5,7 @@ public class ArmorUpgradeItem : Item
     private int defenseDelta = 0;
     private int maxHealthDelta = 0;
 
-    public ArmorUpgradeItem(string itemId, ItemKind itemKind, int defenseDelta, int maxHealthDelta) : base(itemId, itemKind)
+    public ArmorUpgradeItem(string itemId, int defenseDelta, int maxHealthDelta, string texturePath) : base(itemId, ItemKind.ArmorUpgrade, texturePath)
     {
         this.defenseDelta = defenseDelta;
         this.maxHealthDelta = maxHealthDelta;
@@ -20,7 +20,7 @@ public class ArmorUpgradeItem : Item
 
     public override Item Clone()
     {
-        return new ArmorUpgradeItem(getItemId(), getItemKind(), defenseDelta, maxHealthDelta);
+        return new ArmorUpgradeItem(getItemId(), defenseDelta, maxHealthDelta, getTexture());
     }
 
     public int getDefenseDelta()

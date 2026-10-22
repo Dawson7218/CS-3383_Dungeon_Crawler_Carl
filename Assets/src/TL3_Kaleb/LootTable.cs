@@ -6,9 +6,26 @@ using UnityEngine;
 [Serializable]
 public class LootTable
 {
-    private List<Item> prototypes = new List<Item>
+    static private List<Item> prototypes = new List<Item>
     {
-        
+        new ArmorUpgradeItem("armor_plating", 5, 2, "armor_plating"),
+        new ArmorUpgradeItem("armor_upgrade_1", 5, 2, "armor_upgrade_1"),
+        new ArmorUpgradeItem("armor_upgrade_2", 5, 2, "armor_upgrade_2"),
+        new ArmorUpgradeItem("armor_upgrade_4", 5, 2, "armor_upgrade_4"),
+        new ArmorUpgradeItem("armor_upgrade_5", 5, 2, "armor_upgrade_5"),
+        new ConsumableItem("grenade_updgrade_1", 20f, 10, "grenade_updgrade_1"),
+        new ConsumableItem("grenade_updgrade_2", 20f, 20, "grenade_updgrade_2"),
+        new ConsumableItem("temp_dmg_upgrade_1", 10f, 5, "temp_dmg_upgrade_1"),
+        new RelicUpgradeItem("hair_upgrade", 100f, 0, "hair_upgrade"),
+        new RelicUpgradeItem("luck_upgrade", 0f, 5, "luck_upgrade"),
+        new RelicUpgradeItem("sight_upgrade_1", 0f, 5, "sight_upgrade_1"),
+        new RelicUpgradeItem("sight_upgrade_2", 0f, 10, "sight_upgrade_2"),
+        new RelicUpgradeItem("sight_upgrade_3", 0f, 15, "sight_upgrade_3"),
+        new RelicUpgradeItem("speed_upgrade_1", 10f, 0, "speed_upgrade_1"),
+        new RelicUpgradeItem("speed_upgrade_2", 10f, 0, "speed_upgrade_2"),
+        new WeaponUpgradeItem("barrel_extension", 10, "barrel_extension"),
+        new WeaponUpgradeItem("bullet_upgrade_2", 10, "bullet_upgrade_2"),
+        new WeaponUpgradeItem("bullet_upgrade_3", 10, "bullet_upgrade_3")
     };
     [SerializeField] private List<RoomDropRate> dropRates = new List<RoomDropRate>{};
     [SerializeField] private List<RoomLootTable> weights = new List<RoomLootTable>{};

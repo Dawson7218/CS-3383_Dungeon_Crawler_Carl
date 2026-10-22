@@ -4,7 +4,7 @@ public class WeaponUpgradeItem : Item
 {
     private int attackDelta = 0;
 
-    public WeaponUpgradeItem(string itemId, ItemKind itemKind, int attackDelta) : base(itemId, itemKind)
+    public WeaponUpgradeItem(string itemId, int attackDelta, string texturePath) : base(itemId, ItemKind.WeaponUpgrade, texturePath)
     {
         this.attackDelta = attackDelta;
     }
@@ -18,7 +18,7 @@ public class WeaponUpgradeItem : Item
 
     public override Item Clone()
     {
-        return new WeaponUpgradeItem(getItemId(), getItemKind(), attackDelta);
+        return new WeaponUpgradeItem(getItemId(), attackDelta, getTexture());
     }
 
     public int getAttackDelta()

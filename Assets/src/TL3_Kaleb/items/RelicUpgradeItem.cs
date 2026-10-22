@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class RelicUpgradeItem : Item
 {
+    static private int relics = 0;
     private string relicId = "nothing";
     private float moveSpeedDelta = 0;
     private int critChanceDelta = 0;
 
-    public RelicUpgradeItem(string itemId, string relicId, float moveSpeedDelta, int critChanceDelta) : base(itemId, ItemKind.Relic)
+    public RelicUpgradeItem(string itemId, float moveSpeedDelta, int critChanceDelta, string texturePath) : base(itemId, ItemKind.Relic, texturePath)
     {
-        this.relicId = relicId;
+        this.relicId = itemId + "_" + relics++;
         this.moveSpeedDelta = moveSpeedDelta;
         this.critChanceDelta = critChanceDelta;
     }
@@ -22,7 +23,7 @@ public class RelicUpgradeItem : Item
 
     public override Item Clone()
     {
-        return new RelicUpgradeItem(getItemId(), relicId, moveSpeedDelta, critChanceDelta);
+        return new RelicUpgradeItem(getItemId(), moveSpeedDelta, critChanceDelta, getTexture());
     }
 
     public string getRelicId()

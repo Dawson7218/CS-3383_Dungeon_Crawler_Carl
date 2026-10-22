@@ -10,6 +10,7 @@ public class InWorldItem : MonoBehaviour
         if (other.CompareTag("Player")) {
             LootSystem.Instance.ApplyItem(item);
         }
+        Destroy(gameObject);
     }
 
     public Item Item()

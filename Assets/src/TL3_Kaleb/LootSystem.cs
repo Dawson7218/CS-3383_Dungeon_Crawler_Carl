@@ -44,9 +44,10 @@ public class LootSystem : MonoBehaviour
     }
 
     //temporary for continued mvp workage
+    //depricated
     public Item RollDrop(RoomType roomType)
     {
-        return new RelicUpgradeItem("steak", "steak", 0.1f, 1);
+        return new RelicUpgradeItem("steak", 0.1f, 1, "hair_upgrade");
     }
 
     public ItemMemento SaveAState()
