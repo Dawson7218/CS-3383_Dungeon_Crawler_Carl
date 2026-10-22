@@ -7,7 +7,7 @@ public class BindingTests
     [Test]
     public void BaseRef_ToSubclass_UsesOverride(){
         Item baseline = new Item("basicItem", ItemKind.None);
-        Item actual = new RelicUpgradeItem("relicItem", "coolRelic", 0.15f, 10);
+        Item actual = new RelicUpgradeItem("relicItem", 0.15f, 10, "coolRelic");
         string a = baseline.ApplyEffect();
         string b = actual.ApplyEffect();
         
