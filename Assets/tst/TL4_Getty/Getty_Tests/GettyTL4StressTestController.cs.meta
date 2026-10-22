@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 58df28e6f8084f4448ec83dca501bb5d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - numItemsViewer: {instanceID: 0}
+  - fpsCounter: {fileID: 4750642435062986005, guid: 0af3711bb3f609f4cac9655bef2fbb84, type: 3}
+  - menuTxtPrefab: {fileID: 5737104711552621010, guid: 0af3711bb3f609f4cac9655bef2fbb84, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
