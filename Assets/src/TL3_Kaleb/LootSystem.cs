@@ -39,7 +39,7 @@ public class LootSystem : MonoBehaviour
             GameObject itemspawned = Instantiate(itemPrefabBase, spawnPosition, Quaternion.identity);
             // Assign the kind of item it is
             itemspawned.GetComponent<InWorldItem>().SetItem(itemToSpawn);
-            itemspawned.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("TL3_Kaleb/Idle");
+            itemspawned.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("TL3_Kaleb/" + itemToSpawn.getTexture());
         }
     }
 

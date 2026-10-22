@@ -8,10 +8,14 @@ public class Item // YOUR superclass name​
     [SerializeField] private ItemKind itemKind = ItemKind.None;
     [SerializeField] private string texturePath = "";
 
-    public Item(string itemId, ItemKind itemKind)
+    public Item(string itemId, ItemKind itemKind) : this(itemId, itemKind, "hair_upgrade")
+    {}
+
+    public Item(string itemId, ItemKind itemKind, string texturePath)
     {
         this.itemId = itemId;
         this.itemKind = itemKind;
+        this.texturePath = texturePath;
     }
 
     public Item() {}
@@ -37,5 +41,10 @@ public class Item // YOUR superclass name​
     public string getItemId()
     {
         return itemId;
+    }
+
+    public string getTexture()
+    {
+        return texturePath;
     }
 }
