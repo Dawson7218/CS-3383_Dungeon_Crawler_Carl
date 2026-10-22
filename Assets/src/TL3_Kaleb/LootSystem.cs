@@ -1,15 +1,26 @@
-using System.Reflection.Metadata.Ecma335;
 using UnityEngine;
 
 public class LootSystem : MonoBehaviour
 {
+    [SerializeField] private GameObject itemPrefabBase;
     [SerializeField] private LootTable lootTables;
     private Loadout loadout = new Loadout();
     private ItemMemento heldMemento = new ItemMemento();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    //Code gets simpler if I use a singleton pattern for this class
+    public static LootSystem Instance { get; private set; }
+
+    private void Awake()
     {
-        
+        // Check if an instance already exists
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // Prevent duplicates
+            return;
+        }
+
+        // Assign this instance as the global singleton
+        Instance = this;
     }
 
     public void ApplyItem(Item item/*, PlayerStats stats*/)
@@ -22,8 +33,12 @@ public class LootSystem : MonoBehaviour
         Item itemToSpawn = lootTables.RollDrop(roomType);
         if (itemToSpawn != null)
         {
-            //TODO:
-            //Instantiate(objectToSpawn)
+            Vector3 spawnPosition = new Vector3(location.x, location.y, 0f);
+
+            // Instantiate the item base prefab at the specific position with no rotation
+            GameObject itemspawned = Instantiate(itemPrefabBase, spawnPosition, Quaternion.identity);
+            // Assign the kind of item it is
+            itemspawned.GetComponent<InWorldItem>().SetItem(itemToSpawn);
         }
     }
 

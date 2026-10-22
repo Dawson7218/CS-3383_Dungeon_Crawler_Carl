@@ -1,25 +1,24 @@
+using System;
 using UnityEngine;
 
 public class InWorldItem : MonoBehaviour
 {
 
     [SerializeField] private Item item;
-    [SerializeField] private LootSystem lootSystem;
-
-    public InWorldItem(LootSystem lootSystem, Item item)
-    {
-        this.lootSystem = lootSystem;
-        this.item = item;
-    }
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            lootSystem.ApplyItem(item);
+            LootSystem.Instance.ApplyItem(item);
         }
     }
 
     public Item Item()
     {
         return item;
+    }
+
+    internal void SetItem(Item item)
+    {
+        this.item = item;
     }
 }

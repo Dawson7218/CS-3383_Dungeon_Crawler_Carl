@@ -289,7 +289,6 @@ MonoBehaviour:
     itemId: none
     itemKind: 0
     texturePath: 
-  lootSystem: {fileID: 801641439}
 --- !u!4 &664786086
 Transform:
   m_ObjectHideFlags: 0
@@ -350,6 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ebb9e52f4cc40c397d29c5296017dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::LootSystem
+  itemPrefabBase: {fileID: 0}
   lootTables:
     dropRates:
     - roomType: 1

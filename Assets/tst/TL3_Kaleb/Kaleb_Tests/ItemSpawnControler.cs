@@ -7,7 +7,7 @@ public class ItemSpawnControler : MonoBehaviour
     [SerializeField] private TMP_Text fpsCounter;
     [SerializeField] private GameObject item;
     private int numItems = 0;
-    int currentFPS = 1000;
+    private int currentFPS = 1000;
     // Update is called once per frame
     void Update()
     {
