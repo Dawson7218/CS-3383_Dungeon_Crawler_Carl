@@ -1,11 +1,11 @@
 using System;
 
-// Serializable lets Unity's JsonUtility convert this data to and from JSON.
+//Serializable lets Unity's JsonUtility convert this data to and from JSON.
 [Serializable]
 public class EconomySaveData
 {
-    // These public fields are the values written to economy.json.
-    // Levels count purchases; the actual stat bonuses are calculated by EconomyManager.
+    //Public fields are the values written to economy.json.
+    // Levels count purchases; the actual stat bonuses are calculated by EconomyManager
     public int points;
     public int healthLevel;
     public int attackLevel;
@@ -13,9 +13,7 @@ public class EconomySaveData
 
     public EconomySaveData Clone()
     {
-        // Make a separate candidate for a transaction to edit before it is saved.
-        // MemberwiseClone is sufficient because every field here is an int value.
-        return (EconomySaveData)MemberwiseClone();
+        return (EconomySaveData)MemberwiseClone(); //Shallow Copy
     }
 
     public bool IsValid()

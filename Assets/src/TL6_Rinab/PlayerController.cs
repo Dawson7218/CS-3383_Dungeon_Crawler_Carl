@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement")]
+    [Header("Movement (starting value; stats.moveSpeed is used at runtime)")]
     [SerializeField] private float moveSpeed = 5f;
 
     [Header("Room bounds (placeholder)")]
@@ -17,12 +17,15 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        stats = new PlayerStats(maxHP);
+        stats = new PlayerStats(maxHP, moveSpeed);
         currentState = new PlayerIdleState();
     }
 
     void Update()
     {
+        if (stats.IsDead())
+            return;
+
         Vector2 direction = HandleInput();
 
         if (direction != Vector2.zero)
@@ -65,7 +68,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 MovePlayer(Vector2 direction)
     {
         Vector2 newPosition = (Vector2)transform.position
-            + direction.normalized * moveSpeed * Time.deltaTime;
+            + direction.normalized * stats.moveSpeed * Time.deltaTime;
 
         newPosition = ClampToRoomBounds(newPosition);
         transform.position = newPosition;
@@ -84,18 +87,25 @@ public class PlayerController : MonoBehaviour
         return transform.position;
     }
 
-
-    public void TakeDamage(int amount)
+    public void ApplyDamage(int amount)
     {
-        stats.TakeDamage(amount);
+        if (stats.IsDead())
+            return;
 
+        stats.TakeDamage(amount);
         Debug.Log("Player HP: " + stats.currentHP);
 
         if (stats.IsDead())
         {
-            Debug.Log("Player died");
+            ChangeState(new PlayerDeadState());
         }
     }
+
+    public void TakeDamage(int amount)
+    {
+        ApplyDamage(amount);
+    }
+
     public bool IsDead => stats.IsDead();
     public int CurrentHP => stats.currentHP;
 

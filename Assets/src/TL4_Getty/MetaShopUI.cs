@@ -1,47 +1,46 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Draws the standalone shop scene. Future death handling will load this scene.
+//Draws the standalone shop scene
 public class MetaShopUI : MonoBehaviour
 {
-    // Change the destination in the Inspector if the menu scene is renamed.
+    //Change the destination in the Inspector if the menu scene is renamed.
     [SerializeField] private string mainMenuScene = "MainMenu";
-    // This array controls the order of the three rows. readonly prevents replacing it.
+    //This array controls the order of the three rows. readonly prevents replacing it.
     private readonly StatType[] stats = { StatType.Health, StatType.Defense, StatType.Attack };
     // Cache the manager and the message shown below the upgrade buttons.
     private EconomyManager economy;
     private string message = "";
 
-    private void Start()
+    private void Start() //Create a manager instance and check if it fails
     {
-        // EconomyManager loads first because of its DefaultExecutionOrder attribute.
         economy = EconomyManager.Instance;
-        // A failed load is shown immediately instead of waiting for a button click.
         if (economy != null) message = economy.LastError;
     }
 
     // Unity calls OnGUI for drawing and input events, sometimes several times per frame.
     // GUILayout positions the controls; no Canvas or UI prefab is needed.
+    //OnGUI runs once a frame in addition to on GUI inputs
     private void OnGUI()
     {
-        // Do not try to read points or levels without a manager in the scene.
+        //Do not try to read points or levels without a manager in the scene.
         if (economy == null) return;
-        // Copy Unity's built-in styles and adjust the local copies for readable text.
+        //Copy Unity's built-in IMGUI styles and adjust the local copies for readable text.
         GUIStyle text = new GUIStyle(GUI.skin.label) { fontSize = 18 };
         GUIStyle title = new GUIStyle(text) { fontSize = 26, alignment = TextAnchor.MiddleCenter };
         GUIStyle button = new GUIStyle(GUI.skin.button) { fontSize = 18 };
-        // Center a 340-pixel-tall panel, with a maximum width of 500 pixels.
-        // On narrower windows, leave 10 pixels of space on each side.
+        //Center a 340-pixel-tall panel, with a maximum width of 500 pixels.
+        //On narrower windows, leave 10 pixels of space on each side.
         float width = Mathf.Min(500, Screen.width - 20);
         GUILayout.BeginArea(new Rect((Screen.width - width) / 2, (Screen.height - 340) / 2, width, 340), GUI.skin.box);
         GUILayout.Label("Meta Shop", title, GUILayout.Height(42));
         GUILayout.Label("Points: " + economy.GetBalance(), text);
         GUILayout.Space(12);
 
-        // Reuse the same row code once for health, defense, and attack.
+        //Reuse the same row code once for health, defense, and attack.
         foreach (StatType stat in stats)
         {
-            // Place the stat label and its upgrade button next to each other.
+            //Place the stat label and its upgrade button next to each other.
             GUILayout.BeginHorizontal();
             GUILayout.Label(stat + "  -  Level " + economy.GetLevel(stat), text, GUILayout.Height(36));
             // Disable the purchase button when points are too low, the stat is capped,
