@@ -87,11 +87,9 @@ public class EconomyManager : MonoBehaviour
     // and the player has enough points for the next level.
     public bool CanPurchase(StatType stat) => saveAvailable && !IsMaxLevel(stat) && GetBalance() >= GetNextCost(stat);
 
-    public bool TryPurchase(StatType stat)
+    public bool TryPurchase(StatType stat) //if fails to spend, move to committing the purchase
     {
-        // Return false without spending anything if the upgrade is unavailable.
-        if (!CanPurchase(stat)) return false;
-        // The transaction describes the purchase; Commit handles saving and accepting it.
+        if (!CanPurchase(stat)) return false; //Return false without spending anything if the upgrade is unavailable
         return Commit(new PurchaseTransaction(stat, GetNextCost(stat)));
     }
 
@@ -105,7 +103,7 @@ public class EconomyManager : MonoBehaviour
         Commit(new RunEndPayoutTransaction(pointsEarned));
     }
 
-    private bool Commit(CurrencyTransaction transaction)
+    private bool Commit(CurrencyTransaction transaction) //Actually write to JSON
     {
         if (!saveAvailable) return false;
         // Work on a separate copy first. Failed transactions leave state unchanged.
@@ -142,21 +140,20 @@ public class EconomyManager : MonoBehaviour
         }
     }
 
-    private void Load()
+    private void Load()//LOAD JSON FOR SAVE STATE
     {
-        // Begin with a new player's starting points and zero upgrade levels.
+        //Begin with a new player's starting points and zero upgrade levels
         state = new EconomySaveData { points = Mathf.Max(0, startingPoints) };
-        try
+        try //try once, if it fails, catch statement
         {
-            // No file means this is a new save; keep the starting values above.
+            //No file means this is a new save; keep the starting values above
             if (!File.Exists(SavePath)) return;
-            // Read the JSON file and turn its fields back into an EconomySaveData object.
             EconomySaveData loaded = JsonUtility.FromJson<EconomySaveData>(File.ReadAllText(SavePath));
-            // Reject a missing object or negative balance/levels before using the save.
+            //Reject missing values and negative/malformed values
             if (loaded == null || !loaded.IsValid()) throw new InvalidDataException("Invalid economy save.");
             state = loaded;
         }
-        catch (Exception exception) when (exception is IOException || exception is UnauthorizedAccessException || exception is ArgumentException)
+        catch (Exception exception) when (exception is IOException || exception is UnauthorizedAccessException || exception is ArgumentException) //Error not good
         {
             // Preserve an unreadable/invalid save for investigation instead of overwriting it.
             saveAvailable = false;
