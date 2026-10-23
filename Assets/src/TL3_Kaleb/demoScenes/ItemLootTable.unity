@@ -211,121 +211,66 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2015218082
-GameObject:
+--- !u!1001 &4984891192824926381
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2015218084}
-  - component: {fileID: 2015218083}
-  m_Layer: 0
-  m_Name: LootSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2015218083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015218082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68ebb9e52f4cc40c397d29c5296017dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: MainGameAssembly::LootSystem
-  itemPrefabBase: {fileID: 0}
-  lootTables:
-    dropRates:
-    - roomType: 0
-      dropRate: 0
-    - roomType: 1
-      dropRate: 0.75
-    - roomType: 2
-      dropRate: 1
-    - roomType: 3
-      dropRate: 0.25
-    - roomType: 4
-      dropRate: 0
-    weights:
-    - roomType: 0
-      lootTable:
-      - SpawnableItem: hair_upgrade
-        dropWeight: 1
-    - roomType: 1
-      lootTable:
-      - SpawnableItem: armor_plating
-        dropWeight: 20
-      - SpawnableItem: armor_upgrade_1
-        dropWeight: 10
-      - SpawnableItem: armor_upgrade_2
-        dropWeight: 5
-      - SpawnableItem: armor_upgrade_4
-        dropWeight: 3
-      - SpawnableItem: barrel_extension
-        dropWeight: 5
-      - SpawnableItem: bullet_upgrade_2
-        dropWeight: 10
-      - SpawnableItem: sight_upgrade_1
-        dropWeight: 10
-      - SpawnableItem: temp_dmg_upgrade_1
-        dropWeight: 15
-    - roomType: 2
-      lootTable:
-      - SpawnableItem: armor_upgrade_4
-        dropWeight: 10
-      - SpawnableItem: armor_upgrade_5
-        dropWeight: 5
-      - SpawnableItem: grenade_upgrade_1
-        dropWeight: 10
-      - SpawnableItem: grenade_upgrade_2
-        dropWeight: 5
-      - SpawnableItem: hair_upgrade
-        dropWeight: 1
-      - SpawnableItem: bullet_upgrade_3
-        dropWeight: 10
-      - SpawnableItem: sight_upgrade_2
-        dropWeight: 10
-      - SpawnableItem: sight_upgrade_3
-        dropWeight: 5
-      - SpawnableItem: speed_upgrade_1
-        dropWeight: 10
-      - SpawnableItem: speed_upgrade_2
-        dropWeight: 5
-    - roomType: 3
-      lootTable:
-      - SpawnableItem: temp_dmg_upgrade_1
-        dropWeight: 10
-      - SpawnableItem: armor_plating
-        dropWeight: 10
-    - roomType: 4
-      lootTable:
-      - SpawnableItem: hair_upgrade
-        dropWeight: 1
---- !u!4 &2015218084
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015218082}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 902.9353, y: 730.9584, z: 45.61951}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 902.9353
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 730.9584
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 45.61951
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 590423942715255329, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6179428440150079476, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: m_Name
+      value: LootSystem
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 719396288}
-  - {fileID: 2015218084}
+  - {fileID: 4984891192824926381}
