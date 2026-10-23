@@ -1,29 +1,76 @@
-using System.Collections;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 public class BindingTests
 {
-    // A Test behaves as an ordinary method
-    [Test]
-    public void BaseRef_ToSubclass_UsesOverride(){
-        BossPhase baseline = new BossPhase();
-        BossPhase actual = new Phase1_RangedBarrage();
-        string a = baseline.CanHandle();
-        string b = actual.CanHandle();
-        
-        Assert.AreNotEqual(a, b); // assert: DIFFERENT​
+    // A test-only phase that records whether its override ran.
+    private class TestPhase : BossPhase
+    {
+        private readonly bool canHandle;
+
+        public bool WasExecuted { get; private set; }
+
+        public override string PhaseName => "Test Phase";
+
+        public TestPhase(bool canHandle)
+        {
+            this.canHandle = canHandle;
+        }
+
+        public override bool CanHandle(BossController ctx)
+        {
+            return canHandle;
+        }
+
+        public override void ExecutePhase(BossController ctx)
+        {
+            WasExecuted = true;
+        }
     }
 
     [Test]
-    public void BaseRef_ToBase_NoBindingChange()
+    public void BaseReference_ExecutePhase_UsesDerivedOverride()
     {
-        BossPhase baseline = new BossPhase(); 
-        BossPhase actual = new BossPhase();
-        // Assert.AreNotEqual(baseline.CanHandle(), actual.CanHandle());
-        Assert.AreEqual(baseline.CanHandle(), actual.CanHandle());
-        // Run 1: RED - same output, nothing to bind to
-        // Run 2: change to Assert.AreEqual -> GREEN -> commit
+        TestPhase concretePhase = new TestPhase(true);
+        BossPhase phase = concretePhase;
+
+        phase.ExecutePhase(null);
+
+        Assert.That(concretePhase.WasExecuted, Is.True);
+    }
+
+    [Test]
+    public void Handle_WhenCurrentPhaseAccepts_ReturnsCurrentPhase()
+    {
+        BossPhase first = new TestPhase(true);
+        BossPhase second = new TestPhase(true);
+        first.SetNext(second);
+
+        BossPhase selected = first.Handle(null);
+
+        Assert.That(selected, Is.SameAs(first));
+    }
+
+    [Test]
+    public void Handle_WhenCurrentPhaseRejects_PassesToNextPhase()
+    {
+        BossPhase first = new TestPhase(false);
+        BossPhase second = new TestPhase(true);
+        first.SetNext(second);
+
+        BossPhase selected = first.Handle(null);
+
+        Assert.That(selected, Is.SameAs(second));
+    }
+
+    [Test]
+    public void Handle_WhenNoPhaseAccepts_ReturnsNull()
+    {
+        BossPhase first = new TestPhase(false);
+        BossPhase second = new TestPhase(false);
+        first.SetNext(second);
+
+        BossPhase selected = first.Handle(null);
+
+        Assert.That(selected, Is.Null);
     }
 }

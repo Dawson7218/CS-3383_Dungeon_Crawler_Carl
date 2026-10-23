@@ -1,9 +1,25 @@
-using UnityEngine;
-
-public class BossPhase
+public abstract class BossPhase
 {
-   public virtual string CanHandle() // virtual = overridable​
+    private BossPhase next;
+
+    public abstract string PhaseName { get; }
+
+    public void SetNext(BossPhase nextPhase)
     {
-        return "generic attack"; // RETURN a value​
+        next = nextPhase;
+    }
+
+    public BossPhase Handle(BossController ctx)
+    {
+        if (CanHandle(ctx))
+            return this;
+
+        return next != null ? next.Handle(ctx) : null;
+    }
+
+    public abstract bool CanHandle(BossController ctx);
+
+    public virtual void ExecutePhase(BossController ctx)
+    {
     }
 }
