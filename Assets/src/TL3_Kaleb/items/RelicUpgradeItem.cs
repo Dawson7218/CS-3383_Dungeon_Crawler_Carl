@@ -13,7 +13,7 @@ public class RelicUpgradeItem : Item
         this.moveSpeedDelta = moveSpeedDelta;
         this.critChanceDelta = critChanceDelta;
     }
-    public override string ApplyEffect(/*will accept player stats*/)
+    public override string ApplyEffect(PlayerStats playerStats)
     {
         /* Once the player stats structure has been created this will
          * update/change the inputed player stats

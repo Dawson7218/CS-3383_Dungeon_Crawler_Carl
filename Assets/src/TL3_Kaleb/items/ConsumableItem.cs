@@ -14,14 +14,14 @@ public class ConsumableItem : Item
         this.durationRemaining = durationRemaining;
         this.attackDelta = attackDelta;
     }
-    public override string ApplyEffect(/*will accept player stats*/)
+    public override string ApplyEffect(PlayerStats playerStats)
     {
         /* Once the player stats structure has been created this will
          * update/change the inputed player stats
          */
          return "consumableItem";
     }
-    public void Revert(/*will accept player stats*/)
+    public void Revert(PlayerStats playerStats)
     {
         /* Once the player stats structure has been created this will
          * revert the changes made to the inputed player stats by

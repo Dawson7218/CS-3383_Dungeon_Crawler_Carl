@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class InWorldItem : MonoBehaviour
@@ -8,9 +7,12 @@ public class InWorldItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            LootSystem.Instance.ApplyItem(item);
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
+            if (playerController != null) {
+                LootSystem.Instance.ApplyItem(item, playerController.GetStats());
+                Destroy(gameObject);
+            }
         }
-        Destroy(gameObject);
     }
 
     public Item Item()

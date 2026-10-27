@@ -20,7 +20,7 @@ public class Item // YOUR superclass name​
 
     public Item() {}
 
-    public virtual string ApplyEffect(/*will accept player stats*/)
+    public virtual string ApplyEffect(PlayerStats playerStats)
     {
         /* Once the player stats structure has been created this will
          * update/change the inputed player stats

@@ -10,7 +10,7 @@ public class ArmorUpgradeItem : Item
         this.defenseDelta = defenseDelta;
         this.maxHealthDelta = maxHealthDelta;
     }
-    public override string ApplyEffect(/*will accept player stats*/)
+    public override string ApplyEffect(PlayerStats playerStats)
     {
         /* Once the player stats structure has been created this will
          * update/change the inputed player stats
