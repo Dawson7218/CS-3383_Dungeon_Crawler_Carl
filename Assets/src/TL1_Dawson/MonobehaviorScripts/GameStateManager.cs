@@ -18,6 +18,16 @@ public class GameStateManager : MonoBehaviour
     void Update()
     {
         gameState.gameTimer += Time.deltaTime;
+
+        if (gameState.playerHealth < 0)
+        {
+
+        }
+    }
+
+    public void ExecuteDeathSequence()
+    {
+        LoadScene("DeathScene");
     }
 
     public void LoadScene(string sceneName)
