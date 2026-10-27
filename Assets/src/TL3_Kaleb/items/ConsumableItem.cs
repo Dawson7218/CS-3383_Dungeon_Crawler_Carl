@@ -16,9 +16,7 @@ public class ConsumableItem : Item
     }
     public override string ApplyEffect(PlayerStats playerStats)
     {
-        /* Once the player stats structure has been created this will
-         * update/change the inputed player stats
-         */
+        playerStats.ModifyAttackPower(attackDelta);
          return "consumableItem";
     }
     public void Revert(PlayerStats playerStats)
