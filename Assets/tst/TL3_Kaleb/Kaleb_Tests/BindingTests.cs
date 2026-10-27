@@ -4,12 +4,13 @@ using UnityEngine.TestTools;
 
 public class BindingTests
 {
+    //instantiating player stats is a temporary bandaid for the dynamic binding tests and showcase
     [Test]
     public void BaseRef_ToSubclass_UsesOverride(){
         Item baseline = new Item("basicItem", ItemKind.None);
         Item actual = new RelicUpgradeItem("relicItem", 0.15f, 10, "coolRelic");
-        string a = baseline.ApplyEffect();
-        string b = actual.ApplyEffect();
+        string a = baseline.ApplyEffect(new PlayerStats());
+        string b = actual.ApplyEffect(new PlayerStats());
         
         Assert.AreNotEqual(a, b); // assert: DIFFERENT​
     }
@@ -19,9 +20,7 @@ public class BindingTests
     {
         Item baseline = new Item("basicItem", ItemKind.None); 
         Item actual = new Item("basicItem", ItemKind.None);
-        //Assert.AreNotEqual(baseline.ApplyEffect(), actual.ApplyEffect());
-        Assert.AreEqual(baseline.ApplyEffect(), actual.ApplyEffect());
-        // Run 1: RED - same output, nothing to bind to
-        // Run 2: change to Assert.AreEqual -> GREEN -> commit
+        //Assert.AreNotEqual(baseline.ApplyEffect(new PlayerStats()), actual.ApplyEffect(new PlayerStats()));
+        Assert.AreEqual(baseline.ApplyEffect(new PlayerStats()), actual.ApplyEffect(new PlayerStats()));
     }
 }

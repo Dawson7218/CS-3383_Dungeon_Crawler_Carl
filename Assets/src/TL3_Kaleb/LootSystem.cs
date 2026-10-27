@@ -23,7 +23,7 @@ public class LootSystem : MonoBehaviour
         Instance = this;
     }
 
-    public void ApplyItem(Item item/*, PlayerStats stats*/)
+    public void ApplyItem(Item item, PlayerStats stats)
     {
         
     }
