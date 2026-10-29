@@ -16,10 +16,14 @@ public class Loadout
         return consumableTimers;
     }
 
-    public void ApplyItem(Item item/*, PlayerStats stats*/)
+    public void ApplyItem(Item item, PlayerStats stats)
     {
         items.Add(item);
-        //other functionallity needed here
+        item.ApplyEffect(stats);
+        if (item is ConsumableItem consumable)
+        {
+            consumableTimers.Add((consumable.getConsumableId(), consumable.getDurationRemaining()));
+        }
     }
 
     public ItemMemento CreateMemento()

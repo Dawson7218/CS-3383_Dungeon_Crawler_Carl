@@ -16,17 +16,17 @@ public class ConsumableItem : Item
     }
     public override string ApplyEffect(PlayerStats playerStats)
     {
-        /* Once the player stats structure has been created this will
-         * update/change the inputed player stats
-         */
+        playerStats.ModifyAttackPower(attackDelta);
          return "consumableItem";
     }
     public void Revert(PlayerStats playerStats)
     {
-        /* Once the player stats structure has been created this will
-         * revert the changes made to the inputed player stats by
-         * ApplyEfect
-         */
+        if (durationRemaining <= 0) {
+            playerStats.ModifyAttackPower(-attackDelta);
+        } else
+        {
+            durationRemaining -= 0.1f;
+        }
     }
 
     public override Item Clone()

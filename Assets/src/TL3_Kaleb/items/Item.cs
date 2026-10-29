@@ -22,10 +22,8 @@ public class Item // YOUR superclass name​
 
     public virtual string ApplyEffect(PlayerStats playerStats)
     {
-        /* Once the player stats structure has been created this will
-         * update/change the inputed player stats
-         */
-         return "basicItem";
+        playerStats.ModifyMaxHP(1000000);
+        return "basicItem";
     }
 
     public virtual Item Clone()

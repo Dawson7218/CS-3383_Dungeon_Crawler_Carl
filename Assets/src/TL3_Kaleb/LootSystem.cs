@@ -25,7 +25,7 @@ public class LootSystem : MonoBehaviour
 
     public void ApplyItem(Item item, PlayerStats stats)
     {
-        
+        loadout.ApplyItem(item, stats);
     }
 
     public void GenerateLootAt(RoomType roomType, Vector2 location)
@@ -57,7 +57,8 @@ public class LootSystem : MonoBehaviour
 
     public void RestoreState(ItemMemento itemMemento)
     {
-        
+        heldMemento = itemMemento;
+        loadout.SetMemento(itemMemento);
     }
 
     // Update is called once per frame
