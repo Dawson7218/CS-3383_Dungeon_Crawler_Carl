@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/src/TL1_Dawson/Scenes/MainMenu.unity
     guid: 3552120dc5bcf2e4a8def5a204276221
   - enabled: 1
-    path: Assets/src/TL2_Jordan/Scenes/MVPScene.unity
-    guid: 25cd2348d6c06554baece619930bca31
+    path: Assets/src/TL2_Jordan/Scenes/GameScene.unity
+    guid: b2a5c2e6da0cc3749a95b5ea0a9b5aac
   - enabled: 1
     path: Assets/src/TL1_Dawson/Scenes/DeathScene.unity
     guid: 0ea1bd980ce43b840b5fd96e42ca3fda
