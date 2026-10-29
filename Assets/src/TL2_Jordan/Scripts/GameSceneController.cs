@@ -1,113 +1,317 @@
+
 using UnityEngine;
 
-// Temporary integration display. Does not replace teammates' gameplay systems.
 public class GameSceneController : MonoBehaviour
 {
+    [Header("Dungeon System")]
     [SerializeField] private DungeonGenerator generator;
+    [SerializeField] private DungeonRoomVisualizer roomVisualizer;
+
+    [Header("Other Game Systems")]
     [SerializeField] private PlayerController playerController;
     [SerializeField] private EconomyManager economyManager;
     [SerializeField] private LootSystem lootSystem;
-    [SerializeField, Min(2)] private int roomCount = 12;
+    [SerializeField] private Camera mainCamera;
+
+    [Header("Dungeon Settings")]
+    [SerializeField, Min(2)] private int roomCount = 20;
     [SerializeField] private int seed = 12345;
 
     private Room currentRoom;
     private Item currentItem;
-    private readonly Vector2 itemPosition = new Vector2(100f, 250f);
 
-    [System.Obsolete]
+    private readonly Vector2 itemPosition =
+        new Vector2(100f, 250f);
+
     private void Start()
     {
-        if (generator == null) generator = GetComponent<DungeonGenerator>();
-        if (generator == null) generator = FindFirstObjectByType<DungeonGenerator>();
-        if (playerController == null) playerController = FindFirstObjectByType<PlayerController>();
-        if (economyManager == null) economyManager = EconomyManager.Instance;
-        if (lootSystem == null) lootSystem = LootSystem.Instance;
+        // Find existing game systems if not assigned.
+        if (generator == null)
+            generator = GetComponent<DungeonGenerator>();
+
+        if (generator == null)
+            generator = FindFirstObjectByType<DungeonGenerator>();
+
+        if (roomVisualizer == null)
+            roomVisualizer =
+                FindFirstObjectByType<DungeonRoomVisualizer>();
+
+        if (playerController == null)
+            playerController =
+                FindFirstObjectByType<PlayerController>();
+
+        if (economyManager == null)
+            economyManager = EconomyManager.Instance;
+
+        if (lootSystem == null)
+            lootSystem = LootSystem.Instance;
 
         if (generator == null)
         {
-            Debug.LogError("MVPDisplay needs a DungeonGenerator.", this);
+            Debug.LogError(
+                "GameSceneController needs a DungeonGenerator.",
+                this
+            );
+
             enabled = false;
             return;
         }
 
-        // Generate only if a different script has not already generated a run.
-        currentRoom = generator.GetCurrentRoom();
-        if (currentRoom == null)
-            currentRoom = generator.GenerateRun(seed, Mathf.Max(2, roomCount));
-
+        // Subscribe to room transitions.
         generator.OnRoomChanged += HandleRoomChanged;
+
+        // Reuse an existing dungeon if already generated.
+        currentRoom = generator.GetCurrentRoom();
+
+        if (currentRoom == null)
+        {
+            currentRoom = generator.GenerateRun(
+                seed,
+                Mathf.Max(2, roomCount)
+            );
+        }
+
+        // Instantiate the room prefabs.
+        if (roomVisualizer != null)
+        {
+            roomVisualizer.BuildDungeon(
+                generator.GetAllRooms()
+            );
+            HandleRoomChanged(generator.GetCurrentRoom());
+        }
+        else
+        {
+            Debug.LogWarning(
+                "DungeonRoomVisualizer not found!",
+                this
+            );
+        }
+
         RefreshItem();
 
         if (playerController == null)
-            Debug.LogWarning("No PlayerController found; using a static GUI player marker.", this);
+            Debug.LogWarning("PlayerController not found.");
+
         if (economyManager == null)
-            Debug.LogWarning("No EconomyManager found; score unavailable.", this);
+            Debug.LogWarning("EconomyManager not found.");
+
         if (lootSystem == null)
-            Debug.LogWarning("No LootSystem found; loot unavailable.", this);
+            Debug.LogWarning("LootSystem not found.");
+
+        Debug.Log("GameScene started!");
+        Debug.Log(
+            "Generated " + generator.GetAllRooms().Count +
+            " rooms."
+        );
     }
 
-    private void OnDestroy()
+    private void Update()
     {
-        if (generator != null)
-            generator.OnRoomChanged -= HandleRoomChanged;
+        if (generator == null)
+            return;
+
+        // Arrow keys test logical room transitions.
+        Direction direction;
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            direction = Direction.North;
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+            direction = Direction.South;
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            direction = Direction.West;
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+            direction = Direction.East;
+        else
+            return;
+
+        Room nextRoom;
+
+        if (generator.TryTransition(
+            direction,
+            out nextRoom))
+        {
+            GameObject roomObject = null;
+
+            if (roomVisualizer != null)
+            {
+                roomObject =
+                    roomVisualizer.GetRoomObject(nextRoom);
+            }
+
+            Debug.Log(
+                "Entered " + nextRoom.getRoomType() +
+                " at " + nextRoom.GetPosition() +
+                ". GameObject: " +
+                (roomObject != null
+                    ? roomObject.name
+                    : "None")
+            );
+        }
+        else
+        {
+            Debug.Log(
+                "No connected room to the " + direction
+            );
+        }
     }
+
 
     private void HandleRoomChanged(Room room)
     {
         currentRoom = room;
         RefreshItem();
+
+        if (roomVisualizer == null)
+            return;
+
+        GameObject roomObject =
+            roomVisualizer.GetRoomObject(room);
+
+        if (roomObject == null)
+            return;
+
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
+        if (mainCamera != null)
+        {
+            Vector3 position = roomObject.transform.position;
+
+            mainCamera.transform.position = new Vector3(
+                position.x,
+                position.y,
+                mainCamera.transform.position.z
+            );
+        }
     }
+
 
     private void RefreshItem()
     {
-        // The teammate's RollDrop method is explicitly marked as an MVP placeholder.
-        // Keep it isolated here until loot tables are configured for real gameplay.
-        currentItem = lootSystem != null && currentRoom != null
+        // Temporary loot placeholder from the MVP.
+        currentItem =
+            lootSystem != null && currentRoom != null
             ? lootSystem.RollDrop(currentRoom.getRoomType())
             : null;
     }
 
-    private void OnGUI()
+    private void OnDestroy()
     {
-        Matrix4x4 previousMatrix = GUI.matrix;
-        Color previousColor = GUI.color;
-        GUI.matrix = Matrix4x4.Scale(new Vector3(Screen.width / 600f, Screen.height / 450f, 1f));
-
-        const float x = 50f;
-        const float y = 50f;
-        GUI.Box(new Rect(x, y, 500f, 350f), "Dungeon Room");
-
-        string balance = economyManager != null ? economyManager.GetBalance().ToString() : "N/A";
-        GUI.Box(new Rect(x + 340f, y + 10f, 150f, 35f), "Score: " + balance);
-
-        Vector2 guiPlayer = new Vector2(230f, 150f);
-        if (playerController != null)
+        if (generator != null)
         {
-            Vector2 world = playerController.GetPosition();
-            guiPlayer = new Vector2(230f + world.x * 20f, 150f - world.y * 20f);
+            generator.OnRoomChanged -= HandleRoomChanged;
         }
-
-        GUI.color = Color.blue;
-        GUI.Box(new Rect(x + guiPlayer.x, y + guiPlayer.y, 40f, 40f), "");
-        GUI.color = Color.white;
-
-        if (currentItem != null)
-        {
-            GUI.color = Color.yellow;
-            GUI.Box(new Rect(x + itemPosition.x, y + itemPosition.y, 20f, 20f), "");
-            GUI.color = Color.white;
-            GUI.Label(new Rect(x + itemPosition.x, y + itemPosition.y + 20f, 150f, 25f),
-                currentItem.getItemKind().ToString());
-        }
-
-        if (currentRoom != null)
-            GUI.Label(new Rect(x + 10f, y + 30f, 320f, 30f),
-                "Room: " + currentRoom.getRoomType() + " " + currentRoom.GetPosition());
-
-        if (Time.timeScale == 0f)
-            GUI.Box(new Rect(200f, 200f, 200f, 50f), "GAME PAUSED");
-
-        GUI.color = previousColor;
-        GUI.matrix = previousMatrix;
     }
+
+//    private void OnGUI()
+//    {
+//        Matrix4x4 previousMatrix = GUI.matrix;
+//        Color previousColor = GUI.color;
+
+//        GUI.matrix = Matrix4x4.Scale(
+//            new Vector3(
+//                Screen.width / 600f,
+//                Screen.height / 450f,
+//                1f
+//            )
+//        );
+
+//        const float x = 50f;
+//        const float y = 50f;
+
+        // Temporary debug interface.
+//        GUI.Box(
+//            new Rect(x, y, 500f, 350f),
+//            "Dungeon Room"
+//        );
+
+        // Display score.
+//        string balance = economyManager != null
+//            ? economyManager.GetBalance().ToString()
+//            : "N/A";
+
+//        GUI.Box(
+//            new Rect(x + 340f, y + 10f, 150f, 35f),
+//            "Score: " + balance
+//        );
+
+        // Display player marker.
+//        Vector2 guiPlayer = new Vector2(230f, 150f);
+
+//        if (playerController != null)
+//        {
+//            Vector2 world = playerController.GetPosition();
+
+//            guiPlayer = new Vector2(
+//                230f + world.x * 20f,
+//                150f - world.y * 20f
+//            );
+//        }
+
+//        GUI.color = Color.blue;
+
+//        GUI.Box(
+//            new Rect(
+//                x + guiPlayer.x,
+//                y + guiPlayer.y,
+//                40f,
+//                40f
+//            ),
+//            ""
+//        );
+
+//        GUI.color = Color.white;
+
+        // Display temporary loot information.
+//        if (currentItem != null)
+//        {
+//            GUI.color = Color.yellow;
+
+//            GUI.Box(
+//                new Rect(
+//                    x + itemPosition.x,
+//                    y + itemPosition.y,
+//                    20f,
+//                    20f
+//                ),
+//                ""
+//            );
+
+//            GUI.color = Color.white;
+
+//            GUI.Label(
+//                new Rect(
+//                    x + itemPosition.x,
+//                    y + itemPosition.y + 20f,
+//                    150f,
+//                    25f
+//                ),
+//                currentItem.getItemKind().ToString()
+//            );
+//        }
+
+        // Display current room information.
+//        if (currentRoom != null)
+//        {
+//            GUI.Label(
+//                new Rect(x + 10f, y + 30f, 320f, 30f),
+//                "Room: " +
+//                currentRoom.getRoomType() +
+//                " " + currentRoom.GetPosition()
+//            );
+//        }
+
+        // Display pause notification.
+//        if (Time.timeScale == 0f)
+//        {
+//            GUI.Box(
+//                new Rect(200f, 200f, 200f, 50f),
+//                "GAME PAUSED"
+//            );
+//        }
+
+        // Restore GUI settings.
+//        GUI.color = previousColor;
+//        GUI.matrix = previousMatrix;
+//    }
 }

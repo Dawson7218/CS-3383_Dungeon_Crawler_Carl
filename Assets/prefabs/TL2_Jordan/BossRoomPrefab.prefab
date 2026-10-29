@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &49636386077666127
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259156069300358102, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734713404903588104, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_Color.b
+      value: 0.509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 734713404903588104, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 734713404903588104, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_Color.r
+      value: 0.2941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047249434052042771, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      propertyPath: m_Name
+      value: BossRoomPrefab
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3047249434052042771, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7869375579490104176}
+  m_SourcePrefab: {fileID: 100100000, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+--- !u!1 &3096885759193992028 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3047249434052042771, guid: 77daaf3f3da681b44b4f3ae811ef9966, type: 3}
+  m_PrefabInstance: {fileID: 49636386077666127}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7869375579490104176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3096885759193992028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 629179ef2a83c0f4f92f31c46fd65132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MainGameAssembly::RoomView
+  roomType: 4
