@@ -15,9 +15,8 @@ public class RelicUpgradeItem : Item
     }
     public override string ApplyEffect(PlayerStats playerStats)
     {
-        /* Once the player stats structure has been created this will
-         * update/change the inputed player stats
-         */
+        playerStats.ModifyMoveSpeed(moveSpeedDelta);
+        playerStats.ModifyCritChance(critChanceDelta);
          return "relicItem";
     }
 
