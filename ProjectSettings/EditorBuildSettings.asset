@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/src/TL4_Getty/Scenes/MetaShop.unity
     guid: 76873da375722924eaa00be5518bd2ff
+  - enabled: 1
+    path: Assets/src/TL2_Jordan/Scenes/GameScene.unity
+    guid: b2a5c2e6da0cc3749a95b5ea0a9b5aac
   m_configObjects: {}

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class HUDManager : MonoBehaviour
 {
+    [SerializeField] public GameObject hudRoot;
+    public GameState gameState;
     HudElement healthBar = new HealthBarElement();
     HudElement gameTimer = new RunTimerElement();
     HudElement pointsCounter = new PointsCounterElement();
@@ -16,6 +18,7 @@ public class HUDManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        healthBar.Refresh(gameState);
+        //need to actually get game object data in
     }
 }

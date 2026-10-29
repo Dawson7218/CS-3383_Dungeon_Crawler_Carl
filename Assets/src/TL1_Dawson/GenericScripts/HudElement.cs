@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class HudElement
 {
-    public GameState _gameState;
-
-    public virtual string Refresh(GameState gameState)
+    public virtual bool Refresh(GameState gameState)
     {
-        return "BaseRefresh";
+        return true;
     }
 }
