@@ -11,6 +11,10 @@ public class DungeonGenerator : MonoBehaviour
     public event Action<Room> OnRoomChanged;
     public event Action<Room> OnRoomGenerated;
 
+    [Header("Boss Room Settings")]
+    [Min(1)]
+    [SerializeField] private int minBossDistance = 4;
+
     [Header("Room Generation")]
     [Range(0f, 1f)]
     [SerializeField] private float treasureChance = 0.2f;
@@ -37,13 +41,15 @@ public class DungeonGenerator : MonoBehaviour
         System.Random random = new System.Random(seed);
         roomCount = Mathf.Max(1, roomCount);
 
-        // STEP 1: Generate connected grid positions.
-        List<Vector2Int> positions =
-            GeneratePositions(random, roomCount);
 
-        // STEP 2: Find the room farthest from the start.
-        Vector2Int bossPosition =
-            FindBossPosition(positions, random);
+    Vector2Int bossPosition;
+
+    List<Vector2Int> positions = GeneratePositions(
+        random,
+        roomCount,
+        out bossPosition
+    );
+
 
         // STEP 3: Create the appropriate room objects.
         int treasureCount = 0;
@@ -113,26 +119,61 @@ public class DungeonGenerator : MonoBehaviour
         return currentRoom;
     }
 
+
     private List<Vector2Int> GeneratePositions(
-        System.Random random, int roomCount)
+        System.Random random,
+        int roomCount,
+        out Vector2Int bossPosition)
     {
-        List<Vector2Int> positions =
-            new List<Vector2Int>();
+        List<Vector2Int> positions = new List<Vector2Int>();
 
         HashSet<Vector2Int> occupied =
             new HashSet<Vector2Int>();
 
-        List<Vector2Int> frontier =
-            new List<Vector2Int>();
+        List<Vector2Int> frontier = new List<Vector2Int>();
 
         Vector2Int start = Vector2Int.zero;
-
         positions.Add(start);
         occupied.Add(start);
 
-        AddToFrontier(start, occupied, frontier);
+        // Special case: a one-room dungeon.
+        if (roomCount == 1)
+        {
+            bossPosition = start;
+            return positions;
+        }
 
-        while (positions.Count < roomCount)
+        // We cannot require more transitions than
+        // the number of other rooms available.
+        int distance = Mathf.Clamp(
+            minBossDistance, 1, roomCount - 1
+        );
+
+        // Reserve a straight path to the boss.
+        for (int i = 1; i < distance; i++)
+        {
+            Vector2Int position = new Vector2Int(i, 0);
+
+            positions.Add(position);
+            occupied.Add(position);
+        }
+
+        bossPosition = new Vector2Int(distance, 0);
+        Vector2Int reservedBossPosition = bossPosition;
+
+        // Identify other possible room positions.
+        foreach (Vector2Int position in positions)
+        {
+            AddToFrontier(position, occupied, frontier);
+        }
+
+        // Remove positions that would create
+        // additional entrances to the boss.
+        frontier.RemoveAll(position =>
+            IsTooCloseToBoss(position, reservedBossPosition));
+
+        // Randomly generate remaining rooms.
+        while (positions.Count < roomCount - 1)
         {
             int index = random.Next(frontier.Count);
             Vector2Int position = frontier[index];
@@ -143,9 +184,40 @@ public class DungeonGenerator : MonoBehaviour
             occupied.Add(position);
 
             AddToFrontier(position, occupied, frontier);
+
+            frontier.RemoveAll(candidate =>
+                IsTooCloseToBoss(candidate, reservedBossPosition));
         }
 
+        // Add the reserved boss room last.
+        positions.Add(bossPosition);
+
         return positions;
+    }
+
+
+    private bool IsTooCloseToBoss(
+        Vector2Int position,
+        Vector2Int bossPosition)
+    {
+        // Never place another room at the boss position.
+        if (position == bossPosition)
+            return true;
+
+        // Allow the one intended entrance.
+        Vector2Int entrance = bossPosition + Vector2Int.left;
+
+        if (position == entrance)
+            return false;
+
+        // Check the four adjacent grid cells.
+        foreach (Vector2Int direction in directions)
+        {
+            if (position == bossPosition + direction)
+                return true;
+        }
+
+        return false;
     }
 
     private void AddToFrontier(
@@ -295,4 +367,54 @@ public class DungeonGenerator : MonoBehaviour
     {
         return rooms;
     }
+
+
+    private void TestBossRoom()
+    {
+        GenerateRun(12345, 20);
+
+        Room boss = null;
+
+        foreach (Room room in rooms)
+        {
+            if (room.getRoomType() == RoomType.BossRoom)
+            {
+                boss = room;
+                break;
+            }
+        }
+
+        if (boss == null)
+        {
+            Debug.LogError("No boss room generated!");
+            return;
+        }
+
+        int connections = 0;
+
+        foreach (Direction direction in
+                System.Enum.GetValues(typeof(Direction)))
+        {
+            if (boss.HasNeighbor(direction))
+                connections++;
+        }
+
+        Debug.Log("Boss position: " + boss.GetPosition());
+        Debug.Log("Boss connections: " + connections);
+
+        if (connections == 1)
+            Debug.Log("PASS: Boss has exactly one entrance.");
+        else
+            Debug.LogError("FAIL: Incorrect boss connections.");
+
+        // The reserved path is straight, so its length
+        // equals the boss's X coordinate.
+        int distance = boss.GetPosition().x;
+
+        if (distance >= minBossDistance)
+            Debug.Log("PASS: Boss distance requirement met.");
+        else
+            Debug.LogError("FAIL: Boss is too close to start.");
+    }
+
 }
