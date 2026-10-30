@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PointsCounterElement : HudElement
 {
-    public override string Refresh(GameState gameState)
+    public override bool Refresh(GameState gameState)
     {
-        return "PointCounter";
+        return true;
     }
 }

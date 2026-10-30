@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: MainGameAssembly::MetaShopUI
   mainMenuScene: MainMenu
+  pixelFont: {fileID: 12800000, guid: 2c59908a54d84e14a27373aeb66a6e4f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

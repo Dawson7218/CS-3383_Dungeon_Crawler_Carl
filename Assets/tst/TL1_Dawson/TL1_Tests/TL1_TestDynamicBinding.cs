@@ -13,8 +13,8 @@ public class TL1_TestDynamicBinding
 
         HudElement baseline = new();
         HudElement actual = new HealthBarElement();
-        string a = baseline.Refresh(gameState);
-        string b = actual.Refresh(gameState);
+        bool a = baseline.Refresh(gameState);
+        bool b = actual.Refresh(gameState);
 
         Assert.AreNotEqual(a, b); // assert: DIFFERENT​
     }

@@ -14,7 +14,7 @@ public class GameState : ScriptableObject
     public int dabloons { get; set; } = 0;
     public int playerHealth { get; set; } = 0;
 
-    public List<HudElement> hudElements = new();
+    //public List<HudElement> hudElements = new();
 
      
 }
