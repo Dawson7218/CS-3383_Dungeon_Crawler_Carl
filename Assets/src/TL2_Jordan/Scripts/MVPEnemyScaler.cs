@@ -11,7 +11,7 @@ public class MVPEnemyScaler : MonoBehaviour
         // Wait until all Start methods have had a chance to run.
         yield return null;
 
-        EnemyController enemy = FindFirstObjectByType<EnemyController>();
+        EnemyController enemy = FindAnyObjectByType<EnemyController>();
 
         if (enemy != null)
         {

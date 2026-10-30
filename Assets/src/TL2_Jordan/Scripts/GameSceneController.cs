@@ -30,15 +30,15 @@ public class GameSceneController : MonoBehaviour
             generator = GetComponent<DungeonGenerator>();
 
         if (generator == null)
-            generator = FindFirstObjectByType<DungeonGenerator>();
+            generator = FindAnyObjectByType<DungeonGenerator>();
 
         if (roomVisualizer == null)
             roomVisualizer =
-                FindFirstObjectByType<DungeonRoomVisualizer>();
+                FindAnyObjectByType<DungeonRoomVisualizer>();
 
         if (playerController == null)
             playerController =
-                FindFirstObjectByType<PlayerController>();
+                FindAnyObjectByType<PlayerController>();
 
         if (economyManager == null)
             economyManager = EconomyManager.Instance;
@@ -202,6 +202,50 @@ public class GameSceneController : MonoBehaviour
             generator.OnRoomChanged -= HandleRoomChanged;
         }
     }
+
+
+    private void SpawnDungeonLoot()
+    {
+        if (lootSystem == null || roomVisualizer == null ||
+            generator == null)
+        {
+            Debug.LogWarning(
+                "Cannot spawn loot: a required system is missing."
+            );
+            return;
+        }
+
+        int treasureRooms = 0;
+
+        foreach (Room room in generator.GetAllRooms())
+        {
+            // For now, spawn loot only in treasure rooms.
+            if (room.getRoomType() != RoomType.TreasureRoom)
+                continue;
+
+            GameObject roomObject =
+                roomVisualizer.GetRoomObject(room);
+
+            if (roomObject == null)
+                continue;
+
+            // Spawn at the center of this room.
+            Vector3 center = roomObject.transform.position;
+
+            lootSystem.GenerateLootAt(
+                room.getRoomType(),
+                new Vector2(center.x, center.y)
+            );
+
+            treasureRooms++;
+        }
+
+        Debug.Log(
+            "Requested loot generation in " +
+            treasureRooms + " treasure rooms."
+        );
+    }
+
 
 //    private void OnGUI()
 //    {
