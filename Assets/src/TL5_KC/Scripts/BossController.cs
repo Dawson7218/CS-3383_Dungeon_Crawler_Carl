@@ -17,6 +17,10 @@ public class BossController : MonoBehaviour
     [SerializeField] private float attackInterval = 2f;
     [SerializeField] private float spreadAngle = 15f;
 
+    [Header("Minion Summoning")]
+    [SerializeField] private BossMinionSpawner minionSpawner;
+    [SerializeField] private float summonInterval = 4f;
+
     private int currentHealth;
     private float attackTimer;
     private bool encounterActive;
@@ -54,6 +58,7 @@ public class BossController : MonoBehaviour
         currentHealth = maximumHealth;
 
             chainHead = new Phase1_RangedBarrage();
+            chainHead.SetNext(new Phase2_SummonMinions());
             activePhase = chainHead.Handle(this);
 
             attackTimer = attackInterval;
@@ -91,7 +96,7 @@ public class BossController : MonoBehaviour
         return;
 
     activePhase.ExecutePhase(this);
-    attackTimer = Mathf.Max(0.1f, attackInterval);
+    attackTimer = GetAttackInterval();
     }
 
     public void FireSpread()
@@ -126,6 +131,23 @@ public class BossController : MonoBehaviour
         }
     }
 
+    public void SummonMinions()
+{
+    if (minionSpawner == null || target == null)
+    {
+        Debug.LogWarning("Assign the boss minion spawner and target.", this);
+        return;
+    }
+
+    minionSpawner.SpawnMinions(target);
+}
+
+private float GetAttackInterval()
+{
+    return activePhase is Phase2_SummonMinions
+        ? Mathf.Max(0.1f, summonInterval)
+        : Mathf.Max(0.1f, attackInterval);
+}
     public void TakeDamage(int amount)
     {
         if (!encounterActive || defeatSignaled || amount <= 0)
@@ -143,6 +165,9 @@ public class BossController : MonoBehaviour
         defeatSignaled = true;
 
         ClearProjectiles();
+
+        if (minionSpawner != null)
+        minionSpawner.ClearMinions();
 
         Debug.Log("Boss defeated.", this);
         OnBossDefeated?.Invoke();

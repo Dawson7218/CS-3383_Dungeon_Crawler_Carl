@@ -224,6 +224,8 @@ MonoBehaviour:
   target: {fileID: 0}
   attackInterval: 2
   spreadAngle: 15
+  minionSpawner: {fileID: 8826840101690426026}
+  summonInterval: 4
 --- !u!114 &8826840101690426026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05be0e93d1f104f68bf572594d87fa15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::BossMinionSpawner
-  minionPrefab: {fileID: 0}
+  minionPrefab: {fileID: 6474687799909544869, guid: 05b8dbfb91acf4c578eac0eb083f3c83, type: 3}
   minionsPerSummon: 2
   maximumLivingMinions: 4
   spawnRadius: 2
