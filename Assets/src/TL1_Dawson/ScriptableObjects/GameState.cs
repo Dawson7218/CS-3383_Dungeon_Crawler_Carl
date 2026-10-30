@@ -12,7 +12,7 @@ public class GameState : ScriptableObject
     public int score { get; set; } = 0;
     public float gameTimer { get; set; } = 0f;
     public int dabloons { get; set; } = 0;
-    public int playerHealth { get; set; } = 0;
+    public int playerHealth { get; set; } = 75;
 
     //public List<HudElement> hudElements = new();
 

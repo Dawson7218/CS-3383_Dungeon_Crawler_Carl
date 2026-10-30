@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class HUDManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthBar.Refresh(gameState);
+        healthBar.Refresh(gameState, hudRoot.transform.Find("HealthBar").gameObject);
         //need to actually get game object data in
     }
 }
