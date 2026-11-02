@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Game State")]
+    [SerializeField] private GameState gameState;
+
     [Header("Movement (starting value; stats.moveSpeed is used at runtime)")]
     [SerializeField] private float moveSpeed = 5f;
 
@@ -19,6 +22,11 @@ public class PlayerController : MonoBehaviour
     {
         stats = new PlayerStats(maxHP, moveSpeed);
         currentState = new PlayerIdleState();
+
+        if (gameState != null)
+        {
+            gameState.playerHealth = stats.currentHP;
+        }
     }
 
     void Update()
@@ -93,6 +101,12 @@ public class PlayerController : MonoBehaviour
             return;
 
         stats.TakeDamage(amount);
+
+        if (gameState != null)
+        {
+            gameState.playerHealth = stats.currentHP;
+        }
+
         Debug.Log("Player HP: " + stats.currentHP);
 
         if (stats.IsDead())
