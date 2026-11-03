@@ -93,6 +93,30 @@ public class EconomyManager : MonoBehaviour
         return Commit(new PurchaseTransaction(stat, GetNextCost(stat)));
     }
 
+    /// <summary>Returns whole run points without changing the balance or save file.</summary>
+    /// <param name="enemiesKilled">Number of enemies killed, including the boss if counted by the caller.</param>
+    /// <param name="bossKilled">Whether to add the one-time boss bonus.</param>
+    /// <param name="timeAlive">Finite, non-negative survival time in seconds.</param>
+    /// <exception cref="ArgumentOutOfRangeException">A count or time is invalid.</exception>
+    public int calculateRunPoints(int enemiesKilled, bool bossKilled, float timeAlive)
+    {
+        const int pointsPerEnemy = 10;
+        const int bossBonus = 100;
+        const int pointsPerSecond = 1;
+
+        if (enemiesKilled < 0)
+            throw new ArgumentOutOfRangeException(nameof(enemiesKilled), "Enemy count cannot be negative.");
+        if (timeAlive < 0 || float.IsNaN(timeAlive) || float.IsInfinity(timeAlive))
+            throw new ArgumentOutOfRangeException(nameof(timeAlive), "Survival time must be finite and non-negative.");
+
+        // Use double before multiplying/adding so large valid inputs cannot wrap an int.
+        // Only completed seconds earn points. Cap the result at the currency type's limit.
+        double total = (double)enemiesKilled * pointsPerEnemy
+            + (bossKilled ? bossBonus : 0)
+            + Math.Floor((double)timeAlive) * pointsPerSecond;
+        return (int)Math.Min(int.MaxValue, total);
+    }
+
     public void CreditRunEnd(int pointsEarned, bool bossKilled, float timeAlive)
     {
         // Future run/death code can call this with the completed run's payout.
