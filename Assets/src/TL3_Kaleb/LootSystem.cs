@@ -5,7 +5,7 @@ public class LootSystem : MonoBehaviour
     [SerializeField] private GameObject itemPrefabBase;
     [SerializeField] private LootTable lootTables;
     private Loadout loadout = new Loadout();
-    private ItemMemento heldMemento = new ItemMemento();
+    private ItemMemento heldMemento;
 
     //Code gets simpler if I use a singleton pattern for this class
     public static LootSystem Instance { get; private set; }
@@ -21,6 +21,7 @@ public class LootSystem : MonoBehaviour
 
         // Assign this instance as the global singleton
         Instance = this;
+        loadout.BindLootTable(lootTables);
     }
 
     public void ApplyItem(Item item, PlayerStats stats)
@@ -50,13 +51,23 @@ public class LootSystem : MonoBehaviour
         return new RelicUpgradeItem("steak", 0.1f, 1, "hair_upgrade");
     }
 
+    public ItemMemento SaveState()
+    {
+        heldMemento = loadout.CreateMemento();
+        return heldMemento;
+    }
+
     public ItemMemento SaveAState()
     {
-        return heldMemento;
+        return SaveState();
     }
 
     public void RestoreState(ItemMemento itemMemento)
     {
+        if (itemMemento == null)
+            return;
+
+        loadout.BindLootTable(lootTables);
         heldMemento = itemMemento;
         loadout.SetMemento(itemMemento);
     }

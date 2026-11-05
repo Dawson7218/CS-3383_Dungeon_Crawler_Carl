@@ -425,6 +425,78 @@ What changed versus Entry 9:
 
 ---
 
+## Entry 25 — ItemMemento mockup
+
+| | |
+|---|---|
+| **Date** | 29 October 2026 |
+| **Tool** | Cursor agent (chat over the Dungeon Crawler Carl repo) |
+| **Source** | Class diagram and this log; `ItemMemento.cs`, `Loadout.cs`, `LootSystem.cs`; [Memento](https://sourcemaking.com/design_patterns/memento) |
+| **Prompt** | ItemMemento needs to follow the Memento GoF pattern. Mock up what that looks like for Kaleb’s feature. |
+| **Output** | No code changes. A Caretaker → Originator → lock-box sequence and a sketch of `SaveState` / `CreateMemento` / `CopyFrom` / `RestoreInto`. |
+
+The sketch uses the three SourceMaking roles from Entry 23. `ItemMemento` keeps the Champion snapshot (equipped ids, consumable timers, stat baseline, schema 1) with no public getters. `CreateMemento()` and `SetMemento(m)` stay parameterless. Timers and stats are deep-copied so a later tick does not change the checkpoint.
+
+---
+
+## Entry 26 — Implement the loadout snapshot
+
+| | |
+|---|---|
+| **Date** | 3 November 2026 |
+| **Tool** | Same Cursor conversation |
+| **Prompt** | Implement the memento code. Add a markdown file for what it does, how to use it, and a brief AI interaction log. |
+| **Output** | `Assets/src/TL3_Kaleb/ItemMemento.cs`, `Loadout.cs`, `LootSystem.cs`, and `docs/TL3_Kaleb/ItemMemento.md`. |
+
+What changed from the empty stubs:
+
+- `CreateMemento` fills an `ItemMemento` instead of returning a blank one.
+- `SetMemento` rebuilds items by cloning loot-table prototypes, restores consumable time in order, and writes the saved stat numbers back onto the `PlayerStats` from the last `ApplyItem`.
+- Restore does not call `ApplyEffect`, so deltas are not applied a second time.
+- `LootSystem.SaveState` stores the object `CreateMemento` returns. `RestoreState` passes it to `SetMemento` and does not read the lists or the stats.
+- `SaveAState` remains a wrapper around `SaveState`.
+- `CopyFrom` and `RestoreInto` are `internal`. The memento constructor is `internal`.
+
+---
+
+## Entry 27 — Plan ItemMemento tests
+
+| | |
+|---|---|
+| **Date** | 4 November 2026 |
+| **Tool** | Same Cursor conversation |
+| **Source** | `docs/TL3_Kaleb/ItemMemento.md`; `Loadout.cs`, `LootSystem.cs`, `LootTable.cs`; `Assets/tst/TL3_Kaleb/Kaleb_Tests` |
+| **Prompt** | Plan tests for the item memento functionality. |
+| **Output** | A test plan. No code changes. |
+
+Edit Mode NUnit tests in `Kaleb_Tests`, next to `BindingTests.cs`. No `InternalsVisibleTo` and no asmdef change. Tests call only the public surface. `schemaVersion` is untested, because nothing public can build a snapshot whose version is not 1. Cases: round trip, deep copy, two checkpoints, no second `ApplyEffect`, null restore, unknown prototype id, caretaker `SaveState` / `SaveAState`, empty save before any `ApplyItem`, and a reflection check that `ItemMemento` has no public properties, methods, or fields.
+
+---
+
+## Entry 28 — ItemMemento Edit Mode tests
+
+| | |
+|---|---|
+| **Date** | 4 November 2026 |
+| **Tool** | Same Cursor conversation |
+| **Prompt** | Implement the Item Memento test plan. |
+| **Output** | `Assets/tst/TL3_Kaleb/Kaleb_Tests/ItemMementoTests.cs` |
+
+Nine tests, matching Entry 27. All nine passed in the open Unity editor (`passed=9`, `failed=0`). A second batch-mode editor could not open the project while that editor was already running, so the fixtures ran inside the open editor. `Kaleb_Tests.asmdef` was left unchanged.
+
+---
+
+## Entry 29 — Refresh this log
+
+| | |
+|---|---|
+| **Date** | 4 November 2026 |
+| **Tool** | Same Cursor conversation |
+| **Prompt** | Update the brief AI log in `ItemMemento.md`, then update `docs/TL3_Kaleb/AI_Interaction_Log.md`. |
+| **Output** | Entries 3–4 in `docs/TL3_Kaleb/ItemMemento.md`. Entries 25–29 in this file. |
+
+---
+
 ## Numbered question log
 
 Questions asked of the model while drafting, with the decision that went into the Champion.
