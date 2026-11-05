@@ -8,6 +8,12 @@ public class PlayerController : MonoBehaviour
     [Header("Movement (starting value; stats.moveSpeed is used at runtime)")]
     [SerializeField] private float moveSpeed = 5f;
 
+    [Header("Dash")]
+    [SerializeField] private float dashSpeed = 15f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
+
     [Header("Room bounds (placeholder)")]
     [SerializeField] private Vector2 minBounds = new Vector2(-10f, -10f);
     [SerializeField] private Vector2 maxBounds = new Vector2(10f, 10f);
@@ -17,6 +23,9 @@ public class PlayerController : MonoBehaviour
 
     private PlayerStats stats;
     private PlayerState currentState;
+
+    private float dashCooldownTimer = 0f;
+    private Vector2 lastDirection = Vector2.right;
 
     void Awake()
     {
@@ -34,7 +43,26 @@ public class PlayerController : MonoBehaviour
         if (stats.IsDead())
             return;
 
+        if (dashCooldownTimer > 0f)
+            dashCooldownTimer -= Time.deltaTime;
+
+        if (currentState is PlayerDashState dash)
+        {
+            dash.Tick();
+            return;
+        }
+
         Vector2 direction = HandleInput();
+
+        if (direction != Vector2.zero)
+            lastDirection = direction;
+
+        if (Input.GetKeyDown(dashKey) && dashCooldownTimer <= 0f)
+        {
+            Vector2 dashDir = direction != Vector2.zero ? direction : lastDirection;
+            ChangeState(new PlayerDashState(this, dashDir, dashDuration));
+            return;
+        }
 
         if (direction != Vector2.zero)
         {
@@ -71,6 +99,22 @@ public class PlayerController : MonoBehaviour
     public string GetCurrentStateDescription()
     {
         return currentState.Update();
+    }
+
+
+    public void DashStep(Vector2 direction)
+    {
+        Vector2 newPosition = (Vector2)transform.position
+            + direction.normalized * dashSpeed * Time.deltaTime;
+
+        transform.position = ClampToRoomBounds(newPosition);
+    }
+
+ 
+    public void EndDash()
+    {
+        dashCooldownTimer = dashCooldown;
+        ChangeState(new PlayerIdleState());
     }
 
     public Vector2 MovePlayer(Vector2 direction)
