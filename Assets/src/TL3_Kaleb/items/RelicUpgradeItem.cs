@@ -15,6 +15,9 @@ public class RelicUpgradeItem : Item
     }
     public override string ApplyEffect(PlayerStats playerStats)
     {
+        if (playerStats == null)
+            return "relicItem";
+
         playerStats.ModifyMoveSpeed(moveSpeedDelta);
         playerStats.ModifyCritChance(critChanceDelta);
          return "relicItem";

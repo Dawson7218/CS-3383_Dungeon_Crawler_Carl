@@ -10,6 +10,9 @@ public class WeaponUpgradeItem : Item
     }
     public override string ApplyEffect(PlayerStats playerStats)
     {
+        if (playerStats == null)
+            return "weaponUpgradeItem";
+
         playerStats.ModifyAttackPower(attackDelta);
          return "weaponUpgradeItem";
     }

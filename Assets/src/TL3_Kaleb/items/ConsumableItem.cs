@@ -1,4 +1,3 @@
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class ConsumableItem : Item
@@ -7,6 +6,7 @@ public class ConsumableItem : Item
     private string consumableId = "nothing";
     private float durationRemaining = 0;
     private int attackDelta = 0;
+    private bool reverted = false;
 
     public ConsumableItem(string itemId, float durationRemaining, int attackDelta, string texturePath) : base(itemId, ItemKind.Consumable, texturePath)
     {
@@ -16,17 +16,25 @@ public class ConsumableItem : Item
     }
     public override string ApplyEffect(PlayerStats playerStats)
     {
+        if (playerStats == null)
+            return "consumableItem";
+
         playerStats.ModifyAttackPower(attackDelta);
          return "consumableItem";
     }
     public void Revert(PlayerStats playerStats)
     {
-        if (durationRemaining <= 0) {
-            playerStats.ModifyAttackPower(-attackDelta);
-        } else
+        if (durationRemaining > 0)
         {
             durationRemaining -= 0.1f;
+            return;
         }
+
+        if (reverted || playerStats == null)
+            return;
+
+        playerStats.ModifyAttackPower(-attackDelta);
+        reverted = true;
     }
 
     public override Item Clone()

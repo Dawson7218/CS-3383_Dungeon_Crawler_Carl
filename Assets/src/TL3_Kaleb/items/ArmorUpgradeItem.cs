@@ -12,6 +12,9 @@ public class ArmorUpgradeItem : Item
     }
     public override string ApplyEffect(PlayerStats playerStats)
     {
+        if (playerStats == null)
+            return "applyEffectItem";
+
         playerStats.ModifyDefense(defenseDelta);
         playerStats.ModifyMaxHP(maxHealthDelta);
          return "applyEffectItem";

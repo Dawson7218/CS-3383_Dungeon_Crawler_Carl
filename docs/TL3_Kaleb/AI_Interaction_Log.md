@@ -497,6 +497,56 @@ Nine tests, matching Entry 27. All nine passed in the open Unity editor (`passed
 
 ---
 
+## Entry 30 — Item class Edit Mode tests
+
+| | |
+|---|---|
+| **Date** | 4 November 2026 |
+| **Tool** | Cursor agent (chat over the Dungeon Crawler Carl repo) |
+| **Source** | `Assets/src/TL3_Kaleb/items`; `Assets/tst/TL3_Kaleb/Kaleb_Tests` |
+| **Prompt** | Plan tests for the item classes in `Assets/src/TL3_Kaleb/items`, using the Unity Test Runner already set up in `tst/TL3_Kaleb`. Cover working cases and edge cases that fail gracefully. After the tests pass, update this log. |
+| **Output** | `Assets/tst/TL3_Kaleb/Kaleb_Tests/ItemClassTests.cs`. Null guards on `ApplyEffect`. One-shot `ConsumableItem.Revert`. |
+
+What the tests lock in:
+
+- `ApplyEffect` on `Item` and the four subclasses returns the same type string when `PlayerStats` is null, and does not change stats.
+- `Revert` subtracts `0.1` while duration is above 0. At or below 0 it removes `attackDelta` once. A null `PlayerStats` on that call does not throw and does not use up the revert, so a later call with real stats still removes the buff once.
+- Base `Item.Clone()` was left as written. It uses the two-argument constructor, so the copy’s texture is `"hair_upgrade"` even when the source texture was custom. Each subclass override still copies `texturePath` and its own deltas. Consumable and relic clones get a new id; tests check the prefix, not the counter.
+- `InWorldItem` was not changed. A player and a `LootSystem` apply the item and call `Destroy`. No player, or no loot system, leaves the pickup in place. A null item still destroys the pickup after `Loadout.ApplyItem` adds nothing.
+- Base `ApplyEffect` still adds 1,000,000 max HP and leaves current HP at 100. `ArmorUpgradeItem` still returns `"applyEffectItem"`.
+
+Twenty-one Edit Mode tests. All twenty-one passed in the open Unity editor (`passed=21`, `failed=0`). A second batch-mode editor was not started, because this project was already open. `Kaleb_Tests.asmdef` was left unchanged. `SetItem` is `internal`, so the pickup tests invoke it with reflection, along with the private trigger. Edit Mode `Destroy` logs “Destroy may not be called from edit mode”; the two cases that call it expect that error. `PlayerController.Awake` and `LootSystem.Awake` are invoked from the tests so stats and `LootSystem.Instance` exist in Edit Mode.
+
+The destroy-log expectation is superseded by Entry 31. Those two cases are Play Mode tests now.
+
+---
+
+## Entry 31 — Pickup tests run in Play Mode
+
+| | |
+|---|---|
+| **Date** | 4 November 2026 |
+| **Tool** | Same Cursor conversation |
+| **Source** | `Assets/tst/TL3_Kaleb/Kaleb_Tests/ItemClassTests.cs`; `Assets/src/TL3_Kaleb/items/InWorldItem.cs`; `Assets/src/TL3_Kaleb/items/ConsumableItem.cs` |
+| **Prompt** | The two pickup tests that call `Destroy` failed in the Test Runner. How can they run without relying on Edit Mode? Then implement that and run them. Update this log. |
+| **Output** | `Pickup_WithPlayerAndLootSystem_AppliesWeapon` and `Pickup_NullItem_LeavesLoadoutEmptyAndDestroys` are `[UnityTest]` Play Mode cases. This entry. |
+
+Why the Play Mode run failed:
+
+- Those two tests called `LogAssert.Expect` for `Destroy may not be called from edit mode`.
+- `InWorldItem` uses `Object.Destroy`. Edit Mode logs that error and does not remove the object. Play Mode destroys it and does not log the error.
+- The Test Runner then failed both tests with `Expected log did not appear`. The loadout and stat checks were not the failure. The other two pickup tests never call `Destroy`, so they still passed.
+
+What changed:
+
+- The two tests no longer expect the Edit Mode error. After the trigger they `yield return null`, then assert the pickup reference is gone, along with the same loadout and stat checks.
+- If they are started from the Edit Mode tab, `Assert.Ignore` skips them. Destruction is checked only while the editor is playing.
+- An unused `using UnityEditor.VersionControl` in `ConsumableItem.cs` was removed. It stopped the player compile, so the Play Mode run could not start.
+
+Play Mode run of `ItemClassTests` in the open editor: `passed=21`, `failed=0`, `skipped=0`. Both pickup cases ran and passed; they were not skipped. `InWorldItem` was not changed. `Kaleb_Tests.asmdef` was left unchanged.
+
+---
+
 ## Numbered question log
 
 Questions asked of the model while drafting, with the decision that went into the Champion.
@@ -620,6 +670,12 @@ Questions asked of the model while drafting, with the decision that went into th
 
 39. **Q:** Which Feature 4 class inherits `MonoBehaviour`?  
     **A:** Only `LootSystem` (Unity hook: pickup, `Update` for the 10 s consumable). `Item` and its four subtypes, `LootTable`, `Loadout`, and `ItemMemento` are ordinary C# so Prototype `Clone()` can use `new`.
+
+40. **Q:** What should a bad item call do?  
+    **A:** Null `PlayerStats` on `ApplyEffect` returns the usual type string and does not change stats. A second `Revert` does not strip the attack buff again. A null `PlayerStats` on an expired consumable does not throw and does not use up that revert. Base `Clone()` intentionally drops `texturePath` (the copy uses `"hair_upgrade"`); subclass overrides intentionally copy it. A pickup with no player or no loot system stays in the world. A null item on a valid pickup is still destroyed after `Loadout` ignores it. `Item.Clone` and `InWorldItem` were not changed for these tests. **Superseded in part by Q41** for how the tests observe that `Destroy`.
+
+41. **Q:** How should the pickup tests check `Destroy` without depending on Edit Mode?  
+    **A:** Do not expect the Edit Mode error. `Pickup_WithPlayerAndLootSystem_AppliesWeapon` and `Pickup_NullItem_LeavesLoadoutEmptyAndDestroys` are Play Mode `[UnityTest]` cases. They wait one frame, then assert the pickup reference is gone. An Edit Mode run skips those two with `Assert.Ignore`. The other item tests stay ordinary `[Test]` methods.
 
 ---
 

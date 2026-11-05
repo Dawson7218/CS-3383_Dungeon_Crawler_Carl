@@ -22,6 +22,9 @@ public class Item // YOUR superclass name​
 
     public virtual string ApplyEffect(PlayerStats playerStats)
     {
+        if (playerStats == null)
+            return "basicItem";
+
         playerStats.ModifyMaxHP(1000000);
         return "basicItem";
     }
