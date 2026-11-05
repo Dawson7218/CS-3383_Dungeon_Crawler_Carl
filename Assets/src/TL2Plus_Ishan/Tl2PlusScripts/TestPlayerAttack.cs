@@ -18,10 +18,7 @@ public class TestPlayerAttack : MonoBehaviour
     private void AttackNearestEnemy()
     {
         EnemyController[] enemies =
-            FindObjectsByType<EnemyController>(
-                FindObjectsSortMode.None
-            );
-
+           FindObjectsByType<EnemyController>();
         EnemyController nearestEnemy = null;
         float nearestDistance = attackRange;
 

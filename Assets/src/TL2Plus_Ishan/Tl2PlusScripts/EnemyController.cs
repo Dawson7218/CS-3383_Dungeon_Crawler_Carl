@@ -24,9 +24,12 @@ public class EnemyController : MonoBehaviour
     private EnemyState currentState;
     private Rigidbody2D rb;
     private Animator animator;
+    private bool defeatReported = false;
 
     public int CurrentHP => enemy != null ? enemy.Hp : 0;
     public bool IsDead => enemy != null && enemy.IsDefeated();
+    public static event System.Action<Enemy> OnEnemyDefeated;
+
 
     void Awake()
     {
@@ -156,6 +159,25 @@ public class EnemyController : MonoBehaviour
         playerHealth.TakeDamage(attackDamage);
     }
 
+    // Ai generated function to report the enemy death 
+
+private void ReportEnemyDefeat()
+{
+    // Prevent duplicate defeat notifications.
+    if (enemy == null || !enemy.IsDefeated() || defeatReported)
+        return;
+
+    // Mark the enemy as reported.
+    defeatReported = true;
+
+    // Notify other systems that this enemy was defeated.
+    OnEnemyDefeated?.Invoke(enemy);
+
+    Debug.Log("Enemy defeat reported.");
+}
+
+
+
     public void SetTarget(Transform target)
     {
         player = target;
@@ -182,6 +204,12 @@ public class EnemyController : MonoBehaviour
                 enemyCollider.enabled = false;
 
             rb.linearVelocity = Vector2.zero;
+
+            // report the enmey defeat exactly once 
+            ReportEnemyDefeat();
         }
     }
+
+
+
 }
