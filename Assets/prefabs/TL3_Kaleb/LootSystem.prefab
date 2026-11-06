@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ebb9e52f4cc40c397d29c5296017dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::LootSystem
-  itemPrefabBase: {fileID: 0}
+  itemPrefabBase: {fileID: 942730391339161280, guid: 160239dcc92354d5a93be76df66a1726, type: 3}
   lootTables:
     dropRates:
     - roomType: 0
