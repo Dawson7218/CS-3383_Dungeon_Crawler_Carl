@@ -1,0 +1,338 @@
+fileFormatVersion: 2
+guid: f3b04d75365d14403acadc90f2299464
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3852288016110418177
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_0
+  - first:
+      213: 1286731450625144595
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_1
+  - first:
+      213: -1471867284989462650
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_2
+  - first:
+      213: -2295891497583708906
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_3
+  - first:
+      213: 2004503288359094995
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_4
+  - first:
+      213: -8477603286917421355
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_5
+  - first:
+      213: 7396072971132373105
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_6
+  - first:
+      213: 7972412240619274918
+    second: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_0
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 32
+        width: 306
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff68e3ba57ce98ac0800000000000000
+      internalID: -3852288016110418177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_1
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 32
+        width: 306
+        height: 374
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 317b5dbdf636bd110800000000000000
+      internalID: 1286731450625144595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_2
+      rect:
+        serializedVersion: 2
+        x: 1128
+        y: 32
+        width: 305
+        height: 376
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6873fa9a080e29be0800000000000000
+      internalID: -1471867284989462650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_3
+      rect:
+        serializedVersion: 2
+        x: 1639
+        y: 32
+        width: 306
+        height: 374
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 615feabd8da5320e0800000000000000
+      internalID: -2295891497583708906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 2151
+        y: 32
+        width: 306
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3da0fb5de1d61db10800000000000000
+      internalID: 2004503288359094995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_5
+      rect:
+        serializedVersion: 2
+        x: 2661
+        y: 32
+        width: 308
+        height: 368
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d66a901ab0895a80800000000000000
+      internalID: -8477603286917421355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_6
+      rect:
+        serializedVersion: 2
+        x: 3172
+        y: 32
+        width: 309
+        height: 367
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17886316e2124a660800000000000000
+      internalID: 7396072971132373105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_7
+      rect:
+        serializedVersion: 2
+        x: 3685
+        y: 32
+        width: 308
+        height: 368
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a2861571b2b3ae60800000000000000
+      internalID: 7972412240619274918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_0: -3852288016110418177
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_1: 1286731450625144595
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_2: -1471867284989462650
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_3: -2295891497583708906
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_4: 2004503288359094995
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_5: -8477603286917421355
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_6: 7396072971132373105
+      SciFi_01_Security_Drone_01_Idle_8Frame_SpriteSheet_7: 7972412240619274918
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

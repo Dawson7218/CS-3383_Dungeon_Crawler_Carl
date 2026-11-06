@@ -1,0 +1,338 @@
+fileFormatVersion: 2
+guid: 69a472bdc9b434be1830b23c0b77a8b7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6720468830387773000
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_0
+  - first:
+      213: 8834894903583487535
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_1
+  - first:
+      213: -1347721121863262096
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_2
+  - first:
+      213: -8173179869124668230
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_3
+  - first:
+      213: -3359276103925384650
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_4
+  - first:
+      213: -9088279813802506300
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_5
+  - first:
+      213: -5123803024608267777
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_6
+  - first:
+      213: -4516022932852542486
+    second: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_0
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 320
+        height: 378
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b1e6a094391cb2a0800000000000000
+      internalID: -6720468830387773000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_1
+      rect:
+        serializedVersion: 2
+        x: 605
+        y: 32
+        width: 325
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f26b0040b1adb9a70800000000000000
+      internalID: 8834894903583487535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_2
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 32
+        width: 333
+        height: 366
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 070ac0bb7ceeb4de0800000000000000
+      internalID: -1347721121863262096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_3
+      rect:
+        serializedVersion: 2
+        x: 1623
+        y: 32
+        width: 334
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab4537f5638039e80800000000000000
+      internalID: -8173179869124668230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 2134
+        y: 32
+        width: 335
+        height: 359
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63ab1138e247161d0800000000000000
+      internalID: -3359276103925384650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_5
+      rect:
+        serializedVersion: 2
+        x: 2647
+        y: 32
+        width: 334
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c7c2fe39a1ffd180800000000000000
+      internalID: -9088279813802506300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_6
+      rect:
+        serializedVersion: 2
+        x: 3161
+        y: 32
+        width: 331
+        height: 365
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff1f623db4894e8b0800000000000000
+      internalID: -5123803024608267777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_7
+      rect:
+        serializedVersion: 2
+        x: 3677
+        y: 32
+        width: 325
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae37ec9c11dd351c0800000000000000
+      internalID: -4516022932852542486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_0: -6720468830387773000
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_1: 8834894903583487535
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_2: -1347721121863262096
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_3: -8173179869124668230
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_4: -3359276103925384650
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_5: -9088279813802506300
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_6: -5123803024608267777
+      SciFi_01_Security_Drone_04_Defend_8Frame_SpriteSheet_7: -4516022932852542486
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
