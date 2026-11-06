@@ -182,9 +182,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::EnemyController
   player: {fileID: 0}
-  moveSpeed: 2
+  moveSpeed: 1.5
   detectionRange: 10
-  attackRange: 2
+  attackRange: 1
   attackExitBuffer: 0.3
   maxHealth: 100
   attackDamage: 3
