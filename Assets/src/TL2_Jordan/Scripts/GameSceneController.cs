@@ -16,6 +16,8 @@ public class GameSceneController : MonoBehaviour
 
     [Header("Dungeon Settings")]
     [SerializeField, Min(2)] private int roomCount = 20;
+    [SerializeField] private bool useRandomSeed = true;
+    [Tooltip("Used when Use Random Seed is off; updated to the chosen seed during a random run.")]
     [SerializeField] private int seed = 12345;
 
     [Header("Treasure Loot")]
@@ -71,6 +73,11 @@ public class GameSceneController : MonoBehaviour
 
         if (currentRoom == null)
         {
+            if (useRandomSeed)
+                seed = Random.Range(0, int.MaxValue);
+
+            Debug.Log("Dungeon seed: " + seed, this);
+
             currentRoom = generator.GenerateRun(
                 seed,
                 Mathf.Max(2, roomCount)

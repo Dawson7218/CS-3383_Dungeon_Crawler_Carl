@@ -72,6 +72,13 @@ public class DungeonRoomVisualizer : MonoBehaviour
 
             // Associate the GameObject with its logical room.
             roomObjects.Add(room, roomObject);
+
+            RoomView roomView = roomObject.GetComponent<RoomView>();
+            if (roomView != null)
+                roomView.ConfigureDoorways(room);
+            else
+                Debug.LogWarning("Room prefab needs a RoomView to configure doorways.", roomObject);
+
             OnRoomCreated?.Invoke(room, roomObject);
         }
 
