@@ -905,15 +905,15 @@ PrefabInstance:
       objectReference: {fileID: 1898207877}
     - target: {fileID: 1353392852357154797, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
       propertyPath: moveSpeed
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1353392852357154797, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
-      propertyPath: attackRange
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1353392852357154797, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
+      propertyPath: attackRange
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1353392852357154797, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
       propertyPath: detectionRange
-      value: 14
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1741500343422006111, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
       propertyPath: m_Size.x
