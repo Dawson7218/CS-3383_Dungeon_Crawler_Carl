@@ -8,4 +8,4 @@ These are copied Minecraft: Java Edition 1.21.4 textures, created by Mojang / Mi
 | armor.png | Defense | item/iron_chestplate.png | https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21.4/assets/minecraft/textures/item/iron_chestplate.png |
 | sword.png | Attack | item/iron_sword.png | https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21.4/assets/minecraft/textures/item/iron_sword.png |
 
-The source PNGs are unchanged. The shop displays the heart at 18x18 (2x its 9x9 source) and equipment at 16x16, with point filtering and no compression. All three are static category illustrations for permanent-upgrade purchases; they do not display current health or armor and cannot be equipped. No economy, transaction, or save behavior is changed.
+The source PNGs are unchanged. The shop displays the heart at 27x27 (3x its 9x9 source) and equipment at 24x24 in the 560x315 UI coordinate space, with point filtering and no compression. All three are static category illustrations for permanent-upgrade purchases; they do not display current health or armor and cannot be equipped. No economy, transaction, or save behavior is changed.

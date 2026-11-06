@@ -1,161 +1,163 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// The shop still uses the original economy. This script only draws its terminal skin.
+// Runtime labels and buttons sit over the orbital console skin.
 public class MetaShopUI : MonoBehaviour
 {
     [SerializeField] private string mainMenuScene = "MainMenu";
     [SerializeField] private Font pixelFont;
 
     private readonly StatType[] stats = { StatType.Health, StatType.Defense, StatType.Attack };
-    private static readonly Color Green = new Color32(111, 235, 158, 255);
-    private static readonly Color DimGreen = new Color32(53, 116, 78, 255);
-    private static readonly Color ScreenColor = new Color32(3, 19, 13, 255);
+    private static readonly Color Ice = new Color32(193, 220, 238, 255);
+    private static readonly Color Muted = new Color32(145, 150, 176, 255);
+    private static readonly Color Cream = new Color32(239, 211, 163, 255);
     private EconomyManager economy;
-    private string message = "";
-    private GUIStyle text, title, button;
+    private Texture2D skin;
     private Texture2D[] icons;
+    private string message = "";
+    private GUIStyle title, category, subtitle, level, button, points, unavailableButton, navigationButton;
+    private int lastPurchased = -1;
+    private float purchaseTime;
 
     private void Start()
     {
-        // The manager has already loaded the player's points and upgrades in Awake.
         economy = EconomyManager.Instance;
         if (economy != null) message = economy.LastError;
-        // Shared imported textures are included in builds through this TL4 Resources folder.
+        skin = Resources.Load<Texture2D>("TL4/OrbitalShopSkin");
         icons = new[]
         {
             Resources.Load<Texture2D>("TL4/Minecraft/heart"),
             Resources.Load<Texture2D>("TL4/Minecraft/armor"),
             Resources.Load<Texture2D>("TL4/Minecraft/sword")
         };
+        if (skin == null) Debug.LogError("Missing orbital meta shop skin.", this);
         for (int i = 0; i < icons.Length; i++)
             if (icons[i] == null) Debug.LogError("Missing TL4 shop icon for " + stats[i], this);
     }
 
-    // Draw in a small 400 x 240 space. Whole-number scaling keeps the pixels crisp.
     private void OnGUI()
     {
-        if (text == null) CreateStyles();
-        Matrix4x4 oldMatrix = GUI.matrix;
-        Color oldColor = GUI.color;
-        bool oldEnabled = GUI.enabled;
-        GUI.color = Color.white;
-        float fit = Mathf.Min(Screen.width / 400f, Screen.height / 240f);
-        float scale = fit >= 1 ? Mathf.Floor(fit) : fit;
-        GUI.matrix = Matrix4x4.TRS(new Vector3(
-            Mathf.Round((Screen.width - 400 * scale) / 2),
-            Mathf.Round((Screen.height - 240 * scale) / 2), 0), Quaternion.identity, Vector3.one * scale);
+        if (title == null) CreateStyles();
+        Matrix4x4 previousMatrix = GUI.matrix;
+        Color previousColor = GUI.color;
+        bool previousEnabled = GUI.enabled;
+        try
+        {
+            // Keep the complete artwork visible at any display aspect ratio.
+            GUI.matrix = Matrix4x4.identity;
+            GUI.color = Color.white;
+            Fill(new Rect(0, 0, Screen.width, Screen.height), new Color32(6, 10, 28, 255));
+            float scale = Mathf.Min(Screen.width / 560f, Screen.height / 315f);
+            if (scale <= 0) return;
+            GUI.matrix = Matrix4x4.TRS(new Vector3(
+                Mathf.Round((Screen.width - 560 * scale) / 2),
+                Mathf.Round((Screen.height - 315 * scale) / 2), 0), Quaternion.identity, Vector3.one * scale);
+            if (skin != null) GUI.DrawTexture(new Rect(0, 0, 560, 315), skin, ScaleMode.StretchToFill);
 
-        // Cover the whole display, including the margins around the centered terminal.
-        Fill(new Rect(-Screen.width / scale, -Screen.height / scale,
-            Screen.width * 3 / scale, Screen.height * 3 / scale), new Color32(4, 9, 16, 255));
-        DrawStars();
-        DrawMonitor();
+            GUI.Label(new Rect(351, 99, 92, 18),
+                economy != null ? "POINTS: " + economy.GetBalance() : "OFFLINE", points);
+            for (int i = 0; i < stats.Length; i++) DrawUpgrade(i);
 
-        GUI.Label(new Rect(42, 33, 316, 27), "META SHOP", title);
-        GUI.Label(new Rect(42, 63, 316, 16), economy != null ? "POINTS: " + economy.GetBalance() : "ECONOMY UNAVAILABLE", button);
-        for (int i = 0; i < stats.Length; i++) DrawUpgrade(stats[i], i);
-
-        // Long save/load errors wrap inside the monitor; normal purchases need one line.
-        GUI.Label(new Rect(48, 183, 304, 14), message, text);
-        if (TerminalButton(new Rect(140, 198, 120, 18), "MAIN MENU", true)) ReturnToMainMenu();
-
-        // Other OnGUI scripts should receive their original drawing state.
-        GUI.matrix = oldMatrix;
-        GUI.color = oldColor;
-        GUI.enabled = oldEnabled;
+            GUI.Label(new Rect(214, 257, 98, 20), "META SHOP", title);
+            if (!string.IsNullOrEmpty(message))
+            {
+                Fill(new Rect(166, 244, 246, 12), new Color32(9, 12, 28, 240));
+                GUI.Label(new Rect(168, 243, 242, 14), message, subtitle);
+            }
+            if (ConsoleButton(new Rect(435, 259, 81, 17), "MAIN MENU", true, true)) ReturnToMainMenu();
+        }
+        finally
+        {
+            GUI.matrix = previousMatrix;
+            GUI.color = previousColor;
+            GUI.enabled = previousEnabled;
+        }
     }
 
-    private void DrawUpgrade(StatType stat, int index)
+    private void DrawUpgrade(int index)
     {
-        int y = 85 + index * 33;
-        Frame(new Rect(45, y, 310, 28), DimGreen, ScreenColor);
+        StatType stat = stats[index];
+        int y = 138 + index * 36;
         if (icons != null && icons[index] != null)
         {
-            // The 9px heart uses 2x scaling; 16px equipment uses its native size.
-            int size = stat == StatType.Health ? 18 : 16;
-            GUI.DrawTexture(new Rect(67 - size / 2, y + (28 - size) / 2, size, size),
+            int size = stat == StatType.Health ? 27 : 24;
+            GUI.DrawTexture(new Rect(131 - size / 2, y + (28 - size) / 2, size, size),
                 icons[index], ScaleMode.ScaleToFit, true);
         }
-        GUI.Label(new Rect(85, y + 5, 90, 18), stat.ToString().ToUpperInvariant(), text);
-        GUI.Label(new Rect(178, y + 5, 63, 18), "Level " + (economy != null ? economy.GetLevel(stat) : 0), text);
+        GUI.Label(new Rect(171, y + 5, 106, 20), stat.ToString().ToUpperInvariant(), category);
+        GUI.Label(new Rect(299, y + 5, 65, 20),
+            "LEVEL " + (economy != null ? economy.GetLevel(stat) : 0), level);
 
         bool maxed = economy != null && economy.IsMaxLevel(stat);
-        string label = maxed ? "MAX LEVEL" : "UPGRADE " + (economy != null ? economy.GetNextCost(stat) : 0);
         bool available = economy != null && economy.CanPurchase(stat);
-        if (TerminalButton(new Rect(249, y + 4, 97, 20), label, available))
-            message = economy.TryPurchase(stat) ? stat + " upgraded." : economy.LastError;
+        string label = economy == null ? "OFFLINE" : maxed ? "MAX LEVEL" : "UPGRADE " + economy.GetNextCost(stat);
+        Rect purchase = new Rect(382, y + 5, 82, 18);
+        if (lastPurchased == index && Time.unscaledTime - purchaseTime < .4f)
+            Fill(new Rect(169, y - 1, 198, 31), new Color32(167, 107, 40, 35));
+        if (ConsoleButton(purchase, label, available))
+        {
+            if (economy.TryPurchase(stat))
+            {
+                message = stat.ToString().ToUpperInvariant() + " UPGRADED";
+                lastPurchased = index;
+                purchaseTime = Time.unscaledTime;
+            }
+            else message = economy.LastError;
+        }
     }
 
-    private bool TerminalButton(Rect rect, string label, bool available)
+    private bool ConsoleButton(Rect rect, string label, bool available, bool navigation = false)
     {
-        // Hover/focus and press states make the plain pixel buttons feel interactive.
-        bool hovered = available && rect.Contains(Event.current.mousePosition);
-        Color edge = available ? Green : DimGreen;
-        Frame(rect, edge, hovered ? new Color32(20, 62, 37, 255) : ScreenColor);
-        bool previousEnabled = GUI.enabled;
-        GUI.enabled = available && previousEnabled;
-        bool clicked = GUI.Button(rect, label, button);
-        GUI.enabled = previousEnabled;
+        bool enabled = GUI.enabled;
+        if (!available)
+        {
+            Fill(rect, new Color32(10, 8, 18, 160));
+            GUI.Label(rect, label, unavailableButton);
+            return false;
+        }
+        else if (rect.Contains(Event.current.mousePosition))
+            Fill(rect, new Color32(244, 190, 100, 40));
+        GUI.enabled = enabled && available;
+        bool clicked = GUI.Button(rect, label, navigation ? navigationButton : button);
+        GUI.enabled = enabled;
         return clicked;
     }
 
-    private void DrawMonitor()
+    private GUIStyle LabelStyle(int size, Color color, TextAnchor alignment)
     {
-        // Layered flat rectangles form a stepped metal casing, not a generated image.
-        Fill(new Rect(24, 18, 352, 206), Color.black);
-        Fill(new Rect(22, 18, 356, 202), new Color32(28, 36, 40, 255));
-        Fill(new Rect(24, 16, 352, 206), new Color32(65, 77, 83, 255));
-        Fill(new Rect(28, 20, 344, 198), new Color32(38, 49, 52, 255));
-        Frame(new Rect(32, 24, 336, 194), DimGreen, ScreenColor);
-        Fill(new Rect(350, 18, 5, 3), new Color32(239, 180, 69, 255));
-        Fill(new Rect(52, 46, 46, 1), Green);
-        Fill(new Rect(302, 46, 46, 1), Green);
-    }
-
-    private void DrawStars()
-    {
-        // Fixed arithmetic gives a repeatable starfield without changing Unity's random seed.
-        for (int i = 0; i < 42; i++)
-        {
-            int x = (i * 73 + 9) % 400;
-            int y = (i * 47 + 5) % 240;
-            Fill(new Rect(x, y, 1, 1), i % 3 == 0 ? new Color32(180, 209, 225, 255) : new Color32(63, 99, 123, 255));
-            if (i % 11 == 0)
-            {
-                Fill(new Rect(x - 1, y, 3, 1), new Color32(126, 172, 202, 255));
-                Fill(new Rect(x, y - 1, 1, 3), new Color32(126, 172, 202, 255));
-            }
-        }
+        GUIStyle style = new GUIStyle { font = pixelFont, fontSize = size, alignment = alignment, wordWrap = false };
+        style.normal.textColor = color;
+        return style;
     }
 
     private void CreateStyles()
     {
-        // Cache styles once instead of allocating new ones on every repaint.
-        text = new GUIStyle { font = pixelFont, fontSize = 16, alignment = TextAnchor.MiddleLeft, wordWrap = true };
-        text.normal.textColor = Green;
-        title = new GUIStyle(text) { fontSize = 32, alignment = TextAnchor.MiddleCenter, wordWrap = false };
-        button = new GUIStyle(text) { alignment = TextAnchor.MiddleCenter, wordWrap = false };
-        button.hover.textColor = new Color32(191, 255, 209, 255);
-        button.active.textColor = Color.white;
-        button.focused.textColor = Color.white;
-        button.onNormal.textColor = Green;
+        title = LabelStyle(18, Ice, TextAnchor.MiddleCenter);
+        category = LabelStyle(22, Ice, TextAnchor.MiddleLeft);
+        subtitle = LabelStyle(14, Muted, TextAnchor.MiddleLeft);
+        level = LabelStyle(20, Ice, TextAnchor.MiddleCenter);
+        points = LabelStyle(18, Cream, TextAnchor.MiddleCenter);
+        points.contentOffset = new Vector2(0, -4);
+        title.contentOffset = new Vector2(0, -1);
+        button = LabelStyle(12, new Color32(22, 13, 10, 255), TextAnchor.MiddleCenter);
+        unavailableButton = LabelStyle(12, Cream, TextAnchor.MiddleCenter);
+        navigationButton = LabelStyle(16, Cream, TextAnchor.MiddleCenter);
+        navigationButton.hover.textColor = Color.white;
+        navigationButton.active.textColor = Ice;
+        navigationButton.focused.textColor = Color.white;
+        button.hover.textColor = new Color32(22, 13, 10, 255);
+        button.active.textColor = Cream;
+        button.focused.textColor = Cream;
         if (pixelFont != null && pixelFont.material.mainTexture != null)
             pixelFont.material.mainTexture.filterMode = FilterMode.Point;
     }
 
     private static void Fill(Rect rect, Color color)
     {
-        Color previousColor = GUI.color;
+        Color previous = GUI.color;
         GUI.color = color;
         GUI.DrawTexture(rect, Texture2D.whiteTexture);
-        GUI.color = previousColor;
-    }
-
-    private static void Frame(Rect rect, Color border, Color inside)
-    {
-        Fill(rect, border);
-        Fill(new Rect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2), inside);
+        GUI.color = previous;
     }
 
     public void ReturnToMainMenu()
