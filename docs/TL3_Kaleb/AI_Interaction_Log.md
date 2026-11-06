@@ -547,6 +547,43 @@ Play Mode run of `ItemClassTests` in the open editor: `passed=21`, `failed=0`, `
 
 ---
 
+## Entry 32 — LootSystem and LootTable tests
+
+| | |
+|---|---|
+| **Date** | 5 November 2026 |
+| **Tool** | Cursor agent (chat over the Dungeon Crawler Carl repo) |
+| **Source** | `Assets/src/TL3_Kaleb/LootSystem.cs`; `Assets/src/TL3_Kaleb/LootTable.cs`; `Assets/prefabs/TL3_Kaleb/LootSystem.prefab`; `Assets/tst/TL3_Kaleb/Kaleb_Tests` |
+| **Prompt** | Plan tests for `LootSystem` and `LootTable`, using the Unity Test Runner in `tst/TL3_Kaleb`. Cover working cases and edge cases that fail gracefully. Use `[UnityTest]` when a case needs a scene. The drop weights live on the LootSystem prefab, not in code. After the tests pass, update this log. |
+| **Output** | `Assets/tst/TL3_Kaleb/Kaleb_Tests/LootSystemTests.cs`. Quiet returns in `LootTable.RollDrop` and `LootSystem.GenerateLootAt`. `"UnityEditor"` added to `Kaleb_Tests.asmdef` references. |
+
+What the tests lock in:
+
+- Drop chances on the prefab, in room order: None 0, CombatRoom 0.75, TreasureRoom 1, CorridorRoom 0.25, BossRoom 0. These are the prefab’s numbers, not the older Champion rates.
+- The 18 catalog prototypes are the shared static list.
+- TreasureRoom always returns a clone whose id is in that room’s weight list. CombatRoom and CorridorRoom stay in a wide band around 0.75 and 0.25, and the id is from that room. None and BossRoom almost never drop; a hit can only be a `hair_upgrade` clone.
+- A new `LootTable` has no drop-rate row, so `RollDrop` returns null. A prefab copy with Treasure’s weights cleared, every weight set to 0, or every id set to `not_a_real_item` also returns null. Those edits are reflection on the instance. The prefab asset is not modified.
+- `Awake` on a prefab instance sets `Instance`, and `Table()` / `Loadout()` are present. A second instance is destroyed and `Instance` stays the first.
+- `ApplyItem` with a weapon adds 4 attack. A null item leaves the loadout empty and leaves `PlayerStats` at its defaults.
+- `GenerateLootAt` for TreasureRoom, with a stand-in that has `InWorldItem` and `SpriteRenderer`, spawns at the given position. The pickup’s item id matches a roll from the same seed, and the sprite matches `Resources.Load`. The prefab’s `itemPrefabBase` is unassigned, and a bare `LootSystem` has a null table: both calls spawn nothing. A stand-in with neither component does not throw.
+- The deprecated `RollDrop` still returns a relic whose id is `"steak"`.
+
+Guards added so those edges do not throw:
+
+- No drop-rate row, a null rate list, a null weight list, a missing weight table, or a total weight of 0 or less: `RollDrop` returns null. The weighted loop, including `Random.Range(0, totalWeight + 1)`, was left as written.
+- `GenerateLootAt` returns before `Instantiate` when the table or `itemPrefabBase` is null, and when the roll is null. A spawned object missing `InWorldItem` or `SpriteRenderer` skips that step. The method does not call `Destroy`.
+
+`[Test]` vs `[UnityTest]`:
+
+- No case loads `ItemLootTable.unity`. The prefab is loaded with `AssetDatabase` and instantiated. `GenerateLootAt` uses `Instantiate` and `Resources.Load`, which work without a yielded frame, so those cases stay `[Test]`.
+- `Awake_DuplicateInstance_KeepsTheFirst` is the only `[UnityTest]`. `Awake` calls `Destroy` on the duplicate. Edit Mode would log an error and leave the object. The test ignores itself unless the editor is playing, then waits one frame and checks that the duplicate is gone.
+
+`Kaleb_Tests` is not an Editor-only assembly (`includePlatforms` is still empty), so the Test Runner lists it on the Play Mode tab, same as the other fixtures in that assembly. An Edit Mode query therefore has no `LootSystemTests` to run. The Play Mode run executes the `[Test]` methods and the `[UnityTest]`.
+
+Play Mode run in the open editor: `discovered=19`, `passed=19`, `failed=0`, `skipped=0`. The duplicate-instance case ran and passed; it was not skipped. A second batch-mode editor was not started.
+
+---
+
 ## Numbered question log
 
 Questions asked of the model while drafting, with the decision that went into the Champion.
@@ -677,6 +714,9 @@ Questions asked of the model while drafting, with the decision that went into th
 41. **Q:** How should the pickup tests check `Destroy` without depending on Edit Mode?  
     **A:** Do not expect the Edit Mode error. `Pickup_WithPlayerAndLootSystem_AppliesWeapon` and `Pickup_NullItem_LeavesLoadoutEmptyAndDestroys` are Play Mode `[UnityTest]` cases. They wait one frame, then assert the pickup reference is gone. An Edit Mode run skips those two with `Assert.Ignore`. The other item tests stay ordinary `[Test]` methods.
 
+42. **Q:** How should a bad loot roll or a missing pickup prefab fail, and which chances do the tests use?  
+    **A:** A missing drop-rate row, a missing weight table, or a total weight of 0 or less returns null. `GenerateLootAt` does not instantiate when the table or `itemPrefabBase` is null, or when the roll is null, and it skips a missing `InWorldItem` or `SpriteRenderer`. Chances are the ones on `Assets/prefabs/TL3_Kaleb/LootSystem.prefab` (0 / 0.75 / 1 / 0.25 / 0), not the older Champion rates. Only the duplicate-`LootSystem` case is a Play Mode `[UnityTest]`, because `Awake` uses `Destroy`. The other cases are `[Test]` methods. `Kaleb_Tests` is not Editor-only, so the Test Runner runs this fixture from the Play Mode tab. That run was `passed=19`, `failed=0`, `skipped=0`.
+
 ---
 
 ## What was not delegated
@@ -692,3 +732,4 @@ Questions asked of the model while drafting, with the decision that went into th
 - That `<< include >>` and `<< extend >>` use an open chevron in the diagram’s navy, not a filled triangle and not the example’s red.
 - That only `LootSystem` inherits `MonoBehaviour`; `Item` / `LootTable` / `Loadout` / `ItemMemento` stay plain C# so Prototype `Clone()` can use `new`.
 - That Memento on the class diagram is Originator + Memento + Caretaker (SourceMaking), not Save/Restore methods on `ItemMemento`.
+- That the loot tests follow the drop chances serialized on the LootSystem prefab, not the older Champion rates.
