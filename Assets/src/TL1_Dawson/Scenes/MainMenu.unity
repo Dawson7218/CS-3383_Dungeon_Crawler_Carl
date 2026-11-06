@@ -885,7 +885,7 @@ GameObject:
   - component: {fileID: 1952692884}
   - component: {fileID: 1952692883}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Space Dungeon Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -905,10 +905,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1166700424}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.53261113}
-  m_AnchoredPosition: {x: -0.023438, y: -23.48}
-  m_SizeDelta: {x: 2560, y: 1393}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1952692883
 MonoBehaviour:
@@ -924,13 +924,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 512539354122396812, guid: 6873a5c2a8ca49c4e91cd4aa5f3e769f, type: 3}
+  m_Sprite: {fileID: 3118912485016815551, guid: 7b7b49d913b591147befbd005ece92a1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
