@@ -31,17 +31,24 @@ public class LootSystem : MonoBehaviour
 
     public void GenerateLootAt(RoomType roomType, Vector2 location)
     {
-        Item itemToSpawn = lootTables.RollDrop(roomType);
-        if (itemToSpawn != null)
-        {
-            Vector3 spawnPosition = new Vector3(location.x, location.y, 0f);
+        if (lootTables == null || itemPrefabBase == null)
+            return;
 
-            // Instantiate the item base prefab at the specific position with no rotation
-            GameObject itemspawned = Instantiate(itemPrefabBase, spawnPosition, Quaternion.identity);
-            // Assign the kind of item it is
-            itemspawned.GetComponent<InWorldItem>().SetItem(itemToSpawn);
-            itemspawned.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("TL3_Kaleb/" + itemToSpawn.getTexture());
-        }
+        Item itemToSpawn = lootTables.RollDrop(roomType);
+        if (itemToSpawn == null)
+            return;
+
+        Vector3 spawnPosition = new Vector3(location.x, location.y, 0f);
+
+        // Instantiate the item base prefab at the specific position with no rotation
+        GameObject itemspawned = Instantiate(itemPrefabBase, spawnPosition, Quaternion.identity);
+        InWorldItem worldItem = itemspawned.GetComponent<InWorldItem>();
+        if (worldItem != null)
+            worldItem.SetItem(itemToSpawn);
+
+        SpriteRenderer renderer = itemspawned.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+            renderer.sprite = Resources.Load<Sprite>("TL3_Kaleb/" + itemToSpawn.getTexture());
     }
 
     //temporary for continued mvp workage

@@ -45,14 +45,21 @@ public class LootTable
  */
     public Item RollDrop(RoomType roomType)
     {
-        float dropRate = dropRates.Find(roomRate =>
-        {
-            return roomRate.GetRoomType() == roomType;
-        }).GetDropRate();
+        if (dropRates == null)
+            return null;
+
+        RoomDropRate roomRate = dropRates.Find(rate => rate.GetRoomType() == roomType);
+        if (roomRate == null)
+            return null;
+
+        float dropRate = roomRate.GetDropRate();
 
         //check if the loot actually drops
         if (UnityEngine.Random.Range(0.0f, 1.0f) <= dropRate)
         {
+            if (weights == null)
+                return null;
+
             RoomLootTable lootTable = weights.Find(roomLootTable =>
             {
                 return roomLootTable.GetRoomType() == roomType;
@@ -62,16 +69,23 @@ public class LootTable
             if (lootTable == null)
                 return null;
 
+            List<ItemDropWeight> rows = lootTable.GetLootTable();
+            if (rows == null)
+                return null;
+
             //fetch total weight for weighted rand drop
             int totalWeight = 0;
-            lootTable.GetLootTable().ForEach(itemDropWeight =>
+            rows.ForEach(itemDropWeight =>
             {
                 totalWeight += itemDropWeight.GetDropRate();
             });
-            
+
+            if (totalWeight <= 0)
+                return null;
+
             int itemRand = UnityEngine.Random.Range(0,totalWeight+1);
             string itemToDropId = null;
-            foreach (ItemDropWeight item in lootTable.GetLootTable())
+            foreach (ItemDropWeight item in rows)
             {
                 if (itemRand <= item.GetDropRate())
                 {
