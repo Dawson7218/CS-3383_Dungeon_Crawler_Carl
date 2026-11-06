@@ -7,14 +7,17 @@ public class BossMinionSpawner : MonoBehaviour
     [SerializeField] private EnemyController minionPrefab;
 
     [Header("Spawn Settings")]
-    [SerializeField] private int minionsPerSummon = 2;
-    [SerializeField] private int maximumLivingMinions = 4;
     [SerializeField] private float spawnRadius = 2f;
+
+    private const int WaveSize = 3;
 
     private readonly List<EnemyController> spawnedMinions =
         new List<EnemyController>();
 
-    private int spawnIndex;
+    public bool IsReady =>
+        isActiveAndEnabled
+        && minionPrefab != null
+        && minionPrefab.GetComponent<BossMinionAttack>() != null;
 
     public int LivingMinionCount
     {
@@ -32,68 +35,50 @@ public class BossMinionSpawner : MonoBehaviour
         }
     }
 
-    public int SpawnMinions(Transform target)
+    public int SpawnMinions(
+        Transform target,
+        BossProjectile projectilePrefab)
     {
-        if (!isActiveAndEnabled)
-            return 0;
-
-        if (minionPrefab == null || target == null)
+        if (!IsReady || target == null || projectilePrefab == null)
         {
-            Debug.LogWarning(
-                "Boss summon requires a minion prefab and target.",
+            Debug.LogError(
+                "Assign a boss minion prefab with BossMinionAttack, " +
+                "a target, and a projectile prefab.",
                 this);
+
             return 0;
         }
 
-        RemoveDefeatedMinions();
+        ClearMinions();
 
-        int availableSlots = Mathf.Max(
-            0, maximumLivingMinions - LivingMinionCount);
-
-        int spawnCount = Mathf.Min(
-            Mathf.Max(0, minionsPerSummon), availableSlots);
-
-        for (int i = 0; i < spawnCount; i++)
+        for (int i = 0; i < WaveSize; i++)
         {
-            // Cycle through four positions around the boss.
-            float angle = (spawnIndex % 4) * 90f;
+            float angle = i * 120f;
             float radians = angle * Mathf.Deg2Rad;
 
             Vector3 offset = new Vector3(
                 Mathf.Cos(radians),
                 Mathf.Sin(radians),
-                0f) * Mathf.Max(0f, spawnRadius);
+                0f) * spawnRadius;
 
             EnemyController minion = Instantiate(
                 minionPrefab,
                 transform.position + offset,
                 Quaternion.identity);
 
-            minion.SetTarget(target);
+            BossMinionAttack attack =
+                minion.GetComponent<BossMinionAttack>();
+
+            attack.Initialize(
+                target,
+                projectilePrefab,
+                angle,
+                1f + i * 0.4f);
+
             spawnedMinions.Add(minion);
-
-            spawnIndex++;
         }
 
-        return spawnCount;
-    }
-
-    private void RemoveDefeatedMinions()
-    {
-        for (int i = spawnedMinions.Count - 1; i >= 0; i--)
-        {
-            EnemyController minion = spawnedMinions[i];
-
-            if (minion == null)
-            {
-                spawnedMinions.RemoveAt(i);
-            }
-            else if (minion.IsDead)
-            {
-                Destroy(minion.gameObject);
-                spawnedMinions.RemoveAt(i);
-            }
-        }
+        return WaveSize;
     }
 
     public void ClearMinions()
@@ -105,7 +90,19 @@ public class BossMinionSpawner : MonoBehaviour
         }
 
         spawnedMinions.Clear();
-        spawnIndex = 0;
+    }
+
+    // Used by the boss's temporary test command.
+    public void DamageOneLivingMinion(int amount)
+    {
+        foreach (EnemyController minion in spawnedMinions)
+        {
+            if (minion != null && !minion.IsDead)
+            {
+                minion.TakeDamage(amount);
+                return;
+            }
+        }
     }
 
     private void OnDisable()

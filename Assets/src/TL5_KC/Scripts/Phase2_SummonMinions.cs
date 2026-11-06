@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Phase2_SummonMinions : BossPhase
 {
     public override string PhaseName => "Phase 2 - Summon Minions";
@@ -6,9 +8,12 @@ public class Phase2_SummonMinions : BossPhase
     {
         BossPhaseInfo info = ctx.GetCurrentPhase();
 
-        // Handles lower health until we add Phase 3.
+        int phase2Threshold =
+            Mathf.FloorToInt(info.MaximumHealth * 0.70f);
+
         return info.CurrentHealth > 0
-            && info.CurrentHealth <= info.MaximumHealth * 0.70f;
+            && info.CurrentHealth <= phase2Threshold
+            && !ctx.MinionWaveDefeated;
     }
 
     public override void ExecutePhase(BossController ctx)

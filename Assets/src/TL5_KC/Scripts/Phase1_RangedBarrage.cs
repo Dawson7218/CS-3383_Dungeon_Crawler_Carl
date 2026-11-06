@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Phase1_RangedBarrage : BossPhase
 {
     public override string PhaseName => "Phase 1 - Ranged Barrage";
@@ -6,7 +8,11 @@ public class Phase1_RangedBarrage : BossPhase
     {
         BossPhaseInfo info = ctx.GetCurrentPhase();
 
-        return info.CurrentHealth > info.MaximumHealth * 0.70f;
+        int phase2Threshold =
+            Mathf.FloorToInt(info.MaximumHealth * 0.70f);
+
+        return !ctx.MinionWaveDefeated
+            && info.CurrentHealth > phase2Threshold;
     }
 
     public override void ExecutePhase(BossController ctx)

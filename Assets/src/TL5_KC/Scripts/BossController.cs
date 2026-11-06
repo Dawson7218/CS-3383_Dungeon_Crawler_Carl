@@ -13,18 +13,36 @@ public class BossController : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private Transform target;
 
+    [Header("Boss Visual")]
+    [SerializeField] private SpriteRenderer bossVisual;
+
+    [Header("Boss Movement")]
+    [SerializeField] private float moveSpeed = 0.8f;
+    [SerializeField] private float orbitRadius = 4f;
+    [SerializeField] private float orbitSpeed = 12f;
+
     [Header("Ranged Barrage")]
     [SerializeField] private float attackInterval = 2f;
     [SerializeField] private float spreadAngle = 15f;
 
     [Header("Minion Summoning")]
     [SerializeField] private BossMinionSpawner minionSpawner;
-    [SerializeField] private float summonInterval = 4f;
+
+    [Header("Enrage")]
+    [SerializeField] private float enrageInterval = 1f;
+    [SerializeField] private int enrageProjectileCount = 8;
+    [SerializeField] private float enrageRotationPerBurst = 22.5f;
 
     private int currentHealth;
     private float attackTimer;
+    private float enrageAngle;
+    private float movementAngle;
+
     private bool encounterActive;
     private bool defeatSignaled;
+    private bool minionWaveSpawned;
+    private bool minionWaveDefeated;
+
     private BossPhase chainHead;
     private BossPhase activePhase;
 
@@ -32,6 +50,8 @@ public class BossController : MonoBehaviour
         new List<BossProjectile>();
 
     public event Action OnBossDefeated;
+
+    public bool MinionWaveDefeated => minionWaveDefeated;
 
     private void Start()
     {
@@ -44,64 +64,150 @@ public class BossController : MonoBehaviour
         if (encounterActive || defeatSignaled)
             return;
 
-        if (maximumHealth <= 0 ||
+        if (bossVisual == null)
+            bossVisual = GetComponentInChildren<SpriteRenderer>();
+
+        if (maximumHealth < 10 ||
             projectilePrefab == null ||
             firePoint == null ||
-            attackInterval <= 0f)
+            target == null ||
+            bossVisual == null ||
+            minionSpawner == null ||
+            !minionSpawner.IsReady)
         {
             Debug.LogError(
-                "Boss setup invalid: check health, projectile, " +
-                "fire point, and attack interval.", this);
+                "Boss setup invalid. Check health, projectile, FirePoint, " +
+                "target, boss visual, and minion prefab.",
+                this);
+
             return;
         }
 
         currentHealth = maximumHealth;
+        minionWaveSpawned = false;
+        minionWaveDefeated = false;
+        enrageAngle = 0f;
 
-            chainHead = new Phase1_RangedBarrage();
-            chainHead.SetNext(new Phase2_SummonMinions());
-            activePhase = chainHead.Handle(this);
+        Vector2 offset =
+            (Vector2)transform.position - (Vector2)target.position;
 
-            attackTimer = attackInterval;
-            encounterActive = true;
+        movementAngle =
+            Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
 
-        Debug.Log("Boss encounter started: " + activePhase.PhaseName, this);
+        chainHead = new Phase1_RangedBarrage();
+
+        BossPhase phase2 = new Phase2_SummonMinions();
+        BossPhase phase3 = new Phase3_Enrage();
+
+        chainHead.SetNext(phase2);
+        phase2.SetNext(phase3);
+
+        encounterActive = true;
+        bossVisual.enabled = true;
+        activePhase = null;
+
+        SelectPhase();
     }
 
     private void Update()
     {
-        if (!encounterActive)
-        return;
+        if (!encounterActive || Time.deltaTime <= 0f)
+            return;
 
-        BossPhase selectedPhase = chainHead.Handle(this);
+        MoveBoss();
+
+        if (activePhase is Phase2_SummonMinions)
+        {
+            if (minionWaveSpawned &&
+                minionSpawner.LivingMinionCount == 0)
+            {
+                CompleteMinionWave();
+            }
+
+            return;
+        }
+
+        attackTimer -= Time.deltaTime;
+
+        if (attackTimer > 0f)
+            return;
+
+        activePhase.ExecutePhase(this);
+        attackTimer = GetAttackInterval();
+    }
+
+    private void MoveBoss()
+    {
+        if (target == null)
+            return;
+
+        movementAngle += orbitSpeed * Time.deltaTime;
+        float radians = movementAngle * Mathf.Deg2Rad;
+
+        Vector3 desiredPosition = target.position + new Vector3(
+            Mathf.Cos(radians) * orbitRadius,
+            Mathf.Sin(radians) * orbitRadius,
+            0f);
+
+        desiredPosition.z = transform.position.z;
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            desiredPosition,
+            moveSpeed * Time.deltaTime);
+    }
+
+    private void SelectPhase()
+    {
+    Debug.Log(
+        $"[Boss Check] Object={name}, HP={currentHealth}/{maximumHealth}, " +
+        $"WaveDefeated={minionWaveDefeated}",
+        this);
+
+    BossPhase selectedPhase = chainHead.Handle(this);
+
+    Debug.Log(
+        $"[Boss Check] Selected={selectedPhase?.PhaseName ?? "None"}, " +
+        $"Previous={activePhase?.PhaseName ?? "None"}",
+        this);
 
         if (selectedPhase == null)
-    {
-        Debug.LogError("No boss phase can handle the current health.", this);
-        encounterActive = false;
-        ClearProjectiles();
-        return;
-    }
+        {
+            Debug.LogError("No matching boss phase.", this);
+            encounterActive = false;
+            ClearProjectiles();
+            minionSpawner.ClearMinions();
+            bossVisual.enabled = true;
+            return;
+        }
 
-    if (selectedPhase != activePhase)
-    {
+        if (selectedPhase == activePhase)
+            return;
+
         activePhase = selectedPhase;
-        attackTimer = attackInterval;
+        attackTimer = GetAttackInterval();
 
         Debug.Log("Boss phase changed: " + activePhase.PhaseName, this);
-    }
 
-    attackTimer -= Time.deltaTime;
+        if (activePhase is Phase2_SummonMinions)
+        {
+            ClearProjectiles();
+            bossVisual.enabled = false;
 
-    if (attackTimer > 0f)
-        return;
-
-    activePhase.ExecutePhase(this);
-    attackTimer = GetAttackInterval();
+            // Execute the summon once when entering Phase 2.
+            activePhase.ExecutePhase(this);
+        }
+        else
+        {
+            bossVisual.enabled = true;
+        }
     }
 
     public void FireSpread()
     {
-        // Without a target, shoot downward for standalone testing.
+        if (!encounterActive || defeatSignaled)
+            return;
+
         Vector2 aimDirection = Vector2.down;
 
         if (target != null)
@@ -117,46 +223,125 @@ public class BossController : MonoBehaviour
 
         for (int i = -1; i <= 1; i++)
         {
-            Vector2 shotDirection =
+            Vector2 direction =
                 Quaternion.Euler(0f, 0f, i * spreadAngle)
                 * (Vector3)aimDirection;
 
-            BossProjectile projectile = Instantiate(
-                projectilePrefab,
-                firePoint.position,
-                Quaternion.identity);
-
-            projectile.Initialize(shotDirection);
-            projectiles.Add(projectile);
+            SpawnProjectile(direction);
         }
     }
 
-    public void SummonMinions()
-{
-    if (minionSpawner == null || target == null)
+    public void FireRadialBurst()
     {
-        Debug.LogWarning("Assign the boss minion spawner and target.", this);
-        return;
-    }
-
-    minionSpawner.SpawnMinions(target);
-}
-
-private float GetAttackInterval()
-{
-    return activePhase is Phase2_SummonMinions
-        ? Mathf.Max(0.1f, summonInterval)
-        : Mathf.Max(0.1f, attackInterval);
-}
-    public void TakeDamage(int amount)
-    {
-        if (!encounterActive || defeatSignaled || amount <= 0)
+        if (!encounterActive || defeatSignaled)
             return;
 
-        currentHealth = Mathf.Max(0, currentHealth - amount);
+        projectiles.RemoveAll(projectile => projectile == null);
+
+        int count = Mathf.Max(1, enrageProjectileCount);
+        float angleStep = 360f / count;
+
+        for (int i = 0; i < count; i++)
+        {
+            float angle =
+                (enrageAngle + i * angleStep) * Mathf.Deg2Rad;
+
+            Vector2 direction = new Vector2(
+                Mathf.Cos(angle),
+                Mathf.Sin(angle));
+
+            SpawnProjectile(direction);
+        }
+
+        enrageAngle = Mathf.Repeat(
+            enrageAngle + enrageRotationPerBurst,
+            360f);
+    }
+
+    private void SpawnProjectile(Vector2 direction)
+    {
+        BossProjectile projectile = Instantiate(
+            projectilePrefab,
+            firePoint.position,
+            Quaternion.identity);
+
+        projectile.Initialize(direction);
+        projectiles.Add(projectile);
+    }
+
+    public void SummonMinions()
+    {
+        if (!encounterActive ||
+            !(activePhase is Phase2_SummonMinions) ||
+            minionWaveSpawned)
+        {
+            return;
+        }
+
+    Debug.Log("[Boss Check] Starting minion spawn.", this);
+
+    int spawned = minionSpawner.SpawnMinions(
+    target, projectilePrefab);
+
+    Debug.Log($"[Boss Check] Spawned={spawned}", this);
+
+        minionWaveSpawned = spawned == 3;
+
+        if (!minionWaveSpawned)
+        {
+            Debug.LogError("Boss minion wave could not start.", this);
+            encounterActive = false;
+            minionSpawner.ClearMinions();
+            bossVisual.enabled = true;
+        }
+    }
+
+    private void CompleteMinionWave()
+    {
+        minionSpawner.ClearMinions();
+        minionWaveDefeated = true;
+
+        currentHealth = Mathf.Max(
+            1, Mathf.FloorToInt(maximumHealth * 0.35f));
+
+        SelectPhase();
+    }
+
+    private float GetAttackInterval()
+    {
+        return activePhase is Phase3_Enrage
+            ? Mathf.Max(0.1f, enrageInterval)
+            : Mathf.Max(0.1f, attackInterval);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (!encounterActive ||
+            defeatSignaled ||
+            amount <= 0 ||
+            activePhase is Phase2_SummonMinions)
+        {
+            return;
+        }
+
+        if (!minionWaveDefeated)
+        {
+            // The mandatory minion wave cannot be skipped by a large hit.
+            int phase2Health =
+                Mathf.FloorToInt(maximumHealth * 0.70f);
+
+            currentHealth = Mathf.Max(
+                phase2Health, currentHealth - amount);
+        }
+        else
+        {
+            currentHealth = Mathf.Max(0, currentHealth - amount);
+        }
 
         if (currentHealth == 0)
             Defeat();
+        else
+            SelectPhase();
     }
 
     private void Defeat()
@@ -165,8 +350,6 @@ private float GetAttackInterval()
         defeatSignaled = true;
 
         ClearProjectiles();
-
-        if (minionSpawner != null)
         minionSpawner.ClearMinions();
 
         Debug.Log("Boss defeated.", this);
@@ -188,19 +371,25 @@ private float GetAttackInterval()
     {
         encounterActive = false;
         ClearProjectiles();
+
+        if (minionSpawner != null)
+            minionSpawner.ClearMinions();
+
+        if (bossVisual != null)
+            bossVisual.enabled = true;
     }
 
     public BossPhaseInfo GetCurrentPhase()
     {
-    string phaseName = encounterActive && activePhase != null
-        ? activePhase.PhaseName
-        : "None";
+        string phaseName = encounterActive && activePhase != null
+            ? activePhase.PhaseName
+            : "None";
 
-    return new BossPhaseInfo(
-        phaseName,
-        currentHealth,
-        maximumHealth,
-        defeatSignaled);
+        return new BossPhaseInfo(
+            phaseName,
+            currentHealth,
+            maximumHealth,
+            defeatSignaled);
     }
 
     [ContextMenu("Test: Deal 100 Damage")]
@@ -208,5 +397,16 @@ private float GetAttackInterval()
     {
         if (Application.isPlaying)
             TakeDamage(100);
+    }
+
+    [ContextMenu("Test: Defeat One Minion")]
+    private void TestDefeatOneMinion()
+    {
+        if (Application.isPlaying &&
+            encounterActive &&
+            activePhase is Phase2_SummonMinions)
+        {
+            minionSpawner.DamageOneLivingMinion(int.MaxValue);
+        }
     }
 }
