@@ -21,12 +21,15 @@ public class MetaShopUI : MonoBehaviour
         // The manager has already loaded the player's points and upgrades in Awake.
         economy = EconomyManager.Instance;
         if (economy != null) message = economy.LastError;
+        // Shared imported textures are included in builds through this TL4 Resources folder.
         icons = new[]
         {
-            MakeIcon(new[] { ".##.##..", "#++#xx#.", "#++xxx#.", "#xxxxx#.", ".#xxx#..", "..#x#...", "...#....", "........" }, new Color32(226, 53, 76, 255)),
-            MakeIcon(new[] { "..##....", ".#++##..", "#++xxx#.", "#xxxxx#.", ".#xxx#..", ".#xxx#..", "..#x#...", "...#...." }, new Color32(49, 152, 221, 255)),
-            MakeIcon(new[] { "........", ".######.", "#++xxxoo", "########", "..#xx#..", ".#xx#...", ".###....", "........" }, new Color32(135, 147, 158, 255))
+            Resources.Load<Texture2D>("TL4/Minecraft/heart"),
+            Resources.Load<Texture2D>("TL4/Minecraft/armor"),
+            Resources.Load<Texture2D>("TL4/Minecraft/sword")
         };
+        for (int i = 0; i < icons.Length; i++)
+            if (icons[i] == null) Debug.LogError("Missing TL4 shop icon for " + stats[i], this);
     }
 
     // Draw in a small 400 x 240 space. Whole-number scaling keeps the pixels crisp.
@@ -67,7 +70,13 @@ public class MetaShopUI : MonoBehaviour
     {
         int y = 85 + index * 33;
         Frame(new Rect(45, y, 310, 28), DimGreen, ScreenColor);
-        if (icons != null) GUI.DrawTexture(new Rect(59, y + 6, 16, 16), icons[index]);
+        if (icons != null && icons[index] != null)
+        {
+            // The 9px heart uses 2x scaling; 16px equipment uses its native size.
+            int size = stat == StatType.Health ? 18 : 16;
+            GUI.DrawTexture(new Rect(67 - size / 2, y + (28 - size) / 2, size, size),
+                icons[index], ScaleMode.ScaleToFit, true);
+        }
         GUI.Label(new Rect(85, y + 5, 90, 18), stat.ToString().ToUpperInvariant(), text);
         GUI.Label(new Rect(178, y + 5, 63, 18), "Level " + (economy != null ? economy.GetLevel(stat) : 0), text);
 
@@ -147,28 +156,6 @@ public class MetaShopUI : MonoBehaviour
     {
         Fill(rect, border);
         Fill(new Rect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2), inside);
-    }
-
-    private static Texture2D MakeIcon(string[] rows, Color color)
-    {
-        // Each character is one pixel: outline, base color, highlight, or gun muzzle.
-        Texture2D icon = new Texture2D(8, 8, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
-        for (int y = 0; y < 8; y++)
-            for (int x = 0; x < 8; x++)
-            {
-                char pixel = rows[y][x];
-                Color ink = pixel == '#' ? new Color32(1, 7, 7, 255) : pixel == 'x' ? color :
-                    pixel == '+' ? Color.Lerp(color, Color.white, .55f) : pixel == 'o' ? new Color32(245, 177, 53, 255) : Color.clear;
-                icon.SetPixel(x, 7 - y, ink);
-            }
-        icon.Apply();
-        return icon;
-    }
-
-    private void OnDestroy()
-    {
-        // The icons were made at runtime, so release their textures with this scene.
-        if (icons != null) foreach (Texture2D icon in icons) Destroy(icon);
     }
 
     public void ReturnToMainMenu()
