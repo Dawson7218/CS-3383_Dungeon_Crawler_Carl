@@ -11,11 +11,17 @@ public class GameSceneController : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private EconomyManager economyManager;
     [SerializeField] private LootSystem lootSystem;
+    [SerializeField] private GameObject dungeonLootPrefab;
     [SerializeField] private Camera mainCamera;
 
     [Header("Dungeon Settings")]
     [SerializeField, Min(2)] private int roomCount = 20;
     [SerializeField] private int seed = 12345;
+
+    [Header("Treasure Loot")]
+    [SerializeField, Range(0f, 1f)] private float secondItemChance = 0.35f;
+    [Tooltip("Distance from the room center available for loot; leaves a margin inside the 20 x 12 room.")]
+    [SerializeField] private Vector2 lootSpawnHalfExtents = new Vector2(8f, 4f);
 
     private Room currentRoom;
     private Item currentItem;
@@ -74,6 +80,7 @@ public class GameSceneController : MonoBehaviour
         // Instantiate the room prefabs.
         if (roomVisualizer != null)
         {
+            roomVisualizer.OnRoomCreated += HandleRoomCreated;
             roomVisualizer.BuildDungeon(
                 generator.GetAllRooms()
             );
@@ -197,6 +204,9 @@ public class GameSceneController : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (roomVisualizer != null)
+            roomVisualizer.OnRoomCreated -= HandleRoomCreated;
+
         if (generator != null)
         {
             generator.OnRoomChanged -= HandleRoomChanged;
@@ -204,46 +214,52 @@ public class GameSceneController : MonoBehaviour
     }
 
 
-    private void SpawnDungeonLoot()
+    private void HandleRoomCreated(Room room, GameObject roomObject)
     {
-        if (lootSystem == null || roomVisualizer == null ||
-            generator == null)
+        // Only treasure rooms receive a creation-time drop for now.
+        if (room.getRoomType() != RoomType.TreasureRoom)
+            return;
+
+        if (lootSystem == null || dungeonLootPrefab == null)
         {
             Debug.LogWarning(
-                "Cannot spawn loot: a required system is missing."
+                "Cannot spawn room loot: assign the loot system and dungeon loot prefab.",
+                this
             );
             return;
         }
 
-        int treasureRooms = 0;
-
-        foreach (Room room in generator.GetAllRooms())
+        int itemCount = Random.value < secondItemChance ? 2 : 1;
+        for (int i = 0; i < itemCount; i++)
         {
-            // For now, spawn loot only in treasure rooms.
-            if (room.getRoomType() != RoomType.TreasureRoom)
-                continue;
-
-            GameObject roomObject =
-                roomVisualizer.GetRoomObject(room);
-
-            if (roomObject == null)
-                continue;
-
-            // Spawn at the center of this room.
-            Vector3 center = roomObject.transform.position;
-
-            lootSystem.GenerateLootAt(
-                room.getRoomType(),
-                new Vector2(center.x, center.y)
+            Vector3 position = roomObject.transform.position + new Vector3(
+                Random.Range(-Mathf.Abs(lootSpawnHalfExtents.x), Mathf.Abs(lootSpawnHalfExtents.x)),
+                Random.Range(-Mathf.Abs(lootSpawnHalfExtents.y), Mathf.Abs(lootSpawnHalfExtents.y)),
+                0f
             );
-
-            treasureRooms++;
+            SpawnRoomItem(room, roomObject, position);
         }
+    }
 
-        Debug.Log(
-            "Requested loot generation in " +
-            treasureRooms + " treasure rooms."
+    private void SpawnRoomItem(Room room, GameObject roomObject, Vector3 position)
+    {
+        // Each item gets its own roll using the existing treasure loot table.
+        Item item = lootSystem.Table().RollDrop(room.getRoomType());
+        if (item == null)
+            return;
+
+        // Parenting the drop to its room also removes it when the dungeon is rebuilt.
+        GameObject drop = Instantiate(
+            dungeonLootPrefab,
+            position,
+            Quaternion.identity,
+            roomObject.transform
         );
+        drop.GetComponent<InWorldItem>().SetItem(item);
+        drop.GetComponent<SpriteRenderer>().sprite =
+            Resources.Load<Sprite>("TL3_Kaleb/" + item.getTexture());
+
+        Debug.Log("Spawned loot in " + roomObject.name, drop);
     }
 
 

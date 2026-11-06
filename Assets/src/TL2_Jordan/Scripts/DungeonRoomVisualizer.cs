@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DungeonRoomVisualizer : MonoBehaviour
 {
+    public event System.Action<Room, GameObject> OnRoomCreated;
+
     [Header("Room Prefabs")]
     [SerializeField] private GameObject combatRoomPrefab;
     [SerializeField] private GameObject treasureRoomPrefab;
@@ -70,6 +72,7 @@ public class DungeonRoomVisualizer : MonoBehaviour
 
             // Associate the GameObject with its logical room.
             roomObjects.Add(room, roomObject);
+            OnRoomCreated?.Invoke(room, roomObject);
         }
 
         Debug.Log(

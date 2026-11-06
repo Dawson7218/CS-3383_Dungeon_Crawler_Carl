@@ -313,6 +313,7 @@ MonoBehaviour:
   playerController: {fileID: 2093192784}
   economyManager: {fileID: 1743786106}
   lootSystem: {fileID: 852162448}
+  dungeonLootPrefab: {fileID: 942730391339161280, guid: dce699b2e2b84667bfaddbd2ce1fb21b, type: 3}
   mainCamera: {fileID: 1214449554}
   roomCount: 12
   seed: 12345
@@ -701,6 +702,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4908719172133724596, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
+      propertyPath: itemPrefabBase
+      value: 
+      objectReference: {fileID: 942730391339161280, guid: 160239dcc92354d5a93be76df66a1726, type: 3}
     - target: {fileID: 6179428440150079476, guid: 6cfcfe5ebfac64be7b4041a3db5863fa, type: 3}
       propertyPath: m_Name
       value: LootSystem

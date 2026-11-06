@@ -42,13 +42,13 @@ public class DungeonGenerator : MonoBehaviour
         roomCount = Mathf.Max(1, roomCount);
 
 
-    Vector2Int bossPosition;
+        Vector2Int bossPosition;
 
-    List<Vector2Int> positions = GeneratePositions(
-        random,
-        roomCount,
-        out bossPosition
-    );
+        List<Vector2Int> positions = GeneratePositions(
+            random,
+            roomCount,
+            out bossPosition
+        );
 
 
         // STEP 3: Create the appropriate room objects.
