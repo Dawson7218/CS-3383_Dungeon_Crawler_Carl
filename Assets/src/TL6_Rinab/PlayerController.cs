@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; 
 
 public class PlayerController : MonoBehaviour
 {
@@ -156,6 +157,7 @@ public class PlayerController : MonoBehaviour
         if (stats.IsDead())
         {
             ChangeState(new PlayerDeadState());
+            SceneManager.LoadScene("DeathScene");
         }
     }
 
