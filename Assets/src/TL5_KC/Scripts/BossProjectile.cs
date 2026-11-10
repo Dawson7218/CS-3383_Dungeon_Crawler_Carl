@@ -60,7 +60,14 @@ public class BossProjectile : MonoBehaviour
     // The boss calls this after spawning a projectile.
     public void Initialize(Vector2 shotDirection)
     {
-        direction = shotDirection.normalized;
+        direction = shotDirection.sqrMagnitude > 0.0001f
+        ? shotDirection.normalized
+        : Vector2.right;
+
+        float angle = Mathf.Atan2(direction.y, direction.x)
+        * Mathf.Rad2Deg;
+
+        body.rotation = angle;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

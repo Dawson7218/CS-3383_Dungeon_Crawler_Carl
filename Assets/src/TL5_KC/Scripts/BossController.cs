@@ -15,6 +15,8 @@ public class BossController : MonoBehaviour
 
     [Header("Boss Visual")]
     [SerializeField] private SpriteRenderer bossVisual;
+    [SerializeField] private Sprite phase1Sprite;
+    [SerializeField] private Sprite phase3Sprite;
 
     [Header("Boss Movement")]
     [SerializeField] private float moveSpeed = 0.8f;
@@ -189,20 +191,30 @@ public class BossController : MonoBehaviour
 
         Debug.Log("Boss phase changed: " + activePhase.PhaseName, this);
 
-        if (activePhase is Phase2_SummonMinions)
-        {
-            ClearProjectiles();
-            bossVisual.enabled = false;
+    if (activePhase is Phase2_SummonMinions)
+    {
+        ClearProjectiles();
+        bossVisual.enabled = false;
 
-            // Execute the summon once when entering Phase 2.
-            activePhase.ExecutePhase(this);
-        }
-        else
-        {
-            bossVisual.enabled = true;
-        }
+        // Summon once when entering Phase 2.
+        activePhase.ExecutePhase(this);
+    }
+    else
+    {
+    // Choose the sprite before making the boss visible.
+    Sprite selectedSprite = activePhase is Phase3_Enrage
+        ? phase3Sprite
+        : phase1Sprite;
+
+    if (selectedSprite != null)
+    {
+        bossVisual.sprite = selectedSprite;
     }
 
+    bossVisual.enabled = true;
+    }
+
+    }
     public void FireSpread()
     {
         if (!encounterActive || defeatSignaled)

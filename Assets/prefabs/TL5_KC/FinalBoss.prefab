@@ -222,10 +222,18 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6141545216120914885, guid: 492a50b5e04a548c39812ba28f030ae2, type: 3}
   firePoint: {fileID: 8020044463172093621}
   target: {fileID: 0}
+  bossVisual: {fileID: 9190680354758573877}
+  phase1Sprite: {fileID: 21300000, guid: 3c22eeff8b272492791f2b2b1814f7f0, type: 3}
+  phase3Sprite: {fileID: 21300000, guid: 7198bfe27e8d24348a15e893e528e88d, type: 3}
+  moveSpeed: 0.8
+  orbitRadius: 4
+  orbitSpeed: 12
   attackInterval: 2
   spreadAngle: 15
   minionSpawner: {fileID: 8826840101690426026}
-  summonInterval: 4
+  enrageInterval: 1
+  enrageProjectileCount: 8
+  enrageRotationPerBurst: 22.5
 --- !u!114 &8826840101690426026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +247,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::BossMinionSpawner
   minionPrefab: {fileID: 6474687799909544869, guid: 05b8dbfb91acf4c578eac0eb083f3c83, type: 3}
-  minionsPerSummon: 2
-  maximumLivingMinions: 4
   spawnRadius: 2

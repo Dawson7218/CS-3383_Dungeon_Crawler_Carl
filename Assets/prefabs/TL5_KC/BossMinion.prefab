@@ -195,4 +195,4 @@ MonoBehaviour:
   orbitRadius: 2.5
   orbitSpeed: 18
   fireInterval: 2
-  fireOffset: 0.5
+  fireOffset: 0
