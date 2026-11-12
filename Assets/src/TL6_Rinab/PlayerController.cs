@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,30 +22,65 @@ public class PlayerController : MonoBehaviour
     [Header("HP")]
     [SerializeField] private int maxHP = 100;
 
+    [Header("Player Animation")]
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private SpriteRenderer playerSpriteRenderer;
+
+    [Header("Projectile Attack")]
+    [SerializeField] private PlayerProjectile projectilePrefab;
+    [SerializeField] private float fireInterval = 0.25f;
+    [SerializeField] private float projectileSpawnOffset = 0.6f;
+
     private PlayerStats stats;
     private PlayerState currentState;
 
     private float dashCooldownTimer = 0f;
-    private Vector2 lastDirection = Vector2.right;
+    private float fireCooldownTimer = 0f;
 
-    void Awake()
+    private Vector2 lastDirection = Vector2.right;
+    private Vector2 lastAnimationDirection = Vector2.down;
+    private KeyCode lastShootKey = KeyCode.None;
+
+    private void Awake()
     {
         stats = new PlayerStats(maxHP, moveSpeed);
         currentState = new PlayerIdleState();
 
-        if (gameState != null)
+        if (playerAnimator == null)
+            playerAnimator = GetComponentInChildren<Animator>();
+
+        if (playerSpriteRenderer == null)
+            playerSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (playerAnimator != null)
         {
-            gameState.playerHealth = stats.currentHP;
+            // Start facing down. These names must match the Animator parameters.
+            playerAnimator.SetFloat("InputX", 0f);
+            playerAnimator.SetFloat("InputY", -1f);
+            playerAnimator.SetFloat("LastX", 0f);
+            playerAnimator.SetFloat("LastY", -1f);
+            playerAnimator.SetBool("isWalking", false);
         }
+
+        if (playerSpriteRenderer != null)
+            playerSpriteRenderer.flipX = false;
+
+        if (gameState != null)
+            gameState.playerHealth = stats.currentHP;
     }
 
-    void Update()
+    private void Update()
     {
         if (stats.IsDead())
             return;
 
         if (dashCooldownTimer > 0f)
             dashCooldownTimer -= Time.deltaTime;
+
+        if (fireCooldownTimer > 0f)
+            fireCooldownTimer -= Time.deltaTime;
+
+        HandleProjectileInput();
 
         if (currentState is PlayerDashState dash)
         {
@@ -58,9 +93,16 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector2.zero)
             lastDirection = direction;
 
+        UpdateMovementAnimation(direction);
+
         if (Input.GetKeyDown(dashKey) && dashCooldownTimer <= 0f)
         {
             Vector2 dashDir = direction != Vector2.zero ? direction : lastDirection;
+
+
+            if (playerAnimator != null)
+                playerAnimator.SetBool("isWalking", false);
+
             ChangeState(new PlayerDashState(this, dashDir, dashDuration));
             return;
         }
@@ -80,12 +122,120 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 direction = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.W)) direction.y += 1;
-        if (Input.GetKey(KeyCode.S)) direction.y -= 1;
-        if (Input.GetKey(KeyCode.A)) direction.x -= 1;
-        if (Input.GetKey(KeyCode.D)) direction.x += 1;
+        if (Input.GetKey(KeyCode.W)) direction.y += 1f;
+        if (Input.GetKey(KeyCode.S)) direction.y -= 1f;
+        if (Input.GetKey(KeyCode.A)) direction.x -= 1f;
+        if (Input.GetKey(KeyCode.D)) direction.x += 1f;
 
         return direction.normalized;
+    }
+
+    private void UpdateMovementAnimation(Vector2 direction)
+    {
+        if (playerAnimator == null)
+            return;
+
+        bool isWalking = direction.sqrMagnitude > 0.001f;
+
+        if (isWalking)
+        {
+            if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+            {
+                lastAnimationDirection = new Vector2(Mathf.Sign(direction.x), 0f);
+            }
+            else
+            {
+                lastAnimationDirection = new Vector2(0f, Mathf.Sign(direction.y));
+            }
+        }
+
+        playerAnimator.SetFloat("InputX", lastAnimationDirection.x);
+        playerAnimator.SetFloat("InputY", lastAnimationDirection.y);
+        playerAnimator.SetFloat("LastX", lastAnimationDirection.x);
+        playerAnimator.SetFloat("LastY", lastAnimationDirection.y);
+        playerAnimator.SetBool("isWalking", isWalking);
+
+        if (playerSpriteRenderer != null)
+            playerSpriteRenderer.flipX = lastAnimationDirection.x > 0f;
+    }
+
+    private void HandleProjectileInput()
+    {
+        Vector2 shootDirection = GetShootDirection();
+
+        if (shootDirection == Vector2.zero)
+            return;
+
+        if (fireCooldownTimer > 0f || projectilePrefab == null)
+            return;
+
+        int damage = stats.RollAttackDamage(out bool wasCrit);
+
+        Vector2 spawnPosition = (Vector2)transform.position
+            + shootDirection * projectileSpawnOffset;
+
+        PlayerProjectile projectile = Instantiate(
+            projectilePrefab,
+            spawnPosition,
+            Quaternion.identity);
+
+        projectile.Initialize(shootDirection, damage);
+
+        fireCooldownTimer = Mathf.Max(0.01f, fireInterval);
+
+        if (wasCrit)
+            Debug.Log("Critical hit! Damage: " + damage);
+    }
+
+    private Vector2 GetShootDirection()
+    {
+        // remembers most recent arrow
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            lastShootKey = KeyCode.UpArrow;
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+            lastShootKey = KeyCode.DownArrow;
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            lastShootKey = KeyCode.LeftArrow;
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            lastShootKey = KeyCode.RightArrow;
+
+        // holding fire
+        if (lastShootKey != KeyCode.None && Input.GetKey(lastShootKey))
+            return DirectionFromShootKey(lastShootKey);
+
+
+        if (Input.GetKey(KeyCode.UpArrow))
+            lastShootKey = KeyCode.UpArrow;
+        else if (Input.GetKey(KeyCode.DownArrow))
+            lastShootKey = KeyCode.DownArrow;
+        else if (Input.GetKey(KeyCode.LeftArrow))
+            lastShootKey = KeyCode.LeftArrow;
+        else if (Input.GetKey(KeyCode.RightArrow))
+            lastShootKey = KeyCode.RightArrow;
+        else
+            lastShootKey = KeyCode.None;
+
+        return DirectionFromShootKey(lastShootKey);
+    }
+
+    private Vector2 DirectionFromShootKey(KeyCode key)
+    {
+        switch (key)
+        {
+            case KeyCode.UpArrow:
+                return Vector2.up;
+            case KeyCode.DownArrow:
+                return Vector2.down;
+            case KeyCode.LeftArrow:
+                return Vector2.left;
+            case KeyCode.RightArrow:
+                return Vector2.right;
+            default:
+                return Vector2.zero;
+        }
     }
 
     private void ChangeState(PlayerState newState)
@@ -102,7 +252,6 @@ public class PlayerController : MonoBehaviour
         return currentState.Update();
     }
 
-
     public void DashStep(Vector2 direction)
     {
         Vector2 newPosition = (Vector2)transform.position
@@ -111,7 +260,6 @@ public class PlayerController : MonoBehaviour
         transform.position = ClampToRoomBounds(newPosition);
     }
 
- 
     public void EndDash()
     {
         dashCooldownTimer = dashCooldown;
@@ -148,9 +296,7 @@ public class PlayerController : MonoBehaviour
         stats.TakeDamage(amount);
 
         if (gameState != null)
-        {
             gameState.playerHealth = stats.currentHP;
-        }
 
         Debug.Log("Player HP: " + stats.currentHP);
 
