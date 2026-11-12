@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -30,7 +29,6 @@ public class EnemyController : MonoBehaviour
     public bool IsDead => enemy != null && enemy.IsDefeated();
     public static event System.Action<Enemy> OnEnemyDefeated;
 
-
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -41,6 +39,16 @@ public class EnemyController : MonoBehaviour
 
         if (animator != null)
             animator.Play("Enemy_Idle");
+    }
+
+    void Start()
+    {
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                player = playerObj.transform;
+        }
     }
 
     void FixedUpdate()
@@ -57,10 +65,10 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        TestPlayerHealth playerHealth =
-            player.GetComponent<TestPlayerHealth>();
+        PlayerController playerController =
+            player.GetComponent<PlayerController>();
 
-        if (playerHealth != null && playerHealth.IsDead)
+        if (playerController != null && playerController.IsDead)
         {
             ChangeState(new IdleState());
             return;
@@ -136,10 +144,10 @@ public class EnemyController : MonoBehaviour
         if (player == null || enemy.IsDefeated())
             return;
 
-        TestPlayerHealth playerHealth =
-            player.GetComponent<TestPlayerHealth>();
+        PlayerController playerController =
+            player.GetComponent<PlayerController>();
 
-        if (playerHealth == null || playerHealth.IsDead)
+        if (playerController == null || playerController.IsDead)
             return;
 
         // Confirm the player is still within attack range.
@@ -156,27 +164,23 @@ public class EnemyController : MonoBehaviour
         if (animator != null)
             animator.Play("Enemy_Attack", 0, 0f);
 
-        playerHealth.TakeDamage(attackDamage);
+        playerController.TakeDamage(attackDamage);
     }
 
-    // Ai generated function to report the enemy death 
+    private void ReportEnemyDefeat()
+    {
+        // Prevent duplicate defeat notifications.
+        if (enemy == null || !enemy.IsDefeated() || defeatReported)
+            return;
 
-private void ReportEnemyDefeat()
-{
-    // Prevent duplicate defeat notifications.
-    if (enemy == null || !enemy.IsDefeated() || defeatReported)
-        return;
+        // Mark the enemy as reported.
+        defeatReported = true;
 
-    // Mark the enemy as reported.
-    defeatReported = true;
+        // Notify other systems that this enemy was defeated.
+        OnEnemyDefeated?.Invoke(enemy);
 
-    // Notify other systems that this enemy was defeated.
-    OnEnemyDefeated?.Invoke(enemy);
-
-    Debug.Log("Enemy defeat reported.");
-}
-
-
+        Debug.Log("Enemy defeat reported.");
+    }
 
     public void SetTarget(Transform target)
     {
@@ -205,11 +209,8 @@ private void ReportEnemyDefeat()
 
             rb.linearVelocity = Vector2.zero;
 
-            // report the enmey defeat exactly once 
+            // Report the enemy defeat exactly once.
             ReportEnemyDefeat();
         }
     }
-
-
-
 }
