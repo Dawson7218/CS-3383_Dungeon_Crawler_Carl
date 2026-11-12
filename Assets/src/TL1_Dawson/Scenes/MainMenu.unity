@@ -270,8 +270,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Start Game
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 072e899c6a841b244a9009c9d5bc1b28, type: 2}
-  m_sharedMaterial: {fileID: -5320269590941879640, guid: 072e899c6a841b244a9009c9d5bc1b28, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 66d34a3d35b4e79499bf529c5fa137c8, type: 2}
+  m_sharedMaterial: {fileID: 1762547327199657022, guid: 66d34a3d35b4e79499bf529c5fa137c8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -795,8 +795,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 072e899c6a841b244a9009c9d5bc1b28, type: 2}
-  m_sharedMaterial: {fileID: -5320269590941879640, guid: 072e899c6a841b244a9009c9d5bc1b28, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 66d34a3d35b4e79499bf529c5fa137c8, type: 2}
+  m_sharedMaterial: {fileID: 1762547327199657022, guid: 66d34a3d35b4e79499bf529c5fa137c8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1007,8 +1007,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Dungeon Crawler Carl
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 072e899c6a841b244a9009c9d5bc1b28, type: 2}
-  m_sharedMaterial: {fileID: -5320269590941879640, guid: 072e899c6a841b244a9009c9d5bc1b28, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 66d34a3d35b4e79499bf529c5fa137c8, type: 2}
+  m_sharedMaterial: {fileID: 1762547327199657022, guid: 66d34a3d35b4e79499bf529c5fa137c8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

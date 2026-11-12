@@ -29,7 +29,9 @@ public class EconomyManager : MonoBehaviour
     private bool saveAvailable = true;
     // Unity gives each player a save folder that also works in the executable.
     // Path.Combine adds the file name with the correct directory separator.
-    private string SavePath => Path.Combine(Application.persistentDataPath, "economy.json");
+    // Tests supply a temporary path before Awake; normal gameplay uses the player save.
+    private string savePathOverride;
+    private string SavePath => savePathOverride ?? Path.Combine(Application.persistentDataPath, "economy.json");
     // The UI can read the latest error, but only the manager can change it.
     public string LastError { get; private set; } = "";
 
@@ -124,9 +126,28 @@ public class EconomyManager : MonoBehaviour
         // neither bossKilled nor timeAlive currently adds a scoring multiplier.
         // NaN and Infinity are invalid floating-point time values.
         if (timeAlive < 0 || float.IsNaN(timeAlive) || float.IsInfinity(timeAlive)) return;
-        Commit(new RunEndPayoutTransaction(pointsEarned));
+        TryCreditRunEnd(pointsEarned, timeAlive);
     }
 
+    // Apply only once to a fresh player at the beginning of a run.
+    public void ApplyUpgrades(PlayerStats stats)
+    {
+        stats.ModifyMaxHP(GetBonus(StatType.Health));
+        stats.ModifyAttackPower(GetBonus(StatType.Attack));
+        stats.ModifyDefense(GetBonus(StatType.Defense));
+        stats.currentHP = stats.maxHP;
+    }
+
+    // Report success so run tracking can avoid duplicate payouts and retain failures.
+    public bool TryCreditRunEnd(int pointsEarned, float timeAlive)
+    {
+        if (timeAlive < 0 || float.IsNaN(timeAlive) || float.IsInfinity(timeAlive))
+        {
+            LastError = "Invalid run time.";
+            return false;
+        }
+        return Commit(new RunEndPayoutTransaction(pointsEarned));
+    }
     private bool Commit(CurrencyTransaction transaction) //Actually write to JSON
     {
         if (!saveAvailable) return false;
@@ -140,7 +161,7 @@ public class EconomyManager : MonoBehaviour
         try
         {
             // Create the player's save folder if this is the first save.
-            Directory.CreateDirectory(Application.persistentDataPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(SavePath));
             // JsonUtility turns the candidate's public fields into JSON text.
             // Write a temporary file before replacing the previous save.
             string temporaryPath = SavePath + ".tmp";
@@ -186,3 +207,5 @@ public class EconomyManager : MonoBehaviour
         }
     }
 }
+
+
