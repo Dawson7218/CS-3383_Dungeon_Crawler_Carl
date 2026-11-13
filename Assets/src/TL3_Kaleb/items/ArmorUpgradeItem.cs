@@ -17,6 +17,7 @@ public class ArmorUpgradeItem : Item
 
         playerStats.ModifyDefense(defenseDelta);
         playerStats.ModifyMaxHP(maxHealthDelta);
+        playerStats.Heal(maxHealthDelta);
          return "applyEffectItem";
     }
 
