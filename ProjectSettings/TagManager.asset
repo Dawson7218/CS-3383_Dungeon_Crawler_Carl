@@ -38,6 +38,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 302487413
+    locked: 0
+  - name: floor
+    uniqueID: 3551072663
+    locked: 0
+  - name: floorSecondary
+    uniqueID: 894433133
+    locked: 0
+  - name: enemy
+    uniqueID: 483474011
+    locked: 0
   - name: Player
     uniqueID: 4143615871
     locked: 0
