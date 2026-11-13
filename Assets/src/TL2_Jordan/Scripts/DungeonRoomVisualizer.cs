@@ -126,12 +126,40 @@ public class DungeonRoomVisualizer : MonoBehaviour
         return null;
     }
 
+    public Room GetRoomAtWorldPosition(Vector2 worldPosition)
+    {
+        float halfWidth = roomWidth * 0.5f;
+        float halfHeight = roomHeight * 0.5f;
+
+        foreach (var entry in roomObjects)
+        {
+            if (entry.Value == null)
+                continue;
+
+            Vector3 center = entry.Value.transform.position;
+
+            // Include the lower edges and exclude the upper edges so a shared
+            // doorway belongs to exactly one room, including at negative coordinates.
+            if (worldPosition.x >= center.x - halfWidth &&
+                worldPosition.x < center.x + halfWidth &&
+                worldPosition.y >= center.y - halfHeight &&
+                worldPosition.y < center.y + halfHeight)
+            {
+                return entry.Key;
+            }
+        }
+
+        return null;
+    }
+
     public void ClearDungeon()
     {
         foreach (GameObject roomObject in roomObjects.Values)
         {
             if (roomObject != null)
             {
+                // Stop old encounters immediately; Destroy completes at the end of the frame.
+                roomObject.SetActive(false);
                 Destroy(roomObject);
             }
         }

@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameSceneController : MonoBehaviour
@@ -11,8 +12,6 @@ public class GameSceneController : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private EconomyManager economyManager;
     [SerializeField] private LootSystem lootSystem;
-    [SerializeField] private GameObject dungeonLootPrefab;
-    [SerializeField] private Camera mainCamera;
 
     [Header("Dungeon Settings")]
     [SerializeField, Min(2)] private int roomCount = 20;
@@ -27,9 +26,27 @@ public class GameSceneController : MonoBehaviour
 
     private Room currentRoom;
     private Item currentItem;
+    private Rigidbody2D playerBody;
 
     private readonly Vector2 itemPosition =
         new Vector2(100f, 250f);
+
+    private void Awake()
+    {
+        // Room encounters replace the prototype startup encounter in this scene.
+        // Disable before Start runs, without changing the teammate's script or scene.
+        foreach (EncounterSpawner spawner in FindObjectsByType<EncounterSpawner>(FindObjectsInactive.Include))
+        {
+            if (spawner.gameObject.scene == gameObject.scene)
+                spawner.enabled = false;
+        }
+
+        foreach (MVPEnemyScaler scaler in FindObjectsByType<MVPEnemyScaler>(FindObjectsInactive.Include))
+        {
+            if (scaler.gameObject.scene == gameObject.scene)
+                scaler.enabled = false;
+        }
+    }
 
     private void Start()
     {
@@ -47,6 +64,9 @@ public class GameSceneController : MonoBehaviour
         if (playerController == null)
             playerController =
                 FindAnyObjectByType<PlayerController>();
+
+        if (playerController != null)
+            playerBody = playerController.GetComponent<Rigidbody2D>();
 
         if (economyManager == null)
             economyManager = EconomyManager.Instance;
@@ -119,54 +139,32 @@ public class GameSceneController : MonoBehaviour
         );
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (generator == null)
+        if (playerBody == null)
             return;
 
-        // Arrow keys test logical room transitions.
-        Direction direction;
+        // PlayerController moves the Transform for walking and dashing. Physics
+        // should resolve contact, but must not keep drifting from old contact impulses.
+        // Revisit this adapter if the player switches to velocity-driven movement.
+        playerBody.gravityScale = 0f;
+        playerBody.linearVelocity = Vector2.zero;
+        playerBody.angularVelocity = 0f;
+    }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-            direction = Direction.North;
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-            direction = Direction.South;
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            direction = Direction.West;
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-            direction = Direction.East;
-        else
+    private void LateUpdate()
+    {
+        if (generator == null || roomVisualizer == null || playerController == null)
             return;
 
-        Room nextRoom;
+        // Run after the player's Update movement, including dash movement.
+        Room playerRoom = roomVisualizer.GetRoomAtWorldPosition(
+            playerController.GetPosition()
+        );
 
-        if (generator.TryTransition(
-            direction,
-            out nextRoom))
-        {
-            GameObject roomObject = null;
-
-            if (roomVisualizer != null)
-            {
-                roomObject =
-                    roomVisualizer.GetRoomObject(nextRoom);
-            }
-
-            Debug.Log(
-                "Entered " + nextRoom.getRoomType() +
-                " at " + nextRoom.GetPosition() +
-                ". GameObject: " +
-                (roomObject != null
-                    ? roomObject.name
-                    : "None")
-            );
-        }
-        else
-        {
-            Debug.Log(
-                "No connected room to the " + direction
-            );
-        }
+        // If the player is outside the generated map, keep the last known room.
+        if (playerRoom != null)
+            generator.TrySetCurrentRoom(playerRoom);
     }
 
 
@@ -175,28 +173,18 @@ public class GameSceneController : MonoBehaviour
         currentRoom = room;
         RefreshItem();
 
-        if (roomVisualizer == null)
+        // Cinemachine follows the player; logical room changes do not move the camera.
+        if (room == null || room.getRoomType() != RoomType.CombatRoom ||
+            roomVisualizer == null || playerController == null)
             return;
 
-        GameObject roomObject =
-            roomVisualizer.GetRoomObject(room);
-
+        GameObject roomObject = roomVisualizer.GetRoomObject(room);
         if (roomObject == null)
             return;
 
-        if (mainCamera == null)
-            mainCamera = Camera.main;
-
-        if (mainCamera != null)
-        {
-            Vector3 position = roomObject.transform.position;
-
-            mainCamera.transform.position = new Vector3(
-                position.x,
-                position.y,
-                mainCamera.transform.position.z
-            );
-        }
+        CombatRoomEncounter encounter = roomObject.GetComponent<CombatRoomEncounter>();
+        if (encounter != null)
+            encounter.TrySpawn(playerController.transform);
     }
 
 
@@ -227,14 +215,20 @@ public class GameSceneController : MonoBehaviour
         if (room.getRoomType() != RoomType.TreasureRoom)
             return;
 
-        if (lootSystem == null || dungeonLootPrefab == null)
+        if (lootSystem == null)
         {
             Debug.LogWarning(
-                "Cannot spawn room loot: assign the loot system and dungeon loot prefab.",
+                "Cannot spawn room loot: assign the loot system.",
                 this
             );
             return;
         }
+
+        // GenerateLootAt returns void. Remember existing items so only the drops
+        // synchronously created by these calls are attached to this room.
+        var existingItems = new HashSet<InWorldItem>(
+            FindObjectsByType<InWorldItem>(FindObjectsInactive.Include)
+        );
 
         int itemCount = Random.value < secondItemChance ? 2 : 1;
         for (int i = 0; i < itemCount; i++)
@@ -244,29 +238,22 @@ public class GameSceneController : MonoBehaviour
                 Random.Range(-Mathf.Abs(lootSpawnHalfExtents.y), Mathf.Abs(lootSpawnHalfExtents.y)),
                 0f
             );
-            SpawnRoomItem(room, roomObject, position);
+            lootSystem.GenerateLootAt(room.getRoomType(), new Vector2(position.x, position.y));
         }
-    }
 
-    private void SpawnRoomItem(Room room, GameObject roomObject, Vector3 position)
-    {
-        // Each item gets its own roll using the existing treasure loot table.
-        Item item = lootSystem.Table().RollDrop(room.getRoomType());
-        if (item == null)
-            return;
+        foreach (InWorldItem drop in FindObjectsByType<InWorldItem>(FindObjectsInactive.Include))
+        {
+            if (existingItems.Contains(drop))
+                continue;
 
-        // Parenting the drop to its room also removes it when the dungeon is rebuilt.
-        GameObject drop = Instantiate(
-            dungeonLootPrefab,
-            position,
-            Quaternion.identity,
-            roomObject.transform
-        );
-        drop.GetComponent<InWorldItem>().SetItem(item);
-        drop.GetComponent<SpriteRenderer>().sprite =
-            Resources.Load<Sprite>("TL3_Kaleb/" + item.getTexture());
+            // Keep world position and remove room loot when the dungeon is rebuilt.
+            drop.transform.SetParent(roomObject.transform, true);
+            SpriteRenderer renderer = drop.GetComponent<SpriteRenderer>();
+            if (renderer != null)
+                renderer.sortingOrder = 6;
 
-        Debug.Log("Spawned loot in " + roomObject.name, drop);
+            Debug.Log("Spawned loot in " + roomObject.name, drop);
+        }
     }
 
 

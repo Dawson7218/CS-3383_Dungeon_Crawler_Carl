@@ -343,6 +343,20 @@ public class DungeonGenerator : MonoBehaviour
         return currentRoom;
     }
 
+    public bool TrySetCurrentRoom(Room room)
+    {
+        // Position tracking may also need to catch up after a dash or teleport.
+        if (room == null || !rooms.Contains(room))
+            return false;
+
+        if (currentRoom == room)
+            return true;
+
+        currentRoom = room;
+        OnRoomChanged?.Invoke(currentRoom);
+        return true;
+    }
+
     public bool TryTransition(Direction dir, out Room nextRoom)
     {
         nextRoom = null;
@@ -355,12 +369,8 @@ public class DungeonGenerator : MonoBehaviour
         if (neighbor == null)
             return false;
 
-        currentRoom = neighbor;
-        nextRoom = currentRoom;
-
-        OnRoomChanged?.Invoke(currentRoom);
-
-        return true;
+        nextRoom = neighbor;
+        return TrySetCurrentRoom(neighbor);
     }
 
     public List<Room> GetAllRooms()
