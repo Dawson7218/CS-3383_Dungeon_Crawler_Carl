@@ -8,6 +8,7 @@ public class HUDManager : MonoBehaviour
     HudElement healthBar = new HealthBarElement();
     HudElement gameTimer = new RunTimerElement();
     HudElement pointsCounter = new PointsCounterElement();
+    HudElement inventory = new InventoryElement();
     HudElement minimap = new MinimapElement();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -25,6 +26,7 @@ public class HUDManager : MonoBehaviour
         healthBar.Refresh(gameState, hudRoot.transform.Find("HealthBar").gameObject);
         pointsCounter.Refresh(gameState, hudRoot.transform.Find("PointsDisplay").gameObject);
         gameTimer.Refresh(gameState, hudRoot.transform.Find("TimeDisplay").gameObject);
+        inventory.Refresh(gameState, hudRoot.transform.Find("InventoryDisplay").gameObject);
 
         //need to actually get game object data in
     }
