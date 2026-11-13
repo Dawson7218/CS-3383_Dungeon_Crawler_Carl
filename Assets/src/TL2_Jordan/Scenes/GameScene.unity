@@ -382,8 +382,6 @@ MonoBehaviour:
   playerController: {fileID: 2093192784}
   economyManager: {fileID: 1743786106}
   lootSystem: {fileID: 852162448}
-  dungeonLootPrefab: {fileID: 942730391339161280, guid: dce699b2e2b84667bfaddbd2ce1fb21b, type: 3}
-  mainCamera: {fileID: 1214449554}
   roomCount: 12
   useRandomSeed: 1
   seed: 12345
@@ -524,7 +522,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -616,7 +614,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -731,7 +729,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -823,7 +821,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -926,7 +924,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -1143,7 +1141,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -1186,7 +1184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6428db8e8603346f3816f13ecaa40229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::EncounterSpawner
-  enemyPrefab: {fileID: 8663991545903724109, guid: 4c34dabb847744ab1a08b82074b35fff, type: 3}
+  enemyPrefab: {fileID: 580604464917806437, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
   player: {fileID: 2093192786}
   numberOfEnemies: 1
   spawnSpacing: 3
@@ -1328,7 +1326,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -1471,7 +1469,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}
@@ -1624,7 +1622,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 302487413
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4817493816064884136, guid: c52806cf98dc9432a85f31ade89c8387, type: 3}

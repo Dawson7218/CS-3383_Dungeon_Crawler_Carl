@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -12,110 +13,161 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float attackRange = 2.5f;
     [SerializeField] private float attackExitBuffer = 0.3f;
     [SerializeField] private int maxHealth = 100;
+    [SerializeField] private bool spriteFacesRightByDefault = true;
 
     [Header("Attack Settings")]
     [SerializeField] private int attackDamage = 10;
     [SerializeField] private float attackCooldown = 1f;
 
-    private float nextAttackTime;
-
-    private Enemy enemy;
-    private EnemyState currentState;
     private Rigidbody2D rb;
     private Animator animator;
-    private bool defeatReported = false;
+    private Collider2D enemyCollider;
+
+    private PlayerController playerController;
+    private Enemy enemy;
+
+    // Reusable states
+    private IdleState idleState;
+    private ChaseState chaseState;
+    private AttackState attackState;
+    private DeadState deadState;
+
+    private EnemyState currentState;
+
+    private float nextAttackTime;
+    private float initialScaleX;
+
+    private bool defeatReported;
 
     public int CurrentHP => enemy != null ? enemy.Hp : 0;
     public bool IsDead => enemy != null && enemy.IsDefeated();
+
     public static event System.Action<Enemy> OnEnemyDefeated;
 
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        enemyCollider = GetComponent<Collider2D>();
 
-        enemy = new Enemy(1, maxHealth, new IdleState());
-        currentState = new IdleState();
+        initialScaleX = Mathf.Abs(transform.localScale.x);
+
+        // Create states only once.
+        idleState = new IdleState();
+        chaseState = new ChaseState();
+        attackState = new AttackState();
+        deadState = new DeadState();
+
+        enemy = new Enemy(1, maxHealth, idleState);
+
+        currentState = idleState;
 
         if (animator != null)
             animator.Play("Enemy_Idle");
     }
 
-    void Start()
+    private void Start()
     {
         if (player == null)
         {
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            GameObject playerObj =
+                GameObject.FindGameObjectWithTag("Player");
+
             if (playerObj != null)
-                player = playerObj.transform;
+                SetTarget(playerObj.transform);
+        }
+        else
+        {
+            SetTarget(player);
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (enemy.IsDefeated())
+        if (IsDead)
         {
-            ChangeState(new DeadState());
+            ChangeState(deadState);
             return;
         }
 
-        if (player == null)
+        if (player == null || playerController == null ||
+            playerController.IsDead)
         {
-            ChangeState(new IdleState());
+            ChangeState(idleState);
             return;
         }
 
-        PlayerController playerController =
-            player.GetComponent<PlayerController>();
+        FacePlayer();
 
-        if (playerController != null && playerController.IsDead)
+        Vector2 direction =
+            (Vector2)player.position - rb.position;
+
+        float distanceSqr = direction.sqrMagnitude;
+
+        float attackThreshold =
+            currentState == attackState
+                ? attackRange + attackExitBuffer
+                : attackRange;
+
+        float attackThresholdSqr =
+            attackThreshold * attackThreshold;
+
+        float detectionRangeSqr =
+            detectionRange * detectionRange;
+
+        if (distanceSqr <= attackThresholdSqr)
         {
-            ChangeState(new IdleState());
-            return;
-        }
+            ChangeState(attackState);
 
-        float distance = Vector2.Distance(
-            rb.position,
-            (Vector2)player.position
-        );
-
-        // Prevent rapid switching between Chase and Attack.
-        float attackThreshold = currentState is AttackState
-            ? attackRange + attackExitBuffer
-            : attackRange;
-
-        if (distance <= attackThreshold)
-        {
-            ChangeState(new AttackState());
-
-            if (Time.time >= nextAttackTime)
+            // Only deal damage inside the actual attack range.
+            if (distanceSqr <= attackRange * attackRange &&
+                Time.time >= nextAttackTime)
             {
                 PerformAttack();
                 nextAttackTime = Time.time + attackCooldown;
             }
         }
-        else if (distance <= detectionRange)
+        else if (distanceSqr <= detectionRangeSqr)
         {
-            ChangeState(new ChaseState());
+            ChangeState(chaseState);
 
-            Vector2 direction =
-                ((Vector2)player.position - rb.position).normalized;
+            direction.Normalize();
 
             Vector2 newPosition =
-                rb.position + direction * moveSpeed *
-                Time.fixedDeltaTime;
+                rb.position +
+                direction * moveSpeed * Time.fixedDeltaTime;
 
             rb.MovePosition(newPosition);
         }
         else
         {
-            ChangeState(new IdleState());
+            ChangeState(idleState);
         }
+    }
+
+    private void FacePlayer()
+    {
+        float dx = player.position.x - transform.position.x;
+
+        if (Mathf.Abs(dx) < 0.05f)
+            return;
+
+        bool shouldFaceRight = dx > 0f;
+
+        float sign =
+            shouldFaceRight == spriteFacesRightByDefault
+                ? 1f
+                : -1f;
+
+        Vector3 scale = transform.localScale;
+        scale.x = initialScaleX * sign;
+
+        transform.localScale = scale;
     }
 
     private void ChangeState(EnemyState newState)
     {
-        if (currentState.GetType() == newState.GetType())
+        if (currentState == newState)
             return;
 
         currentState = newState;
@@ -123,16 +175,16 @@ public class EnemyController : MonoBehaviour
 
         if (animator != null)
         {
-            if (newState is IdleState)
+            if (newState == idleState)
                 animator.Play("Enemy_Idle", 0, 0f);
 
-            else if (newState is ChaseState)
+            else if (newState == chaseState)
                 animator.Play("Enemy_Run", 0, 0f);
 
-            else if (newState is AttackState)
+            else if (newState == attackState)
                 animator.Play("Enemy_Attack", 0, 0f);
 
-            else if (newState is DeadState)
+            else if (newState == deadState)
                 animator.Play("Enemy_Die", 0, 0f);
         }
 
@@ -141,42 +193,22 @@ public class EnemyController : MonoBehaviour
 
     private void PerformAttack()
     {
-        if (player == null || enemy.IsDefeated())
+        if (playerController == null || IsDead ||
+            playerController.IsDead)
             return;
 
-        PlayerController playerController =
-            player.GetComponent<PlayerController>();
-
-        if (playerController == null || playerController.IsDead)
-            return;
-
-        // Confirm the player is still within attack range.
-        float distance = Vector2.Distance(
-            rb.position,
-            (Vector2)player.position
-        );
-
-        if (distance > attackRange + attackExitBuffer)
-            return;
-
-        Debug.Log("Goblin attacks!");
-
-        if (animator != null)
-            animator.Play("Enemy_Attack", 0, 0f);
+        Debug.Log("Enemy attacks!");
 
         playerController.TakeDamage(attackDamage);
     }
 
     private void ReportEnemyDefeat()
     {
-        // Prevent duplicate defeat notifications.
-        if (enemy == null || !enemy.IsDefeated() || defeatReported)
+        if (!IsDead || defeatReported)
             return;
 
-        // Mark the enemy as reported.
         defeatReported = true;
 
-        // Notify other systems that this enemy was defeated.
         OnEnemyDefeated?.Invoke(enemy);
 
         Debug.Log("Enemy defeat reported.");
@@ -185,31 +217,30 @@ public class EnemyController : MonoBehaviour
     public void SetTarget(Transform target)
     {
         player = target;
+
+        playerController = player != null
+            ? player.GetComponent<PlayerController>()
+            : null;
     }
 
     public void TakeDamage(int damage)
     {
-        if (enemy.IsDefeated())
+        if (IsDead)
             return;
 
         enemy.TakeDamage(damage);
 
-        Debug.Log("Goblin HP: " + enemy.Hp);
+        Debug.Log("Enemy HP: " + enemy.Hp);
 
-        if (enemy.IsDefeated())
+        if (IsDead)
         {
-            ChangeState(new DeadState());
-
-            // Prevent further collisions after death.
-            Collider2D enemyCollider =
-                GetComponent<Collider2D>();
+            ChangeState(deadState);
 
             if (enemyCollider != null)
                 enemyCollider.enabled = false;
 
             rb.linearVelocity = Vector2.zero;
 
-            // Report the enemy defeat exactly once.
             ReportEnemyDefeat();
         }
     }
