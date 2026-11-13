@@ -11,7 +11,7 @@ public class HealthBarElement : HudElement
             var healthSlider = hudObject.transform.Find("HealthSlider").GetComponent<Slider>();
             var healthNumber = hudObject.transform.Find("HealthNumberDisplay").GetComponent<TextMeshProUGUI>();
 
-            healthSlider.value = (float)gameState.playerHealth / 100f;
+            healthSlider.value = (float)gameState.playerHealth / gameState.maxHealth * 100f;
             healthNumber.text = gameState.playerHealth.ToString();
 
             return true;

@@ -13,8 +13,6 @@ public class GameState : ScriptableObject
     public float gameTimer { get; set; } = 0f;
     public int dabloons { get; set; } = 0;
     public int playerHealth { get; set; } = 100;
-
-    //public List<HudElement> hudElements = new();
-
-     
+    public int maxHealth { get; set; } = 100;
+   
 }

@@ -13,9 +13,7 @@ public class HUDManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //test code will need removed when hooked to other components
-        gameState.playerHealth = 100;
-        gameState.points = 123;
+
     }
 
     // Update is called once per frame
