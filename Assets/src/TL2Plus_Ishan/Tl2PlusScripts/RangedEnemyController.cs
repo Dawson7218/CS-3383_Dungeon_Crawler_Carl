@@ -12,6 +12,9 @@ public class RangedEnemyController : MonoBehaviour
     [SerializeField] private float detectionRange = 12f;
     [SerializeField] private float shootingRange = 6f;
 
+    [Header("Sprite Settings")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     [Header("Attack")]
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
@@ -31,13 +34,20 @@ public class RangedEnemyController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        // Get the SpriteRenderer automatically if one is not assigned.
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         currentHealth = maxHealth;
+
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
     }
 
     private void Start()
     {
+        // Find the player automatically if no target was assigned.
         if (player == null)
         {
             GameObject target = GameObject.FindGameObjectWithTag("Player");
@@ -54,10 +64,7 @@ public class RangedEnemyController : MonoBehaviour
         if (isDead || player == null)
             return;
 
-        float distance = Vector2.Distance(
-            transform.position,
-            player.position
-        );
+        float distance = Vector2.Distance(rb.position, player.position);
 
         if (distance > detectionRange)
         {
@@ -66,17 +73,27 @@ public class RangedEnemyController : MonoBehaviour
             return;
         }
 
+        // Move toward the player when outside shooting range.
         if (distance > shootingRange)
         {
             Vector2 direction =
                 ((Vector2)player.position - rb.position).normalized;
 
             rb.linearVelocity = direction * moveSpeed;
+
+            // Make the drone face the direction it is moving.
+            UpdateFacingDirection(direction.x);
+
             PlayAnimation("Drone_Move");
         }
         else
         {
+            // Stop moving while attacking.
             rb.linearVelocity = Vector2.zero;
+
+            // Face the player even when the drone is standing still.
+            float directionX = player.position.x - transform.position.x;
+            UpdateFacingDirection(directionX);
 
             if (Time.time >= nextAttackTime)
             {
@@ -84,6 +101,16 @@ public class RangedEnemyController : MonoBehaviour
                 nextAttackTime = Time.time + attackCooldown;
             }
         }
+    }
+
+    // Flip the drone sprite when its facing direction changes.
+    private void UpdateFacingDirection(float directionX)
+    {
+        if (spriteRenderer == null || Mathf.Abs(directionX) < 0.01f)
+            return;
+
+        // Assumes the original drone sprite faces right.
+        spriteRenderer.flipX = directionX < 0f;
     }
 
     private void Shoot()
@@ -135,6 +162,7 @@ public class RangedEnemyController : MonoBehaviour
     {
         isDead = true;
         rb.linearVelocity = Vector2.zero;
+
         PlayAnimation("Drone_Death", true);
 
         Debug.Log("Ranged enemy defeated!");
