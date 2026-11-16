@@ -898,9 +898,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4154691615964103281, guid: 99ca6f805e62940178e2cee87c229b2f, type: 3}
+      propertyPath: m_Size.x
+      value: 8.393768
+      objectReference: {fileID: 0}
+    - target: {fileID: 4154691615964103281, guid: 99ca6f805e62940178e2cee87c229b2f, type: 3}
+      propertyPath: m_Size.y
+      value: 8.017672
+      objectReference: {fileID: 0}
+    - target: {fileID: 4154691615964103281, guid: 99ca6f805e62940178e2cee87c229b2f, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.7898102
+      objectReference: {fileID: 0}
+    - target: {fileID: 4154691615964103281, guid: 99ca6f805e62940178e2cee87c229b2f, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.45132542
+      objectReference: {fileID: 0}
     - target: {fileID: 8201986177021755003, guid: 99ca6f805e62940178e2cee87c229b2f, type: 3}
       propertyPath: m_Name
-      value: FinalBoss 1
+      value: FinalBoss
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

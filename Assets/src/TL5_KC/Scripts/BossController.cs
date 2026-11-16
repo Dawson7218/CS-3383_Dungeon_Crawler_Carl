@@ -161,17 +161,17 @@ public class BossController : MonoBehaviour
 
     private void SelectPhase()
     {
-    Debug.Log(
-        $"[Boss Check] Object={name}, HP={currentHealth}/{maximumHealth}, " +
-        $"WaveDefeated={minionWaveDefeated}",
-        this);
+        Debug.Log(
+            $"[Boss Check] Object={name}, HP={currentHealth}/{maximumHealth}, " +
+            $"WaveDefeated={minionWaveDefeated}",
+            this);
 
-    BossPhase selectedPhase = chainHead.Handle(this);
+        BossPhase selectedPhase = chainHead.Handle(this);
 
-    Debug.Log(
-        $"[Boss Check] Selected={selectedPhase?.PhaseName ?? "None"}, " +
-        $"Previous={activePhase?.PhaseName ?? "None"}",
-        this);
+        Debug.Log(
+            $"[Boss Check] Selected={selectedPhase?.PhaseName ?? "None"}, " +
+            $"Previous={activePhase?.PhaseName ?? "None"}",
+            this);
 
         if (selectedPhase == null)
         {
@@ -191,28 +191,28 @@ public class BossController : MonoBehaviour
 
         Debug.Log("Boss phase changed: " + activePhase.PhaseName, this);
 
-    if (activePhase is Phase2_SummonMinions)
-    {
-        ClearProjectiles();
-        bossVisual.enabled = false;
+        if (activePhase is Phase2_SummonMinions)
+        {
+            ClearProjectiles();
+            bossVisual.enabled = false;
 
-        // Summon once when entering Phase 2.
-        activePhase.ExecutePhase(this);
-    }
-    else
-    {
-    // Choose the sprite before making the boss visible.
-    Sprite selectedSprite = activePhase is Phase3_Enrage
-        ? phase3Sprite
-        : phase1Sprite;
+            // Summon once when entering Phase 2.
+            activePhase.ExecutePhase(this);
+        }
+        else
+        {
+            // Choose the sprite before making the boss visible.
+            Sprite selectedSprite = activePhase is Phase3_Enrage
+                ? phase3Sprite
+                : phase1Sprite;
 
-    if (selectedSprite != null)
-    {
-        bossVisual.sprite = selectedSprite;
-    }
+            if (selectedSprite != null)
+            {
+                bossVisual.sprite = selectedSprite;
+            }
 
-    bossVisual.enabled = true;
-    }
+            bossVisual.enabled = true;
+        }
 
     }
     public void FireSpread()
@@ -290,12 +290,12 @@ public class BossController : MonoBehaviour
             return;
         }
 
-    Debug.Log("[Boss Check] Starting minion spawn.", this);
+        Debug.Log("[Boss Check] Starting minion spawn.", this);
 
-    int spawned = minionSpawner.SpawnMinions(
-    target, projectilePrefab);
+        int spawned = minionSpawner.SpawnMinions(
+        target, projectilePrefab);
 
-    Debug.Log($"[Boss Check] Spawned={spawned}", this);
+        Debug.Log($"[Boss Check] Spawned={spawned}", this);
 
         minionWaveSpawned = spawned == 3;
 
