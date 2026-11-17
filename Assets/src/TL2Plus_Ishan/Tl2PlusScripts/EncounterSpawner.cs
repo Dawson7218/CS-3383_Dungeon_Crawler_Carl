@@ -1,10 +1,9 @@
-
 using UnityEngine;
 
 public class EncounterSpawner : MonoBehaviour
 {
-    [Header("Enemy Prefab")]
-    [SerializeField] private GameObject enemyPrefab;
+    [Header("Enemy Prefabs")]
+    [SerializeField] private GameObject[] enemyPrefabs;
 
     [Header("Player")]
     [SerializeField] private Transform player;
@@ -12,27 +11,46 @@ public class EncounterSpawner : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] private int numberOfEnemies = 3;
     [SerializeField] private float spawnSpacing = 3f;
+    [SerializeField] private bool spawnInOrder = true;
 
     void Start()
     {
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+        }
+
         SpawnEncounter();
     }
 
     public void SpawnEncounter()
     {
-        if (enemyPrefab == null)
+        if (enemyPrefabs == null || enemyPrefabs.Length == 0)
         {
-            Debug.LogWarning("Enemy prefab is not assigned!");
+            Debug.LogWarning("Enemy prefabs are not assigned!", this);
             return;
         }
 
+        // Center the group around the spawner's position
+        float startOffsetX = -((numberOfEnemies - 1) * spawnSpacing) / 2f;
+
         for (int i = 0; i < numberOfEnemies; i++)
         {
+            GameObject prefabToSpawn = spawnInOrder
+                ? enemyPrefabs[i % enemyPrefabs.Length]
+                : enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+
+            if (prefabToSpawn == null) continue;
+
             Vector3 spawnPosition = transform.position
-                + new Vector3(i * spawnSpacing, 0f, 0f);
+                + new Vector3(startOffsetX + (i * spawnSpacing), 0f, 0f);
 
             GameObject newEnemy = Instantiate(
-                enemyPrefab,
+                prefabToSpawn,
                 spawnPosition,
                 Quaternion.identity
             );

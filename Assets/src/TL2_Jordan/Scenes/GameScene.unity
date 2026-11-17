@@ -1261,10 +1261,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6428db8e8603346f3816f13ecaa40229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::EncounterSpawner
-  enemyPrefab: {fileID: 580604464917806437, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
+  enemyPrefabs:
+  - {fileID: 580604464917806437, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
+  - {fileID: 1962273617786025748, guid: 75e58a142ecec4bde9c1e2f0f4b95875, type: 3}
   player: {fileID: 2093192786}
-  numberOfEnemies: 1
+  numberOfEnemies: 2
   spawnSpacing: 3
+  spawnInOrder: 1
 --- !u!4 &1427359720
 Transform:
   m_ObjectHideFlags: 0
