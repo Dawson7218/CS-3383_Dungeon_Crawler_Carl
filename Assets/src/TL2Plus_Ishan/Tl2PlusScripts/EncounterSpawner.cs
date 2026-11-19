@@ -66,4 +66,7 @@ public class EncounterSpawner : MonoBehaviour
 
         Debug.Log("Encounter spawned: " + numberOfEnemies + " enemies");
     }
+
+
 }
+
