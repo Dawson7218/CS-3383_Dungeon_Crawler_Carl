@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="47" result="Passed" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.2453397">
+  <test-suite type="TestSuite" id="1000" name="CS-3383_Dungeon_Crawler_Carl" fullname="CS-3383_Dungeon_Crawler_Carl" runstate="Runnable" testcasecount="47" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.245340" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1051" name="TL2_Jordan_EditModeTests.dll" fullname="C:/Users/Jorda/CS-3383_Dungeon_Crawler_Carl/CS-3383_Dungeon_Crawler_Carl/Library/ScriptAssemblies/TL2_Jordan_EditModeTests.dll" runstate="Runnable" testcasecount="47" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.229315" total="47" passed="47" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="56168" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestFixture" id="1001" name="DungeonGenerationTests" fullname="DungeonGenerationTests" classname="DungeonGenerationTests" runstate="Runnable" testcasecount="35" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.153191" total="35" passed="35" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1019" name="AllOccupiedAdjacentCellsAreConnectedAndEmptyCellsAreNot" fullname="DungeonGenerationTests.AllOccupiedAdjacentCellsAreConnectedAndEmptyCellsAreNot" methodname="AllOccupiedAdjacentCellsAreConnectedAndEmptyCellsAreNot" classname="DungeonGenerationTests" runstate="Runnable" seed="1157272468" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.048473" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1002" name="BeforeGenerationThereIsNoCurrentRoom" fullname="DungeonGenerationTests.BeforeGenerationThereIsNoCurrentRoom" methodname="BeforeGenerationThereIsNoCurrentRoom" classname="DungeonGenerationTests" runstate="Runnable" seed="2024215764" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.002408" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1034" name="BlockedTransitionDoesNotChangeRoomOrRaiseAnEvent" fullname="DungeonGenerationTests.BlockedTransitionDoesNotChangeRoomOrRaiseAnEvent" methodname="BlockedTransitionDoesNotChangeRoomOrRaiseAnEvent" classname="DungeonGenerationTests" runstate="Runnable" seed="1047586908" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.008780" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1013" name="BossMeetsTheDefaultShortestPathDistance" fullname="DungeonGenerationTests.BossMeetsTheDefaultShortestPathDistance" methodname="BossMeetsTheDefaultShortestPathDistance" classname="DungeonGenerationTests" runstate="Runnable" seed="232639840" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.008412" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1012" name="BossRoomHasExactlyOneEntrance" fullname="DungeonGenerationTests.BossRoomHasExactlyOneEntrance" methodname="BossRoomHasExactlyOneEntrance" classname="DungeonGenerationTests" runstate="Runnable" seed="976681390" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.002069" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 80 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1014" name="ConfiguredBossDistanceIsHonored" fullname="DungeonGenerationTests.ConfiguredBossDistanceIsHonored" methodname="ConfiguredBossDistanceIsHonored" classname="DungeonGenerationTests" runstate="Runnable" seed="1945828840" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.003067" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 40 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1018" name="ConnectionsLeadToTheCorrectAdjacentGridCell" fullname="DungeonGenerationTests.ConnectionsLeadToTheCorrectAdjacentGridCell" methodname="ConnectionsLeadToTheCorrectAdjacentGridCell" classname="DungeonGenerationTests" runstate="Runnable" seed="1671905775" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.002825" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1022" name="DifferentSeedsCanProduceDifferentLayouts" fullname="DungeonGenerationTests.DifferentSeedsCanProduceDifferentLayouts" methodname="DifferentSeedsCanProduceDifferentLayouts" classname="DungeonGenerationTests" runstate="Runnable" seed="1104694803" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.003253" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 40 rooms, including 2 treasure rooms.
+Generated 40 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1011" name="DungeonContainsExactlyOneBossRoom" fullname="DungeonGenerationTests.DungeonContainsExactlyOneBossRoom" methodname="DungeonContainsExactlyOneBossRoom" classname="DungeonGenerationTests" runstate="Runnable" seed="175286791" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000940" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1017" name="EveryConnectionHasAReciprocalConnection" fullname="DungeonGenerationTests.EveryConnectionHasAReciprocalConnection" methodname="EveryConnectionHasAReciprocalConnection" classname="DungeonGenerationTests" runstate="Runnable" seed="710597796" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001188" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1010" name="EveryRoomIsReachableFromTheStart" fullname="DungeonGenerationTests.EveryRoomIsReachableFromTheStart" methodname="EveryRoomIsReachableFromTheStart" classname="DungeonGenerationTests" runstate="Runnable" seed="1127924556" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.003080" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 80 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1009" name="GeneratedRoomsNeverShareAGridPosition" fullname="DungeonGenerationTests.GeneratedRoomsNeverShareAGridPosition" methodname="GeneratedRoomsNeverShareAGridPosition" classname="DungeonGenerationTests" runstate="Runnable" seed="82587081" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.005188" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 80 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1032" name="GenerationSubscribersSeeTheFullyConnectedMap" fullname="DungeonGenerationTests.GenerationSubscribersSeeTheFullyConnectedMap" methodname="GenerationSubscribersSeeTheFullyConnectedMap" classname="DungeonGenerationTests" runstate="Runnable" seed="1131478281" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001955" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1027" name="GuaranteedCombatFillsEligibleNonSpecialRooms" fullname="DungeonGenerationTests.GuaranteedCombatFillsEligibleNonSpecialRooms" methodname="GuaranteedCombatFillsEligibleNonSpecialRooms" classname="DungeonGenerationTests" runstate="Runnable" seed="1597487717" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001665" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 12 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1026" name="GuaranteedTreasureCannotReplaceStartOrBoss" fullname="DungeonGenerationTests.GuaranteedTreasureCannotReplaceStartOrBoss" methodname="GuaranteedTreasureCannotReplaceStartOrBoss" classname="DungeonGenerationTests" runstate="Runnable" seed="846608974" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001928" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 12 rooms, including 10 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1029" name="LogicalRoomTypeMatchesItsConcreteSubclass" fullname="DungeonGenerationTests.LogicalRoomTypeMatchesItsConcreteSubclass" methodname="LogicalRoomTypeMatchesItsConcreteSubclass" classname="DungeonGenerationTests" runstate="Runnable" seed="1705775424" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.002157" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1008" name="MultiRoomRunStartsInACorridor" fullname="DungeonGenerationTests.MultiRoomRunStartsInACorridor" methodname="MultiRoomRunStartsInACorridor" classname="DungeonGenerationTests" runstate="Runnable" seed="787137984" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001810" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1006" name="NegativeRequestedRoomsProducesOneValidRoom" fullname="DungeonGenerationTests.NegativeRequestedRoomsProducesOneValidRoom" methodname="NegativeRequestedRoomsProducesOneValidRoom" classname="DungeonGenerationTests" runstate="Runnable" seed="677908010" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001054" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 1 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1030" name="RegenerationReplacesOldRoomsInsteadOfAccumulatingThem" fullname="DungeonGenerationTests.RegenerationReplacesOldRoomsInsteadOfAccumulatingThem" methodname="RegenerationReplacesOldRoomsInsteadOfAccumulatingThem" classname="DungeonGenerationTests" runstate="Runnable" seed="766513187" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001952" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 30 rooms, including 2 treasure rooms.
+Generated 7 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1004" name="RequestedRoomCountIsPreservedForSmallAndLargeRuns" fullname="DungeonGenerationTests.RequestedRoomCountIsPreservedForSmallAndLargeRuns" methodname="RequestedRoomCountIsPreservedForSmallAndLargeRuns" classname="DungeonGenerationTests" runstate="Runnable" seed="479746213" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.003221" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 1 rooms, including 0 treasure rooms.
+Generated 2 rooms, including 0 treasure rooms.
+Generated 5 rooms, including 2 treasure rooms.
+Generated 12 rooms, including 2 treasure rooms.
+Generated 20 rooms, including 0 treasure rooms.
+Generated 80 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1031" name="RoomGeneratedEventReportsEveryRoomExactlyOnce" fullname="DungeonGenerationTests.RoomGeneratedEventReportsEveryRoomExactlyOnce" methodname="RoomGeneratedEventReportsEveryRoomExactlyOnce" classname="DungeonGenerationTests" runstate="Runnable" seed="910704892" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001401" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1020" name="SameSeedReproducesPositionsAndRoomTypes" fullname="DungeonGenerationTests.SameSeedReproducesPositionsAndRoomTypes" methodname="SameSeedReproducesPositionsAndRoomTypes" classname="DungeonGenerationTests" runstate="Runnable" seed="963909400" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001869" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 40 rooms, including 2 treasure rooms.
+Generated 40 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1016" name="SingleRoomDungeonIsABossWithoutEntrances" fullname="DungeonGenerationTests.SingleRoomDungeonIsABossWithoutEntrances" methodname="SingleRoomDungeonIsABossWithoutEntrances" classname="DungeonGenerationTests" runstate="Runnable" seed="1424063347" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001282" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 1 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1015" name="SmallDungeonClampsImpossibleBossDistance" fullname="DungeonGenerationTests.SmallDungeonClampsImpossibleBossDistance" methodname="SmallDungeonClampsImpossibleBossDistance" classname="DungeonGenerationTests" runstate="Runnable" seed="2050828766" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001332" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 3 rooms, including 1 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1033" name="StartingRoomEventFollowsAllGenerationEvents" fullname="DungeonGenerationTests.StartingRoomEventFollowsAllGenerationEvents" methodname="StartingRoomEventFollowsAllGenerationEvents" classname="DungeonGenerationTests" runstate="Runnable" seed="614635662" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001201" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1007" name="StartingRoomIsAtTheGridOrigin" fullname="DungeonGenerationTests.StartingRoomIsAtTheGridOrigin" methodname="StartingRoomIsAtTheGridOrigin" classname="DungeonGenerationTests" runstate="Runnable" seed="652583155" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001012" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1003" name="TransitionBeforeGenerationFailsWithoutADestination" fullname="DungeonGenerationTests.TransitionBeforeGenerationFailsWithoutADestination" methodname="TransitionBeforeGenerationFailsWithoutADestination" classname="DungeonGenerationTests" runstate="Runnable" seed="881577435" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000459" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1036" name="TransitionThroughTheOppositeDoorReturnsToStart" fullname="DungeonGenerationTests.TransitionThroughTheOppositeDoorReturnsToStart" methodname="TransitionThroughTheOppositeDoorReturnsToStart" classname="DungeonGenerationTests" runstate="Runnable" seed="388487956" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001113" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1025" name="TreasureRoomsNeverExceedTheirConfiguredLimit" fullname="DungeonGenerationTests.TreasureRoomsNeverExceedTheirConfiguredLimit" methodname="TreasureRoomsNeverExceedTheirConfiguredLimit" classname="DungeonGenerationTests" runstate="Runnable" seed="1441905075" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001275" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 3 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1021" name="UnityRandomActivityDoesNotChangeASeededMap" fullname="DungeonGenerationTests.UnityRandomActivityDoesNotChangeASeededMap" methodname="UnityRandomActivityDoesNotChangeASeededMap" classname="DungeonGenerationTests" runstate="Runnable" seed="1483802369" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001864" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 40 rooms, including 2 treasure rooms.
+Generated 40 rooms, including 2 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1035" name="ValidTransitionNotifiesOnceWithTheDestination" fullname="DungeonGenerationTests.ValidTransitionNotifiesOnceWithTheDestination" methodname="ValidTransitionNotifiesOnceWithTheDestination" classname="DungeonGenerationTests" runstate="Runnable" seed="635135989" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001748" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 20 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1028" name="ZeroCombatAndTreasureChancesLeaveCorridorsAndBoss" fullname="DungeonGenerationTests.ZeroCombatAndTreasureChancesLeaveCorridorsAndBoss" methodname="ZeroCombatAndTreasureChancesLeaveCorridorsAndBoss" classname="DungeonGenerationTests" runstate="Runnable" seed="739521221" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001402" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 12 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1005" name="ZeroRequestedRoomsProducesOneValidRoom" fullname="DungeonGenerationTests.ZeroRequestedRoomsProducesOneValidRoom" methodname="ZeroRequestedRoomsProducesOneValidRoom" classname="DungeonGenerationTests" runstate="Runnable" seed="950784167" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000828" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 1 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1023" name="ZeroTreasureChanceProducesNoTreasureRooms" fullname="DungeonGenerationTests.ZeroTreasureChanceProducesNoTreasureRooms" methodname="ZeroTreasureChanceProducesNoTreasureRooms" classname="DungeonGenerationTests" runstate="Runnable" seed="1431860349" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001095" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+        <test-case id="1024" name="ZeroTreasureLimitOverridesGuaranteedTreasureChance" fullname="DungeonGenerationTests.ZeroTreasureLimitOverridesGuaranteedTreasureChance" methodname="ZeroTreasureLimitOverridesGuaranteedTreasureChance" classname="DungeonGenerationTests" runstate="Runnable" seed="1821433739" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001479" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Generated 50 rooms, including 0 treasure rooms.
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1037" name="RoomConnectionTests" fullname="RoomConnectionTests" classname="RoomConnectionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.010688" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1039" name="AddingOneNeighborDoesNotConnectOtherDirections" fullname="RoomConnectionTests.AddingOneNeighborDoesNotConnectOtherDirections" methodname="AddingOneNeighborDoesNotConnectOtherDirections" classname="RoomConnectionTests" runstate="Runnable" seed="2073416390" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000565" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1042" name="ChangingRoomMetadataDoesNotEraseItsConnections" fullname="RoomConnectionTests.ChangingRoomMetadataDoesNotEraseItsConnections" methodname="ChangingRoomMetadataDoesNotEraseItsConnections" classname="RoomConnectionTests" runstate="Runnable" seed="171518964" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000409" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1038" name="MissingNeighborReturnsNullAndIsNotReportedAsConnected" fullname="RoomConnectionTests.MissingNeighborReturnsNullAndIsNotReportedAsConnected" methodname="MissingNeighborReturnsNullAndIsNotReportedAsConnected" classname="RoomConnectionTests" runstate="Runnable" seed="1034939323" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000196" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1041" name="ReplacingANeighborPreservesTheOtherConnections" fullname="RoomConnectionTests.ReplacingANeighborPreservesTheOtherConnections" methodname="ReplacingANeighborPreservesTheOtherConnections" classname="RoomConnectionTests" runstate="Runnable" seed="1725203285" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000225" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1040" name="SeparateRoomsDoNotShareTheirNeighborCollections" fullname="RoomConnectionTests.SeparateRoomsDoNotShareTheirNeighborCollections" methodname="SeparateRoomsDoNotShareTheirNeighborCollections" classname="RoomConnectionTests" runstate="Runnable" seed="490040274" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000194" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1043" name="RoomDoorwayTests" fullname="RoomDoorwayTests" classname="RoomDoorwayTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.062655" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1050" name="BaseRoomContainsFourSolidDoorwayBlockers" fullname="RoomDoorwayTests.BaseRoomContainsFourSolidDoorwayBlockers" methodname="BaseRoomContainsFourSolidDoorwayBlockers" classname="RoomDoorwayTests" runstate="Runnable" seed="1717987292" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.025749" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1045" name="EachConnectionOpensOnlyItsMatchingDoorway" fullname="RoomDoorwayTests.EachConnectionOpensOnlyItsMatchingDoorway" methodname="EachConnectionOpensOnlyItsMatchingDoorway" classname="RoomDoorwayTests" runstate="Runnable" seed="1495905955" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.002056" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1046" name="FourWayJunctionDisablesAllDoorwayWallsAndTheirCollisions" fullname="RoomDoorwayTests.FourWayJunctionDisablesAllDoorwayWallsAndTheirCollisions" methodname="FourWayJunctionDisablesAllDoorwayWallsAndTheirCollisions" classname="RoomDoorwayTests" runstate="Runnable" seed="730248589" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000991" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1048" name="NullRoomDoesNotChangeExistingDoorwayStates" fullname="RoomDoorwayTests.NullRoomDoesNotChangeExistingDoorwayStates" methodname="NullRoomDoesNotChangeExistingDoorwayStates" classname="RoomDoorwayTests" runstate="Runnable" seed="142089794" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.000797" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1049" name="ProductionRoomVariantsHaveTheCorrectLogicalTypes" fullname="RoomDoorwayTests.ProductionRoomVariantsHaveTheCorrectLogicalTypes" methodname="ProductionRoomVariantsHaveTheCorrectLogicalTypes" classname="RoomDoorwayTests" runstate="Runnable" seed="1513819936" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.028885" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1047" name="ReconfigurationClosesPreviouslyOpenDoors" fullname="RoomDoorwayTests.ReconfigurationClosesPreviouslyOpenDoors" methodname="ReconfigurationClosesPreviouslyOpenDoors" classname="RoomDoorwayTests" runstate="Runnable" seed="1577219119" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001026" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1044" name="RoomWithoutNeighborsClosesAllFourDoorways" fullname="RoomDoorwayTests.RoomWithoutNeighborsClosesAllFourDoorways" methodname="RoomWithoutNeighborsClosesAllFourDoorways" classname="RoomDoorwayTests" runstate="Runnable" seed="1145542691" result="Passed" start-time="2026-11-17 18:10:45Z" end-time="2026-11-17 18:10:45Z" duration="0.001297" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Saving results to: C:\Users\Jorda\CS-3383_Dungeon_Crawler_Carl\CS-3383_Dungeon_Crawler_Carl\docs\TL2_Jordan\EditMode-TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
