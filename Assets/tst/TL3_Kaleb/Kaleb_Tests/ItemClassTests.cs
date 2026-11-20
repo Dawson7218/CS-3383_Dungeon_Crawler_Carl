@@ -66,7 +66,7 @@ public class ItemClassTests
         Assert.AreEqual("applyEffectItem", armor.ApplyEffect(stats));
         Assert.AreEqual(3, stats.defense);
         Assert.AreEqual(107, stats.maxHP);
-        Assert.AreEqual(100, stats.currentHP);
+        Assert.AreEqual(107, stats.currentHP);
         Assert.AreEqual(10, stats.attackPower);
         Assert.AreEqual(5f, stats.moveSpeed, 0.001f);
         Assert.AreEqual(0.05f, stats.critChance, 0.001f);

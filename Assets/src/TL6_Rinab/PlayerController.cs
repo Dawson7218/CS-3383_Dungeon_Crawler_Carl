@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
 
         if (playerAnimator != null)
         {
-            // Start facing down. These names must match the Animator parameters.
             playerAnimator.SetFloat("InputX", 0f);
             playerAnimator.SetFloat("InputY", -1f);
             playerAnimator.SetFloat("LastX", 0f);
@@ -179,7 +178,7 @@ public class PlayerController : MonoBehaviour
             spawnPosition,
             Quaternion.identity);
 
-        projectile.Initialize(shootDirection, damage);
+        projectile.Initialize(shootDirection, damage, transform);
 
         fireCooldownTimer = Mathf.Max(0.01f, fireInterval);
 
