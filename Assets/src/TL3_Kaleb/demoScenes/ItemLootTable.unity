@@ -1331,6 +1331,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436940429}
   m_CullTransparentMesh: 1
+--- !u!1001 &1598739210
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 890000000000000003, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2105280579678163109, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
+      propertyPath: m_Name
+      value: TreasureRoomPrefab
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9f6db6d5b62f291458b68aadc6092950, type: 3}
 --- !u!1 &1719229988
 GameObject:
   m_ObjectHideFlags: 0
@@ -2098,3 +2167,4 @@ SceneRoots:
   - {fileID: 1301938974}
   - {fileID: 1767279156}
   - {fileID: 2016477558}
+  - {fileID: 1598739210}
