@@ -148,13 +148,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6428db8e8603346f3816f13ecaa40229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::EncounterSpawner
+  tiers: []
   enemyPrefabs:
   - {fileID: 580604464917806437, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
   - {fileID: 1962273617786025748, guid: 75e58a142ecec4bde9c1e2f0f4b95875, type: 3}
-  player: {fileID: 1898207877}
   numberOfEnemies: 2
+  player: {fileID: 1898207877}
   spawnSpacing: 3
   spawnInOrder: 1
+  spawnOnStart: 1
+  defaultTier: 1
 --- !u!4 &26361886
 Transform:
   m_ObjectHideFlags: 0
@@ -737,6 +740,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 942ec1ac1d9fa45d49b4cfb629b4d5c9, type: 3}
+--- !u!1001 &5807377529337618338
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4527632635242405741, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_Name
+      value: Grunt-Enemies
+      objectReference: {fileID: 0}
+    - target: {fileID: 6310916934286162093, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.40495
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.53333
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6842926495004544279, guid: e030c91297f7246aea77302ee014a62f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e030c91297f7246aea77302ee014a62f, type: 3}
 --- !u!1001 &7680560994343521157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -820,3 +884,4 @@ SceneRoots:
   - {fileID: 185084037225091363}
   - {fileID: 26361886}
   - {fileID: 1306853228}
+  - {fileID: 5807377529337618338}
