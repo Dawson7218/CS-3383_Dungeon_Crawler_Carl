@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6310916934286162093}
   - component: {fileID: 2818743145909344356}
   - component: {fileID: 330495058239958382}
+  - component: {fileID: 2891659548615831536}
   m_Layer: 0
   m_Name: Grunt-Enemies
   m_TagString: Untagged
@@ -156,13 +157,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3657227bf04294c4284d648f4375dbb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MainGameAssembly::GruntEnemyController
+  player: {fileID: 0}
   moveSpeed: 2.5
   detectionRange: 8
   attackRange: 1.2
-  attackCooldown: 1.5
+  attackExitBuffer: 0.3
+  patrolRadius: 3
+  patrolSpeedMultiplier: 0.5
+  patrolPauseTime: 1.5
   attackDamage: 10
+  attackCooldown: 1.5
   maxHealth: 50
-  idleAnim: gruntIdle
-  runAnim: gruntRun
-  attackAnim: gruntAttack
-  dieAnim: gruntDie
+  despawnDelay: 1.5
+  spriteRenderer: {fileID: 0}
+  spriteFacesRightByDefault: 1
+--- !u!61 &2891659548615831536
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4527632635242405741}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.44, y: 0.55}
+    newSize: {x: 0.44, y: 0.55}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.44, y: 0.55}
+  m_EdgeRadius: 0

@@ -1,29 +1,47 @@
-
 using UnityEngine;
+using UnityEngine.Serialization;
 
+// Base class for every enemy. RunCycle() is the template method: the
+// patrol / chase / attack logic is the same for all enemies and only
+// PerformAttack() (and the animation names) change in the subclasses.
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyController : MonoBehaviour
 {
     [Header("Target")]
-    [SerializeField] private Transform player;
+    [SerializeField] protected Transform player;
 
-    [Header("Enemy Settings")]
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float detectionRange = 20f;
-    [SerializeField] private float attackRange = 2.5f;
-    [SerializeField] private float attackExitBuffer = 0.3f;
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private bool spriteFacesRightByDefault = true;
+    [Header("Movement")]
+    [SerializeField] protected float moveSpeed = 2f;
+    [SerializeField] protected float detectionRange = 12f;
 
-    [Header("Attack Settings")]
-    [SerializeField] private int attackDamage = 10;
-    [SerializeField] private float attackCooldown = 1f;
+    // Used to be called shootingRange on the drone, keep the old name so
+    // the value on the prefab doesn't get lost.
+    [SerializeField, FormerlySerializedAs("shootingRange")]
+    protected float attackRange = 2f;
+    [SerializeField] protected float attackExitBuffer = 0.3f;
 
-    private Rigidbody2D rb;
-    private Animator animator;
-    private Collider2D enemyCollider;
+    [Header("Patrol (radius 0 = stand still)")]
+    [SerializeField] protected float patrolRadius = 3f;
+    [SerializeField] protected float patrolSpeedMultiplier = 0.5f;
+    [SerializeField] protected float patrolPauseTime = 1.5f;
 
-    private PlayerController playerController;
+    [Header("Attack")]
+    [SerializeField] protected int attackDamage = 10;
+    [SerializeField] protected float attackCooldown = 1.5f;
+
+    [Header("Health")]
+    [SerializeField] protected int maxHealth = 50;
+    [SerializeField] protected float despawnDelay = 1.5f;
+
+    [Header("Sprite")]
+    [SerializeField] protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected bool spriteFacesRightByDefault = true;
+
+    protected Rigidbody2D rb;
+    protected Animator animator;
+    protected Collider2D enemyCollider;
+    protected PlayerController playerController;
+
     private Enemy enemy;
 
     // Reusable states
@@ -31,26 +49,50 @@ public class EnemyController : MonoBehaviour
     private ChaseState chaseState;
     private AttackState attackState;
     private DeadState deadState;
-
     private EnemyState currentState;
 
+    private string currentAnim;
     private float nextAttackTime;
-    private float initialScaleX;
-
+    private float attackAnimUntil;
+    private float patrolWaitUntil;
+    private float patrolDeadline;
+    private Vector2 spawnPoint;
+    private Vector2 patrolTarget;
     private bool defeatReported;
-
-    public int CurrentHP => enemy != null ? enemy.Hp : 0;
-    public bool IsDead => enemy != null && enemy.IsDefeated();
 
     public static event System.Action<Enemy> OnEnemyDefeated;
 
-    private void Awake()
+    public int CurrentHP => enemy != null ? enemy.Hp : 0;
+    public bool IsDead => enemy != null && enemy.IsDefeated();
+    protected bool FacingRight { get; private set; } = true;
+
+    // The part each enemy type changes. Default is the basic melee hit.
+    protected virtual void PerformAttack()
+    {
+        Debug.Log("Enemy attacks!");
+        DamagePlayer(attackDamage);
+    }
+
+    // Animation names, subclasses override these if their clips are
+    // named differently.
+    protected virtual string IdleAnim => "Enemy_Idle";
+    protected virtual string MoveAnim => "Enemy_Run";
+    protected virtual string AttackAnim => "Enemy_Attack";
+    protected virtual string DeathAnim => "Enemy_Die";
+    protected virtual float AttackAnimDuration => 0.6f;
+
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         enemyCollider = GetComponent<Collider2D>();
 
-        initialScaleX = Mathf.Abs(transform.localScale.x);
+        // Get the SpriteRenderer automatically if one is not assigned.
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
 
         // Create states only once.
         idleState = new IdleState();
@@ -59,110 +101,185 @@ public class EnemyController : MonoBehaviour
         deadState = new DeadState();
 
         enemy = new Enemy(1, maxHealth, idleState);
-
         currentState = idleState;
 
-        if (animator != null)
-            animator.Play("Enemy_Idle");
+        spawnPoint = rb.position;
+        patrolTarget = spawnPoint;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
-        if (player == null)
-        {
-            GameObject playerObj =
-                GameObject.FindGameObjectWithTag("Player");
-
-            if (playerObj != null)
-                SetTarget(playerObj.transform);
-        }
-        else
-        {
+        // Use the target the spawner gave us, otherwise find the player.
+        if (player != null)
             SetTarget(player);
-        }
+        else
+            TryFindPlayer();
+
+        PlayAnimation(IdleAnim);
     }
 
     private void FixedUpdate()
     {
+        RunCycle();
+    }
+
+    // Template method. Not virtual on purpose so the order of the steps
+    // can't be changed by a subclass.
+    public void RunCycle()
+    {
         if (IsDead)
+            return;
+
+        if (player == null)
+            TryFindPlayer();
+
+        if (player == null ||
+            (playerController != null && playerController.IsDead))
         {
-            ChangeState(deadState);
+            Patrol();
             return;
         }
 
-        if (player == null || playerController == null ||
-            playerController.IsDead)
+        // Let the attack animation finish first.
+        if (Time.time < attackAnimUntil)
         {
-            ChangeState(idleState);
+            Stop();
             return;
         }
 
-        FacePlayer();
+        Vector2 toPlayer = (Vector2)player.position - rb.position;
+        float distance = toPlayer.magnitude;
 
-        Vector2 direction =
-            (Vector2)player.position - rb.position;
+        FaceTarget(toPlayer.x);
 
-        float distanceSqr = direction.sqrMagnitude;
-
-        float attackThreshold =
+        // Small buffer so the enemy doesn't flicker between attack and
+        // chase right at the edge of the range.
+        float threshold =
             currentState == attackState
                 ? attackRange + attackExitBuffer
                 : attackRange;
 
-        float attackThresholdSqr =
-            attackThreshold * attackThreshold;
-
-        float detectionRangeSqr =
-            detectionRange * detectionRange;
-
-        if (distanceSqr <= attackThresholdSqr)
+        if (distance <= threshold)
         {
             ChangeState(attackState);
+            Stop();
 
-            // Only deal damage inside the actual attack range.
-            if (distanceSqr <= attackRange * attackRange &&
-                Time.time >= nextAttackTime)
+            if (distance <= attackRange && Time.time >= nextAttackTime)
             {
-                PerformAttack();
                 nextAttackTime = Time.time + attackCooldown;
+                attackAnimUntil = Time.time + AttackAnimDuration;
+
+                PlayAnimation(AttackAnim, true);
+                PerformAttack();
+            }
+            else
+            {
+                PlayAnimation(IdleAnim);
             }
         }
-        else if (distanceSqr <= detectionRangeSqr)
+        else if (distance <= detectionRange)
         {
             ChangeState(chaseState);
 
-            direction.Normalize();
-
-            Vector2 newPosition =
-                rb.position +
-                direction * moveSpeed * Time.fixedDeltaTime;
-
-            rb.MovePosition(newPosition);
+            rb.linearVelocity = toPlayer.normalized * moveSpeed;
+            PlayAnimation(MoveAnim);
         }
         else
         {
-            ChangeState(idleState);
+            Patrol();
         }
     }
 
-    private void FacePlayer()
+    // Wander around the spawn point while the player is out of range.
+    private void Patrol()
     {
-        float dx = player.position.x - transform.position.x;
+        ChangeState(idleState);
 
-        if (Mathf.Abs(dx) < 0.05f)
+        if (patrolRadius <= 0.01f || Time.time < patrolWaitUntil)
+        {
+            Stop();
+            PlayAnimation(IdleAnim);
+            return;
+        }
+
+        Vector2 toPoint = patrolTarget - rb.position;
+
+        // Reached the point (or got stuck on a wall), wait a bit and
+        // pick a new one.
+        if (toPoint.magnitude <= 0.2f || Time.time > patrolDeadline)
+        {
+            patrolWaitUntil = Time.time + patrolPauseTime;
+            patrolTarget = spawnPoint + Random.insideUnitCircle * patrolRadius;
+            patrolDeadline = patrolWaitUntil + 4f;
+
+            Stop();
+            PlayAnimation(IdleAnim);
+            return;
+        }
+
+        rb.linearVelocity =
+            toPoint.normalized * moveSpeed * patrolSpeedMultiplier;
+
+        FaceTarget(toPoint.x);
+        PlayAnimation(MoveAnim);
+    }
+
+    protected void Stop()
+    {
+        rb.linearVelocity = Vector2.zero;
+    }
+
+    // Flip the sprite when the facing direction changes.
+    protected void FaceTarget(float dx)
+    {
+        if (spriteRenderer == null || Mathf.Abs(dx) < 0.05f)
             return;
 
-        bool shouldFaceRight = dx > 0f;
+        FacingRight = dx > 0f;
+        spriteRenderer.flipX = FacingRight != spriteFacesRightByDefault;
+    }
 
-        float sign =
-            shouldFaceRight == spriteFacesRightByDefault
-                ? 1f
-                : -1f;
+    protected void DamagePlayer(int amount)
+    {
+        if (playerController != null && !playerController.IsDead)
+            playerController.TakeDamage(amount);
+    }
 
-        Vector3 scale = transform.localScale;
-        scale.x = initialScaleX * sign;
+    protected void PlayAnimation(string clip, bool restart = false)
+    {
+        if (animator == null || string.IsNullOrEmpty(clip))
+            return;
 
-        transform.localScale = scale;
+        if (!restart && currentAnim == clip)
+            return;
+
+        currentAnim = clip;
+
+        // The name has to match the Animator state exactly (capital
+        // letters too), otherwise Play() does nothing. Warn once and
+        // list what the controller actually has.
+        if (!animator.HasState(0, Animator.StringToHash(clip)))
+        {
+            string available = "";
+
+            if (animator.runtimeAnimatorController != null)
+            {
+                foreach (AnimationClip c in
+                    animator.runtimeAnimatorController.animationClips)
+                {
+                    available += c.name + ", ";
+                }
+            }
+
+            Debug.LogWarning(
+                name + ": Animator has no state named '" + clip +
+                "'. Clips in its controller: " + available,
+                this
+            );
+            return;
+        }
+
+        animator.Play(clip, 0, 0f);
     }
 
     private void ChangeState(EnemyState newState)
@@ -173,45 +290,15 @@ public class EnemyController : MonoBehaviour
         currentState = newState;
         enemy.ChangeState(newState);
 
-        if (animator != null)
-        {
-            if (newState == idleState)
-                animator.Play("Enemy_Idle", 0, 0f);
-
-            else if (newState == chaseState)
-                animator.Play("Enemy_Run", 0, 0f);
-
-            else if (newState == attackState)
-                animator.Play("Enemy_Attack", 0, 0f);
-
-            else if (newState == deadState)
-                animator.Play("Enemy_Die", 0, 0f);
-        }
-
         Debug.Log(enemy.Update());
     }
 
-    private void PerformAttack()
+    private void TryFindPlayer()
     {
-        if (playerController == null || IsDead ||
-            playerController.IsDead)
-            return;
+        GameObject obj = GameObject.FindGameObjectWithTag("Player");
 
-        Debug.Log("Enemy attacks!");
-
-        playerController.TakeDamage(attackDamage);
-    }
-
-    private void ReportEnemyDefeat()
-    {
-        if (!IsDead || defeatReported)
-            return;
-
-        defeatReported = true;
-
-        OnEnemyDefeated?.Invoke(enemy);
-
-        Debug.Log("Enemy defeat reported.");
+        if (obj != null)
+            SetTarget(obj.transform);
     }
 
     public void SetTarget(Transform target)
@@ -230,18 +317,29 @@ public class EnemyController : MonoBehaviour
 
         enemy.TakeDamage(damage);
 
-        Debug.Log("Enemy HP: " + enemy.Hp);
-
         if (IsDead)
+            Die();
+    }
+
+    protected virtual void Die()
+    {
+        ChangeState(deadState);
+        Stop();
+
+        // So projectiles and the player pass through the corpse.
+        if (enemyCollider != null)
+            enemyCollider.enabled = false;
+
+        PlayAnimation(DeathAnim, true);
+
+        // Only report the defeat once.
+        if (!defeatReported)
         {
-            ChangeState(deadState);
-
-            if (enemyCollider != null)
-                enemyCollider.enabled = false;
-
-            rb.linearVelocity = Vector2.zero;
-
-            ReportEnemyDefeat();
+            defeatReported = true;
+            OnEnemyDefeated?.Invoke(enemy);
         }
+
+        // Keep the object around long enough for the death animation.
+        Destroy(gameObject, despawnDelay);
     }
 }
